@@ -3,8 +3,10 @@ package ru.andryss.trousseau
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,7 +22,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -43,16 +48,22 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 
+const val MAX_IMAGES = 10
+
 @Composable
 fun CreateItemPage() {
     var name by remember { mutableStateOf("") }
     val imageUris = remember { mutableStateListOf<Uri>() }
     var selectedImage by remember { mutableIntStateOf(0) }
 
-    val launcher = rememberLauncherForActivityResult(PickMultipleVisualMedia(maxItems = 10)) {
+    val selectLauncher = rememberLauncherForActivityResult(PickMultipleVisualMedia(MAX_IMAGES)) {
         imageUris.clear()
         imageUris.addAll(it)
         selectedImage = 0
+    }
+
+    val addLauncher = rememberLauncherForActivityResult(PickVisualMedia()) {
+        it?.let { imageUris.add(it) }
     }
 
     Column(
@@ -64,22 +75,33 @@ fun CreateItemPage() {
             label = { Text(text = "Название") },
         )
         Button(
-            onClick = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+            onClick = { selectLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
         ) {
             Text(text = "Pick Image")
         }
-        if (imageUris.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(10.dp)),
-                contentAlignment = Alignment.Center
-            ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .padding(5.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.inversePrimary),
+            contentAlignment = Alignment.Center
+        ) {
+            if (imageUris.isNotEmpty()) {
                 ImageWithBlurredFit(imageUris[selectedImage])
+            } else {
+                Icon(
+                    imageVector = Icons.Default.AddAPhoto,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { selectLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
+                )
             }
-
+        }
+        if (imageUris.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,6 +123,27 @@ fun CreateItemPage() {
                         contentAlignment = Alignment.Center
                     ) {
                         ImageWithBlurredFit(uri)
+                    }
+                }
+                if (imageUris.size < MAX_IMAGES) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .aspectRatio(1f)
+                                .padding(5.dp)
+                                .clip(RoundedCornerShape(10.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AddAPhoto,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.inversePrimary,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable { addLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
+                            )
+                        }
                     }
                 }
             }

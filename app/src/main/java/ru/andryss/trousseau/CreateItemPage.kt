@@ -1,178 +1,62 @@
 package ru.andryss.trousseau
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-
-const val MAX_IMAGES = 10
+import ru.andryss.trousseau.widgets.MultipleImagePicker
 
 @Composable
 fun CreateItemPage() {
     var name by remember { mutableStateOf("") }
     val imageUris = remember { mutableStateListOf<Uri>() }
-    var selectedImage by remember { mutableIntStateOf(0) }
-
-    val selectLauncher = rememberLauncherForActivityResult(PickMultipleVisualMedia(MAX_IMAGES)) {
-        imageUris.clear()
-        imageUris.addAll(it)
-        selectedImage = 0
-    }
-
-    val addLauncher = rememberLauncherForActivityResult(PickVisualMedia()) {
-        it?.let { imageUris.add(it) }
-    }
+    var description by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
+        modifier = Modifier
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         TextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text(text = "Название") },
-        )
-        Button(
-            onClick = { selectLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
-        ) {
-            Text(text = "Pick Image")
-        }
-        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(5.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.inversePrimary),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 10.dp),
+            label = { Text(text = "Название") },
+        )
+        MultipleImagePicker(imageUris)
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            label = { Text(text = "Описание") },
+            maxLines = 3,
+            minLines = 3
+        )
+        Button(
+            onClick = {  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
         ) {
-            if (imageUris.isNotEmpty()) {
-                ImageWithBlurredFit(imageUris[selectedImage])
-            } else {
-                Icon(
-                    imageVector = Icons.Default.AddAPhoto,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { selectLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
-                )
-            }
-        }
-        if (imageUris.isNotEmpty()) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-            ) {
-                itemsIndexed(imageUris) { index, uri ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .aspectRatio(1f)
-                            .padding(5.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable { selectedImage = index }
-                            .border(
-                                width = if (selectedImage == index) 4.dp else 0.dp,
-                                color = if (selectedImage == index) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ImageWithBlurredFit(uri)
-                    }
-                }
-                if (imageUris.size < MAX_IMAGES) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .aspectRatio(1f)
-                                .padding(5.dp)
-                                .clip(RoundedCornerShape(10.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AddAPhoto,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.inversePrimary,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .clickable { addLauncher.launch(PickVisualMediaRequest(ImageOnly)) }
-                            )
-                        }
-                    }
-                }
-            }
+            Text(text = "Сохранить")
         }
     }
-}
-
-@Composable
-private fun ImageWithBlurredFit(uri: Uri) {
-    val context = LocalContext.current
-
-    AsyncImage(
-        model = ImageRequest.Builder(context)
-            .data(uri)
-            .crossfade(enable = true)
-            .build(),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxSize()
-            .blur(20.dp)
-    )
-    AsyncImage(
-        model = ImageRequest.Builder(context)
-            .data(uri)
-            .crossfade(enable = true)
-            .build(),
-        contentDescription = null,
-        contentScale = ContentScale.Fit,
-        modifier = Modifier.fillMaxSize()
-    )
 }

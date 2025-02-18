@@ -1,4 +1,4 @@
-package ru.andryss.trousseau
+package ru.andryss.trousseau.mobile
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.andryss.trousseau.widgets.MultipleImagePicker
+import ru.andryss.trousseau.mobile.widgets.MultipleImagePicker
 
 @Composable
 fun CreateItemPage() {

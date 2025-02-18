@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.widgets
+package ru.andryss.trousseau.mobile.widgets
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

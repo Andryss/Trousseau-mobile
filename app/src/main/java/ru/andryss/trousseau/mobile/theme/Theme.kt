@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.theme
+package ru.andryss.trousseau.mobile.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

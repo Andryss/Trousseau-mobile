@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.andryss.trousseau"
+    namespace = "ru.andryss.trousseau.mobile"
     compileSdk = 35
 
     defaultConfig {
@@ -50,7 +50,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.io.coil.kt.coil3)
+    implementation(libs.squareup.okhttp3.okhttp)
+    implementation(libs.fasterxml.jackson.kotlin)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

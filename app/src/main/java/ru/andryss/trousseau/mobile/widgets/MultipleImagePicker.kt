@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -65,11 +66,20 @@ fun MultipleImagePicker(imageUris: MutableList<Uri>) {
         imageUris.addAll(it)
     }
 
+    val addOneLauncher = rememberLauncherForActivityResult(
+        PickVisualMedia()
+    ) {
+        it?.let { imageUris.add(it) }
+    }
+
     fun selectImages() =
         selectLauncher.launch(PickVisualMediaRequest(ImageOnly))
 
-    fun addImages() =
+    fun addImages() = if (MAX_IMAGES - imageUris.size > 1) {
         addLauncher.launch(PickVisualMediaRequest(ImageOnly))
+    } else {
+        addOneLauncher.launch(PickVisualMediaRequest(ImageOnly))
+    }
 
     fun clearImages() =
         imageUris.clear()

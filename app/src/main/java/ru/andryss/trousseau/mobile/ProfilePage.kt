@@ -1,6 +1,5 @@
 package ru.andryss.trousseau.mobile
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.model.createItem
 
 @Composable
-fun ProfilePage(state: AppState) {
+fun ProfilePage(state: AppState, onItemEdit: (String) -> Unit) {
 
     var createItemLoading by remember { mutableStateOf(false) }
 
@@ -36,7 +35,7 @@ fun ProfilePage(state: AppState) {
         createItemLoading = true
         state.createItem(
             onSuccess = {
-                Log.i(TAG, it)
+                onItemEdit(it.id)
                 createItemLoading = false
             },
             onError = {

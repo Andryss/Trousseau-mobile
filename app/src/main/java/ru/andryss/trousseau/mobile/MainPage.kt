@@ -12,10 +12,16 @@ fun MainPage(state: AppState, navController: NavHostController) {
         startDestination = "profile",
         builder = {
             composable("profile") {
-                ProfilePage(state)
+                ProfilePage(
+                    state = state,
+                    onItemEdit = { navController.navigate("seller/items/$it") },
+                )
             }
-            composable("items/create") {
-                CreateItemPage()
+            composable("seller/items/{itemId}") {
+                val itemId = it.arguments?.getString("itemId")
+                itemId?.let {
+                    EditItemPage(itemId)
+                }
             }
         }
     )

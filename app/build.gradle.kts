@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.io.coil.kt.coil3)
+    implementation(libs.io.coil.kt.coil3.network)
     implementation(libs.squareup.okhttp3.okhttp)
     implementation(libs.fasterxml.jackson.kotlin)
     testImplementation(libs.junit)

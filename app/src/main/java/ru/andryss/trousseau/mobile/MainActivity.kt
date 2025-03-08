@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
 import ru.andryss.trousseau.mobile.theme.TrousseauTheme
 import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_REQUEST_TIMEOUT
@@ -18,6 +18,7 @@ const val TAG = "trousseau-mobile"
 class AppState : Application() {
     lateinit var properties: Properties
     lateinit var httpClient: OkHttpClient
+    lateinit var navController: NavHostController
 }
 
 fun AppState.configureWith(applicationContext: Context) {
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TrousseauTheme {
-                MainPage(state = appState, navController = rememberNavController())
+                MainPage(state = appState)
             }
         }
     }

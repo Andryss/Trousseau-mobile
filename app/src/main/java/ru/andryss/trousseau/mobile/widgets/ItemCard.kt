@@ -18,6 +18,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,12 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.model.ItemDto
+import ru.andryss.trousseau.mobile.model.ItemMediaDto
 
 @Composable
 fun ItemCard(state: AppState, item: ItemDto) {
@@ -63,7 +66,7 @@ fun ItemCard(state: AppState, item: ItemDto) {
                     HorizontalPager(
                         state = pagerState
                     ) { page ->
-                        ImageWithBlurredFit(Uri.parse(item.media[page]))
+                        ImageWithBlurredFit(Uri.parse(item.media[page].href))
                     }
                     Row(
                         modifier = Modifier
@@ -85,20 +88,30 @@ fun ItemCard(state: AppState, item: ItemDto) {
                         }
                     }
                 }
-                Box(
+                AssistChip(
+                    onClick = {  },
+                    label = {
+                        Text(
+                            text = item.status,
+                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 5.dp),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                ) {
-                    Text(
-                        text = item.status,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurface
+                        .padding(10.dp),
+                    trailingIcon = {
+                        Icon(
+                            Icons.Default.MoreHoriz,
+                            "Card options icon"
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        labelColor = MaterialTheme.colorScheme.onSurface,
+                        trailingIconContentColor = MaterialTheme.colorScheme.onSurface
                     )
-                }
+                )
             }
 
             Column(
@@ -131,7 +144,11 @@ fun ItemCardPreview() {
     val item = ItemDto(
         id = "1234-4321-1234",
         title = "TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE",
-        media = listOf("123"),
+        media = listOf(
+            ItemMediaDto(id = "123-321", href = "https://sun9-56.userapi.com/s/v1/if1/ckE_uGxsdilADkg6PhXSDEz085PkwaybhjnY7-ImthF1P8c1f0Xf05RM0gMzCYykSM1kOeZ4.jpg?quality=96&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,1600x900&from=bu&u=IKBz0svfrhEd8FUISYfVekg2XFYJjaBY5zPcDcszsF4&cs=604x340"),
+            ItemMediaDto(id = "234-432", href = "https://images.wallpaperscraft.ru/image/single/gory_ozero_vershiny_129263_800x1280.jpg"),
+            ItemMediaDto(id = "345-543", href = "https://static10.tgstat.ru/channels/_0/2d/2df0da7fd2de748e028bdd78ea3845b9.jpg"),
+        ),
         description = "description description description description description description description description description description description description description",
         status = "DRAFT"
     )

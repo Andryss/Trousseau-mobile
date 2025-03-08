@@ -22,13 +22,20 @@ data class ErrorObject(
     val humanMessage: String,
 )
 
+data class ItemMediaDto(
+    val id: String,
+    val href: String,
+)
+
 data class ItemDto(
     val id: String,
     val title: String?,
-    val media: List<String>,
+    val media: List<ItemMediaDto>,
     val description: String?,
     val status: String,
 )
+
+val mapper = jacksonObjectMapper()
 
 val callbackScope = CoroutineScope(Dispatchers.Main)
 
@@ -43,7 +50,6 @@ inline fun <reified T> callbackObj(
         }
     }
     override fun onResponse(call: Call, response: Response) {
-        val mapper = jacksonObjectMapper()
         if (response.code == 200) {
             response.body?.bytes()?.let {
                 val result = mapper.readValue<T>(it)

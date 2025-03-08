@@ -34,7 +34,7 @@ import ru.andryss.trousseau.mobile.model.getItems
 import ru.andryss.trousseau.mobile.widgets.ItemCard
 
 @Composable
-fun ProfilePage(state: AppState, onItemEdit: (String) -> Unit) {
+fun ProfilePage(state: AppState) {
 
     val itemList = remember { mutableStateListOf<ItemDto>() }
 
@@ -64,7 +64,7 @@ fun ProfilePage(state: AppState, onItemEdit: (String) -> Unit) {
         createItemLoading = true
         state.createItem(
             onSuccess = {
-                onItemEdit(it.id)
+                state.navigateItemEditPage(it.id)
                 createItemLoading = false
             },
             onError = {

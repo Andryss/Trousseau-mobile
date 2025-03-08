@@ -2,6 +2,7 @@ package ru.andryss.trousseau.mobile.widgets
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,13 +37,15 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.model.ItemDto
 import ru.andryss.trousseau.mobile.model.ItemMediaDto
+import ru.andryss.trousseau.mobile.navigateItemEditPage
 
 @Composable
 fun ItemCard(state: AppState, item: ItemDto) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 10.dp)
+            .clickable { state.navigateItemEditPage(item.id) },
         shape = RoundedCornerShape(12.dp)
     ) {
         Column {
@@ -93,13 +96,12 @@ fun ItemCard(state: AppState, item: ItemDto) {
                     label = {
                         Text(
                             text = item.status,
-                            modifier = Modifier.padding(vertical = 10.dp, horizontal = 5.dp),
                             style = MaterialTheme.typography.headlineSmall
                         )
                     },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(10.dp),
+                        .padding(horizontal = 10.dp),
                     trailingIcon = {
                         Icon(
                             Icons.Default.MoreHoriz,
@@ -107,7 +109,7 @@ fun ItemCard(state: AppState, item: ItemDto) {
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                         labelColor = MaterialTheme.colorScheme.onSurface,
                         trailingIconContentColor = MaterialTheme.colorScheme.onSurface
                     )

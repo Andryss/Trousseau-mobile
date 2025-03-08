@@ -44,7 +44,7 @@ inline fun <reified T> callbackObj(
     crossinline onError: (error: String) -> Unit,
 ) = object : Callback {
     override fun onFailure(call: Call, e: IOException) {
-        Log.e(TAG, "Error when getting item", e)
+        Log.e(TAG, "Error when sending request", e)
         callbackScope.launch {
             onError(IO_EXCEPTION_ERROR_MESSAGE)
         }

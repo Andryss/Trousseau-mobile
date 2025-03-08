@@ -17,7 +17,6 @@ fun AppState.getItems(
     httpRequest(
         "GET",
         "/seller/items",
-        null,
         callbackObj<GetItemsResponse>(
             onSuccess = {
                 Log.i(TAG, "Got ${it.items.size} items")

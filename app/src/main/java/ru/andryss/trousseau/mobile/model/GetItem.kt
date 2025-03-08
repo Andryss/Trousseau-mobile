@@ -14,7 +14,6 @@ fun AppState.getItem(
     httpRequest(
         "GET",
         "/seller/items/$id",
-        null,
         callbackObj<ItemDto>(
             onSuccess = {
                 Log.i(TAG, "Got item ${it.id}")

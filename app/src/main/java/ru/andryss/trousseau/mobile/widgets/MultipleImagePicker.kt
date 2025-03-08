@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,47 +32,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.andryss.trousseau.mobile.util.replaceAllFrom
 
 const val MAX_IMAGES = 10
 
 @Composable
-fun MultipleImagePicker(imageUris: MutableList<Uri>) {
+fun MultipleImagePicker(imageUris: SnapshotStateList<Uri>) {
 
     var selectedImage by remember { mutableIntStateOf(0) }
 
     val selectLauncher = rememberLauncherForActivityResult(
         PickMultipleVisualMedia(maxItems = MAX_IMAGES)
     ) {
-        imageUris.clear()
-        imageUris.addAll(it)
+        imageUris.replaceAllFrom(it)
         selectedImage = 0
-    }
-
-    val addLauncher = rememberLauncherForActivityResult(
-        PickMultipleVisualMedia(maxItems = MAX_IMAGES - imageUris.size)
-    ) {
-        imageUris.addAll(it)
-    }
-
-    val addOneLauncher = rememberLauncherForActivityResult(
-        PickVisualMedia()
-    ) {
-        it?.let { imageUris.add(it) }
     }
 
     fun selectImages() =
         selectLauncher.launch(PickVisualMediaRequest(ImageOnly))
-
-    fun addImages() = if (MAX_IMAGES - imageUris.size > 1) {
-        addLauncher.launch(PickVisualMediaRequest(ImageOnly))
-    } else {
-        addOneLauncher.launch(PickVisualMediaRequest(ImageOnly))
-    }
 
     fun clearImages() =
         imageUris.clear()
@@ -106,20 +88,18 @@ fun MultipleImagePicker(imageUris: MutableList<Uri>) {
                         ImageWithBlurredFit(uri)
                     }
                 }
-                if (imageUris.size < MAX_IMAGES) {
-                    item {
-                        ThumbnailImage(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.secondary)
-                                .clickable { addImages() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AddAPhoto,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSecondary,
-                                modifier = Modifier.fillMaxSize(fraction = 0.5f)
-                            )
-                        }
+                item {
+                    ThumbnailImage(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.secondary)
+                            .clickable { selectImages() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AddAPhoto,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSecondary,
+                            modifier = Modifier.fillMaxSize(fraction = 0.5f)
+                        )
                     }
                 }
                 item {

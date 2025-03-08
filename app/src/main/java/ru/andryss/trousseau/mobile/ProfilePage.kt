@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,8 +13,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.model.ItemDto
 import ru.andryss.trousseau.mobile.model.createItem
 import ru.andryss.trousseau.mobile.model.getItems
+import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.ItemCard
 
 @Composable
@@ -48,8 +48,7 @@ fun ProfilePage(state: AppState) {
         getItemsLoading = true
         state.getItems(
             onSuccess = {
-                itemList.clear()
-                itemList.addAll(it)
+                itemList.replaceAllFrom(it)
                 getItemsLoading = false
             },
             onError = {
@@ -104,15 +103,14 @@ fun ProfilePage(state: AppState) {
                 text = { Text(alertText) }
             )
         }
-        FloatingActionButton(
+        LargeFloatingActionButton(
             onClick = { if (!createItemLoading) onCreateNewItem() },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(50.dp)
+                .padding(horizontal = 15.dp, vertical = 20.dp)
         ) {
             Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.size(70.dp)
+                contentAlignment = Alignment.Center
             ) {
                 if (createItemLoading) {
                     CircularProgressIndicator()

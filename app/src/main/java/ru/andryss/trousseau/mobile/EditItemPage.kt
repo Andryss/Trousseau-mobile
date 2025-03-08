@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +36,7 @@ import ru.andryss.trousseau.mobile.model.UpdateItemInfo
 import ru.andryss.trousseau.mobile.model.getItem
 import ru.andryss.trousseau.mobile.model.updateItem
 import ru.andryss.trousseau.mobile.model.uploadMedia
+import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.MultipleImagePicker
 
 enum class EditItemState(val description: String, val color: Color) {
@@ -47,8 +49,8 @@ enum class EditItemState(val description: String, val color: Color) {
 fun EditItemPage(state: AppState, itemId: String) {
 
     var getItemLoading by remember { mutableStateOf(false) }
-    var updateItemLoading by remember { mutableStateOf(false) }
-    var saveItemLoading by remember { mutableStateOf(false) }
+    val updateItemLoading = remember { mutableStateOf(false) }
+    val saveItemLoading = remember { mutableStateOf(false) }
 
     var lastSavedState by remember { mutableStateOf(ItemDto("", null, listOf(), null, "")) }
     val lastSavedMediaUris = remember { mutableStateListOf<Uri>() }
@@ -62,68 +64,83 @@ fun EditItemPage(state: AppState, itemId: String) {
     var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
-    fun getTitle() =
-        title.trim().ifBlank { null }
+    fun getTitle() = title.trim()
+        .replaceRepeatableWhitespace()
+        .ifBlank { null }
 
-    fun isMediaDiffers() = !lastSavedMediaUris.containsAll(imageUris)
-            || !imageUris.containsAll(lastSavedMediaUris)
+    fun getDescription() = description.trim()
+        .replaceRepeatableWhitespace()
+        .ifBlank { null }
 
-    fun getDescription() =
-        description.trim().ifBlank { null }
+    fun isMediaDiffers() = lastSavedMediaUris.size != imageUris.size
+            || !lastSavedMediaUris.containsAll(imageUris)
 
     fun hasLocalChangesMade() = lastSavedState.title != getTitle()
-            || isMediaDiffers()
             || lastSavedState.description != getDescription()
+            || isMediaDiffers()
 
-    fun uploadMedia(i: Int = 0, callback: () -> Unit) {
-        state.uploadMedia(
-            imageUris[i],
-            onSuccess = { id ->
-                imageIds.add(id)
-                if (i == imageUris.size - 1) {
-                    callback()
-                } else {
-                    uploadMedia(i + 1, callback)
-                }
+    fun getItemInfo() =
+        UpdateItemInfo(
+            getTitle(),
+            imageIds,
+            getDescription()
+        )
+
+    fun updateItemInternal(
+        onSuccess: (ItemDto) -> Unit,
+        loadingVar: MutableState<Boolean>
+    ) {
+        state.updateItem(
+            itemId,
+            getItemInfo(),
+            onSuccess = { item ->
+                onSuccess(item)
+                loadingVar.value = false
             },
             onError = { error ->
                 alertText = error
                 showAlert = true
+                loadingVar.value = false
             }
         )
     }
 
-    fun getItemInfo(callback: (UpdateItemInfo) -> Unit) {
-        if (isMediaDiffers()) {
+    fun updateAsync(loadingVar: MutableState<Boolean>, onSuccess: (ItemDto) -> Unit) {
+        loadingVar.value = true
+        if (imageUris.isEmpty()) {
             imageIds.clear()
-            if (imageUris.isNotEmpty()) {
-                uploadMedia {
-                    callback(UpdateItemInfo(getTitle(), imageIds, getDescription()))
-                }
-                return
-            }
         }
-        callback(UpdateItemInfo(getTitle(), imageIds, getDescription()))
-    }
+        if (imageUris.isEmpty() || !isMediaDiffers()) {
+            updateItemInternal(onSuccess, loadingVar)
+            return
+        }
+        val imageUriIds = mutableMapOf<Uri, String>()
+        imageUris.forEach { uri ->
+            state.uploadMedia(
+                uri,
+                onSuccess = { id ->
+                    synchronized(imageUriIds) {
+                        imageUriIds[uri] = id
+                    }
+                    if (imageUriIds.size != imageUris.size) return@uploadMedia
 
-    fun onSave() {
-        saveItemLoading = true
-        getItemInfo {
-            state.updateItem(
-                itemId,
-                it,
-                onSuccess = {
-                    state.navigateProfilePage()
-                    saveItemLoading = false
+                    imageIds.clear()
+                    imageUris.forEach { imageIds.add(imageUriIds.getValue(it)) }
+                    updateItemInternal(onSuccess, loadingVar)
                 },
                 onError = { error ->
                     alertText = error
                     showAlert = true
-                    saveItemLoading = false
                 }
             )
         }
     }
+
+    fun onSave() =
+        updateAsync(
+            loadingVar = saveItemLoading,
+            onSuccess = { state.navigateProfilePage() }
+        )
 
     LaunchedEffect(true) {
         getItemLoading = true
@@ -131,21 +148,12 @@ fun EditItemPage(state: AppState, itemId: String) {
             id = itemId,
             onSuccess = { item ->
                 title = item.title ?: ""
-                imageIds.apply {
-                    clear()
-                    addAll(item.media.map { it.id })
-                }
-                imageUris.apply {
-                    clear()
-                    addAll(item.media.map { it.href.toUri() })
-                }
+                imageIds.replaceAllFrom(item.media.map { it.id })
+                imageUris.replaceAllFrom(item.media.map { it.href.toUri() })
                 description = item.description ?: ""
                 status = item.status
                 lastSavedState = item
-                lastSavedMediaUris.apply {
-                    clear()
-                    addAll(imageUris)
-                }
+                lastSavedMediaUris.replaceAllFrom(imageUris)
                 getItemLoading = false
             },
             onError = { error ->
@@ -161,26 +169,13 @@ fun EditItemPage(state: AppState, itemId: String) {
             delay(10_000)
             if (hasLocalChangesMade()) {
                 Log.i(TAG, "Changes detected, updating item")
-                updateItemLoading = true
-                getItemInfo {
-                    state.updateItem(
-                        itemId,
-                        it,
-                        onSuccess = { item ->
-                            lastSavedState = item
-                            lastSavedMediaUris.apply {
-                                clear()
-                                addAll(imageUris)
-                            }
-                            updateItemLoading = false
-                        },
-                        onError = { error ->
-                            alertText = error
-                            showAlert = true
-                            updateItemLoading = false
-                        }
-                    )
-                }
+                updateAsync(
+                    loadingVar = updateItemLoading,
+                    onSuccess = { item ->
+                        lastSavedState = item
+                        lastSavedMediaUris.replaceAllFrom(imageUris)
+                    }
+                )
             } else {
                 Log.i(TAG, "No item changes, skipping update")
             }
@@ -212,11 +207,11 @@ fun EditItemPage(state: AppState, itemId: String) {
             minLines = 3
         )
         // TODO: BEGIN only for debug purposes
-        Row (
+        Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val editState = if (updateItemLoading) {
+            val editState = if (updateItemLoading.value) {
                 EditItemState.UPLOADING_LOCAL_CHANGES
             } else if (hasLocalChangesMade()) {
                 EditItemState.LOCAL_CHANGES_MADE
@@ -245,3 +240,6 @@ fun EditItemPage(state: AppState, itemId: String) {
         }
     }
 }
+
+private fun String.replaceRepeatableWhitespace() =
+    replace("(\\s)\\1+".toRegex()) { result -> result.groupValues[1] }

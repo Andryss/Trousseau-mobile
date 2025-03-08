@@ -5,27 +5,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,8 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 
@@ -54,111 +40,42 @@ fun MultipleImagePicker(imageUris: SnapshotStateList<Uri>) {
         selectedImage = 0
     }
 
-    fun selectImages() =
-        selectLauncher.launch(PickVisualMediaRequest(ImageOnly))
-
-    fun clearImages() =
-        imageUris.clear()
-
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        PreviewImage(
-            imageUri = if (imageUris.isNotEmpty()) imageUris[selectedImage] else null,
-            selectImagesFun = { selectImages() }
-        )
-        if (imageUris.isNotEmpty()) {
-            LazyRow(
+        ImagePager(
+            images = imageUris
+        ) {
+            IconButton(
+                onClick = { selectLauncher.launch(PickVisualMediaRequest(ImageOnly)) },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentPadding = PaddingValues(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    .align(Alignment.BottomStart)
+                    .padding(10.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
-                itemsIndexed(imageUris) { index, uri ->
-                    ThumbnailImage(
-                        modifier = Modifier
-                            .clickable { selectedImage = index }
-                            .border(
-                                width = if (selectedImage == index) 4.dp else 0.dp,
-                                color = if (selectedImage == index) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                    ) {
-                        ImageWithBlurredFit(uri)
-                    }
-                }
-                item {
-                    ThumbnailImage(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.secondary)
-                            .clickable { selectImages() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AddAPhoto,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier.fillMaxSize(fraction = 0.5f)
-                        )
-                    }
-                }
-                item {
-                    ThumbnailImage(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.error)
-                            .clickable { clearImages() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.DeleteForever,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onError,
-                            modifier = Modifier.fillMaxSize(fraction = 0.5f)
-                        )
-                    }
-                }
+                Icon(
+                    Icons.Default.AddAPhoto,
+                    "Add photo button"
+                )
+            }
+            IconButton(
+                onClick = { imageUris.clear() },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(10.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Icon(
+                    Icons.Default.DeleteForever,
+                    "Add photo button"
+                )
             }
         }
-    }
-}
-
-@Composable
-fun PreviewImage(imageUri: Uri?, selectImagesFun: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(10.dp))
-            .background(MaterialTheme.colorScheme.secondary)
-            .clickable { if (imageUri == null) selectImagesFun() },
-        contentAlignment = Alignment.Center
-    ) {
-        if (imageUri != null) {
-            ImageWithBlurredFit(imageUri)
-        } else {
-            Icon(
-                imageVector = Icons.Default.AddAPhoto,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondary,
-                modifier = Modifier.fillMaxSize(fraction = 0.5f)
-            )
-        }
-    }
-}
-
-@Composable
-fun ThumbnailImage(
-    modifier: Modifier,
-    content: @Composable (BoxScope.() -> Unit)
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(10.dp))
-            .then(modifier),
-        contentAlignment = Alignment.Center
-    ) {
-        content()
     }
 }

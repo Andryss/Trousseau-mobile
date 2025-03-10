@@ -9,7 +9,9 @@ import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import okhttp3.ResponseBody
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.util.ItemStatus
 import java.io.IOException
 
 const val IO_EXCEPTION_ERROR_MESSAGE = "Произошла непредвиденная ошибка, повторите попытку позже"
@@ -32,7 +34,7 @@ data class ItemDto(
     val title: String?,
     val media: List<ItemMediaDto>,
     val description: String?,
-    val status: String,
+    var status: ItemStatus,
 )
 
 val mapper = jacksonObjectMapper()
@@ -42,6 +44,32 @@ val callbackScope = CoroutineScope(Dispatchers.Main)
 inline fun <reified T> callbackObj(
     crossinline onSuccess: (result: T) -> Unit,
     crossinline onError: (error: String) -> Unit,
+) = commonCallbackObj(
+    onSuccess = { response ->
+        val result = mapper.readValue<T>(response.bytes())
+        Log.i(TAG, "Got response $result")
+        callbackScope.launch {
+            onSuccess(result)
+        }
+    },
+    onError = onError
+)
+
+inline fun noResponseCallbackObj(
+    crossinline onSuccess: () -> Unit,
+    crossinline onError: (error: String) -> Unit
+) = commonCallbackObj(
+    onSuccess = {
+        callbackScope.launch {
+            onSuccess()
+        }
+    },
+    onError = onError
+)
+
+inline fun commonCallbackObj(
+    crossinline onSuccess: (response: ResponseBody) -> Unit,
+    crossinline onError: (error: String) -> Unit,
 ) = object : Callback {
     override fun onFailure(call: Call, e: IOException) {
         Log.e(TAG, "Error when sending request", e)
@@ -49,20 +77,17 @@ inline fun <reified T> callbackObj(
             onError(IO_EXCEPTION_ERROR_MESSAGE)
         }
     }
+
     override fun onResponse(call: Call, response: Response) {
         if (response.code == 200) {
-            response.body?.bytes()?.let {
-                val result = mapper.readValue<T>(it)
-                Log.i(TAG, "Got response $result")
-                callbackScope.launch {
-                    onSuccess(result)
-                }
+            response.body?.use {
+                onSuccess(it)
             } ?: callbackScope.launch {
                 onError(RESPONSE_PARSE_ERROR_MESSAGE)
             }
         } else {
-            response.body?.bytes()?.let {
-                val error = mapper.readValue<ErrorObject>(it)
+            response.body?.use {
+                val error = mapper.readValue<ErrorObject>(it.bytes())
                 callbackScope.launch {
                     onError(ERROR_RESPONSE_MESSAGE_TEMPLATE.format(error.humanMessage, error.code))
                 }

@@ -2,25 +2,24 @@ package ru.andryss.trousseau.mobile
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -31,10 +30,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlinx.coroutines.delay
@@ -43,14 +39,9 @@ import ru.andryss.trousseau.mobile.model.UpdateItemInfo
 import ru.andryss.trousseau.mobile.model.getItem
 import ru.andryss.trousseau.mobile.model.updateItem
 import ru.andryss.trousseau.mobile.model.uploadMedia
+import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.MultipleImagePicker
-
-enum class EditItemState(val description: String, val color: Color) {
-    LOCAL_CHANGES_MADE("Изменения внесены", Color.Gray),
-    UPLOADING_LOCAL_CHANGES("Обновление...", Color.Yellow),
-    REMOTE_SYNC("Изменения сохранены", Color.Green)
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,14 +51,14 @@ fun EditItemPage(state: AppState, itemId: String) {
     val updateItemLoading = remember { mutableStateOf(false) }
     val saveItemLoading = remember { mutableStateOf(false) }
 
-    var lastSavedState by remember { mutableStateOf(ItemDto("", null, listOf(), null, "")) }
+    var lastSavedState by remember { mutableStateOf(ItemDto("", null, listOf(), null, ItemStatus.UNKNOWN)) }
     val lastSavedMediaUris = remember { mutableStateListOf<Uri>() }
 
     var title by remember { mutableStateOf("") }
     val imageUris = remember { mutableStateListOf<Uri>() }
     val imageIds = remember { mutableStateListOf<String>() }
     var description by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("") }
+    var status by remember { mutableStateOf(ItemStatus.UNKNOWN) }
 
     var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -190,83 +181,74 @@ fun EditItemPage(state: AppState, itemId: String) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Изменение объявления") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { state.navigateProfilePage() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+    Box {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Изменение объявления") },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { state.navigateProfilePage() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
                     }
-                }
-            )
-        }
-    ) { padding ->
-        Box(
-            modifier = Modifier.padding(padding)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(15.dp)
+                )
+            }
+        ) { padding ->
+            Box(
+                modifier = Modifier.padding(padding)
             ) {
-                TextField(
-                    value = title,
-                    onValueChange = { title = it },
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    label = { Text(text = "Название") },
-                )
-                MultipleImagePicker(imageUris)
-                TextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    label = { Text(text = "Описание") },
-                    minLines = 5
-                )
-                // TODO: BEGIN only for debug purposes
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                        .padding(vertical = 10.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    val editState = if (updateItemLoading.value) {
-                        EditItemState.UPLOADING_LOCAL_CHANGES
-                    } else if (hasLocalChangesMade()) {
-                        EditItemState.LOCAL_CHANGES_MADE
-                    } else {
-                        EditItemState.REMOTE_SYNC
-                    }
-                    Box(
+                    TextField(
+                        value = title,
+                        onValueChange = { title = it },
                         modifier = Modifier
-                            .padding(2.dp)
-                            .clip(CircleShape)
-                            .background(editState.color)
-                            .size(16.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        label = { Text(text = "Название") },
                     )
-                    Text(
-                        text = editState.description
+                    MultipleImagePicker(imageUris)
+                    TextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        label = { Text(text = "Описание") },
+                        minLines = 5
                     )
-                }
-                // TODO: END only for debug purposes
-                Button(
-                    onClick = { onSave() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                ) {
-                    Text(text = "Сохранить")
+                    Button(
+                        onClick = { onSave() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
+                    ) {
+                        Text(text = "Сохранить")
+                    }
                 }
             }
+        }
+
+        if (showAlert) {
+            AlertDialog(
+                onDismissRequest = { showAlert = false },
+                confirmButton = {
+                    TextButton(onClick = { showAlert = false }) {
+                        Text("ОК")
+                    }
+                },
+                icon = { Icon(Icons.Filled.Error, "Error icon") },
+                text = { Text(alertText) }
+            )
         }
     }
 }

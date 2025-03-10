@@ -13,9 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -45,6 +52,7 @@ enum class EditItemState(val description: String, val color: Color) {
     REMOTE_SYNC("Изменения сохранены", Color.Green)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditItemPage(state: AppState, itemId: String) {
 
@@ -182,61 +190,83 @@ fun EditItemPage(state: AppState, itemId: String) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
-    ) {
-        TextField(
-            value = title,
-            onValueChange = { title = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            label = { Text(text = "Название") },
-        )
-        MultipleImagePicker(imageUris)
-        TextField(
-            value = description,
-            onValueChange = { description = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            label = { Text(text = "Описание") },
-            maxLines = 3,
-            minLines = 3
-        )
-        // TODO: BEGIN only for debug purposes
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            val editState = if (updateItemLoading.value) {
-                EditItemState.UPLOADING_LOCAL_CHANGES
-            } else if (hasLocalChangesMade()) {
-                EditItemState.LOCAL_CHANGES_MADE
-            } else {
-                EditItemState.REMOTE_SYNC
-            }
-            Box(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .clip(CircleShape)
-                    .background(editState.color)
-                    .size(16.dp)
-            )
-            Text(
-                text = editState.description
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Изменение объявления") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { state.navigateProfilePage() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
             )
         }
-        // TODO: END only for debug purposes
-        Button(
-            onClick = { onSave() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
+    ) { padding ->
+        Box(
+            modifier = Modifier.padding(padding)
         ) {
-            Text(text = "Сохранить")
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
+                TextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    label = { Text(text = "Название") },
+                )
+                MultipleImagePicker(imageUris)
+                TextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    label = { Text(text = "Описание") },
+                    minLines = 5
+                )
+                // TODO: BEGIN only for debug purposes
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val editState = if (updateItemLoading.value) {
+                        EditItemState.UPLOADING_LOCAL_CHANGES
+                    } else if (hasLocalChangesMade()) {
+                        EditItemState.LOCAL_CHANGES_MADE
+                    } else {
+                        EditItemState.REMOTE_SYNC
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .clip(CircleShape)
+                            .background(editState.color)
+                            .size(16.dp)
+                    )
+                    Text(
+                        text = editState.description
+                    )
+                }
+                // TODO: END only for debug purposes
+                Button(
+                    onClick = { onSave() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                ) {
+                    Text(text = "Сохранить")
+                }
+            }
         }
     }
 }

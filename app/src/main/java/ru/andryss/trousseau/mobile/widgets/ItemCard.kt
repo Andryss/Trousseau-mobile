@@ -24,6 +24,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.model.ItemDto
 import ru.andryss.trousseau.mobile.model.ItemMediaDto
 import ru.andryss.trousseau.mobile.navigateItemEditPage
+import ru.andryss.trousseau.mobile.util.ItemStatus
 
 @Composable
 fun ItemCard(state: AppState, item: ItemDto) {
@@ -38,11 +39,16 @@ fun ItemCard(state: AppState, item: ItemDto) {
             ImagePager(
                 images = item.media.map { it.href.toUri() }
             ) {
+                val status = try {
+                    ItemStatus.valueOf(item.status)
+                } catch (e: IllegalArgumentException) {
+                    ItemStatus.UNKNOWN
+                }
                 AssistChip(
                     onClick = {  },
                     label = {
                         Text(
-                            text = item.status,
+                            text = status.value,
                             style = MaterialTheme.typography.headlineSmall
                         )
                     },
@@ -56,8 +62,7 @@ fun ItemCard(state: AppState, item: ItemDto) {
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
-                        labelColor = MaterialTheme.colorScheme.onSurface,
+                        containerColor = status.color.copy(alpha = 0.8f),
                         trailingIconContentColor = MaterialTheme.colorScheme.onSurface
                     )
                 )

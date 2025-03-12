@@ -21,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +36,10 @@ import ru.andryss.trousseau.mobile.model.ItemDto
 import ru.andryss.trousseau.mobile.model.createItem
 import ru.andryss.trousseau.mobile.model.getItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
+import ru.andryss.trousseau.mobile.widgets.BottomBar
+import ru.andryss.trousseau.mobile.widgets.BottomPage
 import ru.andryss.trousseau.mobile.widgets.ItemCard
+import ru.andryss.trousseau.mobile.widgets.TopBar
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,11 +88,8 @@ fun ProfilePage(state: AppState) {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("ПРИДАНОЕ") }
-            )
-        },
+        topBar = { TopBar() },
+        bottomBar = { BottomBar(state, BottomPage.PROFILE) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { if (!createItemLoading) onCreateNewItem() }

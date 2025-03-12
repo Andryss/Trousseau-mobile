@@ -5,12 +5,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-fun AppState.navigateItemEditPage(itemId: String) {
-    navController.navigate("seller/items/$itemId")
+fun AppState.navigateSearchPage() {
+    navController.navigate("search")
 }
 
 fun AppState.navigateProfilePage() {
     navController.navigate("profile")
+}
+
+fun AppState.navigateItemEditPage(itemId: String) {
+    navController.navigate("seller/items/$itemId")
 }
 
 @Composable
@@ -20,8 +24,11 @@ fun MainPage(state: AppState) {
 
     NavHost(
         navController = navController,
-        startDestination = "profile",
+        startDestination = "search",
         builder = {
+            composable("search") {
+                SearchPage(state = state)
+            }
             composable("profile") {
                 ProfilePage(state = state)
             }

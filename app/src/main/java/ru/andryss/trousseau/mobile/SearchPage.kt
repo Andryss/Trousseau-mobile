@@ -32,9 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import ru.andryss.trousseau.mobile.model.PublicItemDto
-import ru.andryss.trousseau.mobile.model.SearchInfo
-import ru.andryss.trousseau.mobile.model.searchItems
+import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.client.SearchInfo
+import ru.andryss.trousseau.mobile.client.searchItems
 import ru.andryss.trousseau.mobile.widgets.BottomBar
 import ru.andryss.trousseau.mobile.widgets.BottomPage
 import ru.andryss.trousseau.mobile.widgets.PublicItemCard

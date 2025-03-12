@@ -1,9 +1,8 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.util.httpRequest
 
 data class GetItemsResponse(
     val items: List<ItemDto>,

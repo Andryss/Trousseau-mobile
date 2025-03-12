@@ -1,22 +1,21 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.util.httpRequest
 
-fun AppState.createItem(
+fun AppState.getSellerItem(
+    id: String,
     onSuccess: (item: ItemDto) -> Unit,
     onError: (error: String) -> Unit,
 ) {
-    Log.i(TAG, "Send create item request")
+    Log.i(TAG, "Send get seller item $id request")
     httpRequest(
-        "POST",
-        "/seller/items",
-        "{}",
+        "GET",
+        "/seller/items/$id",
         callbackObj<ItemDto>(
             onSuccess = {
-                Log.i(TAG, "Created new item ${it.id}")
+                Log.i(TAG, "Got item ${it.id}")
                 onSuccess(it)
             },
             onError = onError

@@ -1,9 +1,8 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.util.httpRequest
 
 data class UpdateItemInfo(
     val title: String?,
@@ -11,13 +10,13 @@ data class UpdateItemInfo(
     val description: String?,
 )
 
-fun AppState.updateItem(
+fun AppState.updateSellerItem(
     id: String,
     update: UpdateItemInfo,
     onSuccess: (item: ItemDto) -> Unit,
     onError: (error: String) -> Unit,
 ) {
-    Log.i(TAG, "Send update item $id with $update request")
+    Log.i(TAG, "Send update seller item $id with $update request")
     httpRequest(
         "PUT",
         "/seller/items/$id",

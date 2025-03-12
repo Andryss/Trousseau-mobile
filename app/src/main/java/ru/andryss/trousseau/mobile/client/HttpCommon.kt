@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.util
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import okhttp3.Callback

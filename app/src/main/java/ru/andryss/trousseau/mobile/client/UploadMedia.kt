@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.net.Uri
 import android.util.Log
@@ -7,7 +7,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.util.httpRequest
 import java.io.File
 import java.io.FileOutputStream
 

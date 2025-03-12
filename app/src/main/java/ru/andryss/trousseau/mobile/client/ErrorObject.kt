@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

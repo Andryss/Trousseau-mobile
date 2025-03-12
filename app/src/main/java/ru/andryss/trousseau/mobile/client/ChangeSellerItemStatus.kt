@@ -1,22 +1,21 @@
-package ru.andryss.trousseau.mobile.model
+package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.util.ItemStatus
-import ru.andryss.trousseau.mobile.util.httpRequest
 
 data class UpdateItemStatus(
     val status: ItemStatus
 )
 
-fun AppState.updateItemStatus(
+fun AppState.updateSellerItemStatus(
     id: String,
     update: UpdateItemStatus,
     onSuccess: () -> Unit,
     onError: (error: String) -> Unit,
 ) {
-    Log.i(TAG, "Send update item $id status $update request")
+    Log.i(TAG, "Send update seller item $id status $update request")
     httpRequest(
         "PUT",
         "/seller/items/$id/status",

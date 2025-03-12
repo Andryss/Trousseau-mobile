@@ -32,13 +32,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.andryss.trousseau.mobile.model.ItemDto
-import ru.andryss.trousseau.mobile.model.createItem
-import ru.andryss.trousseau.mobile.model.getItems
+import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.createSellerItem
+import ru.andryss.trousseau.mobile.client.getItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.BottomBar
 import ru.andryss.trousseau.mobile.widgets.BottomPage
-import ru.andryss.trousseau.mobile.widgets.ItemCard
+import ru.andryss.trousseau.mobile.widgets.SellerItemCard
 import ru.andryss.trousseau.mobile.widgets.TopBar
 
 @Composable
@@ -70,7 +70,7 @@ fun ProfilePage(state: AppState) {
 
     fun onCreateNewItem() {
         createItemLoading = true
-        state.createItem(
+        state.createSellerItem(
             onSuccess = {
                 state.navigateItemEditPage(it.id)
                 createItemLoading = false
@@ -128,7 +128,7 @@ fun ProfilePage(state: AppState) {
                         Text("*нет объявлений*")
                     } else {
                         for (item in itemList) {
-                            ItemCard(state, item)
+                            SellerItemCard(state, item)
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))

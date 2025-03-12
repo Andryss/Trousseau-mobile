@@ -35,7 +35,7 @@ fun MainPage(state: AppState) {
             composable("seller/items/{itemId}") {
                 val itemId = it.arguments?.getString("itemId")
                 itemId?.let {
-                    EditItemPage(
+                    EditSellerItemPage(
                         state = state,
                         itemId = itemId
                     )

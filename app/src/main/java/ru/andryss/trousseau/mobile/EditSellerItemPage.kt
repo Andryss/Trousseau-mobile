@@ -34,18 +34,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlinx.coroutines.delay
-import ru.andryss.trousseau.mobile.model.ItemDto
-import ru.andryss.trousseau.mobile.model.UpdateItemInfo
-import ru.andryss.trousseau.mobile.model.getItem
-import ru.andryss.trousseau.mobile.model.updateItem
-import ru.andryss.trousseau.mobile.model.uploadMedia
+import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.UpdateItemInfo
+import ru.andryss.trousseau.mobile.client.getSellerItem
+import ru.andryss.trousseau.mobile.client.updateSellerItem
+import ru.andryss.trousseau.mobile.client.uploadMedia
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.MultipleImagePicker
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditItemPage(state: AppState, itemId: String) {
+fun EditSellerItemPage(state: AppState, itemId: String) {
 
     var getItemLoading by remember { mutableStateOf(false) }
     val updateItemLoading = remember { mutableStateOf(false) }
@@ -89,7 +89,7 @@ fun EditItemPage(state: AppState, itemId: String) {
         onSuccess: (ItemDto) -> Unit,
         loadingVar: MutableState<Boolean>
     ) {
-        state.updateItem(
+        state.updateSellerItem(
             itemId,
             getItemInfo(),
             onSuccess = { item ->
@@ -143,7 +143,7 @@ fun EditItemPage(state: AppState, itemId: String) {
 
     LaunchedEffect(true) {
         getItemLoading = true
-        state.getItem(
+        state.getSellerItem(
             id = itemId,
             onSuccess = { item ->
                 title = item.title ?: ""

@@ -34,7 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.createSellerItem
-import ru.andryss.trousseau.mobile.client.getItems
+import ru.andryss.trousseau.mobile.client.getSellerItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widgets.BottomBar
 import ru.andryss.trousseau.mobile.widgets.BottomPage
@@ -55,7 +55,7 @@ fun ProfilePage(state: AppState) {
 
     fun getItems() {
         getItemsLoading = true
-        state.getItems(
+        state.getSellerItems(
             onSuccess = {
                 itemList.replaceAllFrom(it)
                 getItemsLoading = false
@@ -72,7 +72,7 @@ fun ProfilePage(state: AppState) {
         createItemLoading = true
         state.createSellerItem(
             onSuccess = {
-                state.navigateItemEditPage(it.id)
+                state.navigateSellerItemEditPage(it.id)
                 createItemLoading = false
             },
             onError = {

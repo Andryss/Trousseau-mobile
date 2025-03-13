@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ImagePager(
     images: List<Uri>,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit = { }
 ) {
     Box(
         modifier = Modifier

@@ -8,11 +8,11 @@ data class GetItemsResponse(
     val items: List<ItemDto>,
 )
 
-fun AppState.getItems(
+fun AppState.getSellerItems(
     onSuccess: (items: List<ItemDto>) -> Unit,
     onError: (error: String) -> Unit,
 ) {
-    Log.i(TAG, "Send get items request")
+    Log.i(TAG, "Send get seller items request")
     httpRequest(
         "GET",
         "/seller/items",

@@ -9,11 +9,15 @@ fun AppState.navigateSearchPage() {
     navController.navigate("search")
 }
 
+fun AppState.navigateItemPage(itemId: String) {
+    navController.navigate("public/items/$itemId")
+}
+
 fun AppState.navigateProfilePage() {
     navController.navigate("profile")
 }
 
-fun AppState.navigateItemEditPage(itemId: String) {
+fun AppState.navigateSellerItemEditPage(itemId: String) {
     navController.navigate("seller/items/$itemId")
 }
 
@@ -28,6 +32,15 @@ fun MainPage(state: AppState) {
         builder = {
             composable("search") {
                 SearchPage(state = state)
+            }
+            composable("public/items/{itemId}") {
+                val itemId = it.arguments?.getString("itemId")
+                itemId?.let {
+                    ItemPage(
+                        state = state,
+                        itemId = itemId
+                    )
+                }
             }
             composable("profile") {
                 ProfilePage(state = state)

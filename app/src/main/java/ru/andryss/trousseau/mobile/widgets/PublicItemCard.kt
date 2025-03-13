@@ -10,6 +10,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,27 +19,23 @@ import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.navigateItemPage
 
 @Composable
 fun PublicItemCard(state: AppState, item: PublicItemDto) {
 
-    fun doOpenItem() {
-        /* TODO */
-    }
+    val imageUris = remember { item.media.map { it.href.toUri() } }
 
     Box {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
-                .clickable { doOpenItem() },
+                .clickable { state.navigateItemPage(item.id) },
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
-                ImagePager(
-                    images = item.media.map { it.href.toUri() },
-                    content = { }
-                )
+                ImagePager(images = imageUris)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

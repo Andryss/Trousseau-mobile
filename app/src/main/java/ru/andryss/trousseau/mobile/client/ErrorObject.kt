@@ -37,6 +37,13 @@ data class ItemDto(
     var status: ItemStatus,
 )
 
+data class PublicItemDto(
+    val id: String,
+    val title: String,
+    val media: List<ItemMediaDto>,
+    val description: String,
+)
+
 val mapper = jacksonObjectMapper()
 
 val callbackScope = CoroutineScope(Dispatchers.Main)

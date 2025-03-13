@@ -40,7 +40,7 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
-import ru.andryss.trousseau.mobile.navigateItemEditPage
+import ru.andryss.trousseau.mobile.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
 
 @Composable
@@ -59,7 +59,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     fun doItemEdit() {
         // TODO: disable editing when PUBLISHED status
         menuExpanded = false
-        state.navigateItemEditPage(item.id)
+        state.navigateSellerItemEditPage(item.id)
     }
 
     fun doItemStatusChange(

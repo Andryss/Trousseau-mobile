@@ -8,13 +8,6 @@ data class SearchInfo(
     val text: String,
 )
 
-data class PublicItemDto(
-    val id: String,
-    val title: String,
-    val media: List<ItemMediaDto>,
-    val description: String,
-)
-
 data class SearchItemsResponse(
     val items: List<PublicItemDto>,
 )

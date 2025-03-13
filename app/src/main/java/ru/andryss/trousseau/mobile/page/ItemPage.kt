@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile
+package ru.andryss.trousseau.mobile.page
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
@@ -33,9 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.PublicItemDto
 import ru.andryss.trousseau.mobile.client.getItem
-import ru.andryss.trousseau.mobile.widgets.ImagePager
+import ru.andryss.trousseau.mobile.widget.ImagePager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

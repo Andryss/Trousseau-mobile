@@ -1,9 +1,10 @@
-package ru.andryss.trousseau.mobile
+package ru.andryss.trousseau.mobile.page
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ru.andryss.trousseau.mobile.AppState
 
 fun AppState.navigateSearchPage() {
     navController.navigate("search")

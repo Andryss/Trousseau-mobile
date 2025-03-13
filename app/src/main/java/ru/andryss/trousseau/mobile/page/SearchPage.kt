@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile
+package ru.andryss.trousseau.mobile.page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,13 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.PublicItemDto
 import ru.andryss.trousseau.mobile.client.SearchInfo
 import ru.andryss.trousseau.mobile.client.searchItems
-import ru.andryss.trousseau.mobile.widgets.BottomBar
-import ru.andryss.trousseau.mobile.widgets.BottomPage
-import ru.andryss.trousseau.mobile.widgets.PublicItemCard
-import ru.andryss.trousseau.mobile.widgets.TopBar
+import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.BottomPage
+import ru.andryss.trousseau.mobile.widget.PublicItemCard
+import ru.andryss.trousseau.mobile.widget.TopBar
 
 @Composable
 fun SearchPage(state: AppState) {

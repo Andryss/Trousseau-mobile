@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
+import ru.andryss.trousseau.mobile.page.MainPage
 import ru.andryss.trousseau.mobile.theme.TrousseauTheme
 import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_REQUEST_TIMEOUT
 import java.util.Properties

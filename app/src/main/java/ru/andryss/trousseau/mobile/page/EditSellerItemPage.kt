@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile
+package ru.andryss.trousseau.mobile.page
 
 import android.net.Uri
 import android.util.Log
@@ -37,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlinx.coroutines.delay
+import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemInfo
 import ru.andryss.trousseau.mobile.client.getSellerItem
@@ -44,7 +46,7 @@ import ru.andryss.trousseau.mobile.client.updateSellerItem
 import ru.andryss.trousseau.mobile.client.uploadMedia
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widgets.MultipleImagePicker
+import ru.andryss.trousseau.mobile.widget.MultipleImagePicker
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.widgets
+package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,7 @@ import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.PublicItemDto
-import ru.andryss.trousseau.mobile.navigateItemPage
+import ru.andryss.trousseau.mobile.page.navigateItemPage
 
 @Composable
 fun PublicItemCard(state: AppState, item: PublicItemDto) {

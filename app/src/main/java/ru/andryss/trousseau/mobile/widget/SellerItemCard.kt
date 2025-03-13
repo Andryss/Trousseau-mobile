@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.widgets
+package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -40,7 +40,7 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
-import ru.andryss.trousseau.mobile.navigateSellerItemEditPage
+import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
 
 @Composable

@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.widgets
+package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text

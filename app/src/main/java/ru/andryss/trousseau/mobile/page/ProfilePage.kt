@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile
+package ru.andryss.trousseau.mobile.page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,14 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.createSellerItem
 import ru.andryss.trousseau.mobile.client.getSellerItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widgets.BottomBar
-import ru.andryss.trousseau.mobile.widgets.BottomPage
-import ru.andryss.trousseau.mobile.widgets.SellerItemCard
-import ru.andryss.trousseau.mobile.widgets.TopBar
+import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.BottomPage
+import ru.andryss.trousseau.mobile.widget.SellerItemCard
+import ru.andryss.trousseau.mobile.widget.TopBar
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

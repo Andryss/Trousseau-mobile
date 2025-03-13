@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.widgets
+package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -10,8 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.navigateProfilePage
-import ru.andryss.trousseau.mobile.navigateSearchPage
+import ru.andryss.trousseau.mobile.page.navigateProfilePage
+import ru.andryss.trousseau.mobile.page.navigateSearchPage
 
 enum class BottomPage(
     val icon: ImageVector,

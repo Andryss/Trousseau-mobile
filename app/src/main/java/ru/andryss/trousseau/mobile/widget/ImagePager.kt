@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.widgets
+package ru.andryss.trousseau.mobile.widget
 
 import android.net.Uri
 import androidx.compose.foundation.background

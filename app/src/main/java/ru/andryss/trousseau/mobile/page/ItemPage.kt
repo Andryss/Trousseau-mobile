@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,12 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -36,6 +35,7 @@ import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.getItem
 import ru.andryss.trousseau.mobile.client.updateItemStatus
 import ru.andryss.trousseau.mobile.util.ItemStatus
+import ru.andryss.trousseau.mobile.widget.ActionButton
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.ImagePager
 
@@ -44,7 +44,8 @@ import ru.andryss.trousseau.mobile.widget.ImagePager
 fun ItemPage(state: AppState, itemId: String) {
 
     var getItemLoading by remember { mutableStateOf(false) }
-    var blockItemLoading by remember { mutableStateOf(false) }
+    val bookItemLoading = remember { mutableStateOf(false) }
+    val unbookItemLoading = remember { mutableStateOf(false) }
 
     var item by remember { mutableStateOf(ItemDto.EMPTY) }
     val imageUris = remember { mutableStateListOf<Uri>() }
@@ -52,22 +53,31 @@ fun ItemPage(state: AppState, itemId: String) {
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
-    fun onBlock() {
-        blockItemLoading = true
+    fun updateStatus(
+        loadingVar: MutableState<Boolean>,
+        targetStatus: ItemStatus,
+    ) {
+        loadingVar.value = true
         state.updateItemStatus(
             item.id,
-            UpdateItemStatus(status = ItemStatus.BOOKED),
+            UpdateItemStatus(status = targetStatus),
             onSuccess = {
                 state.navigateProfilePage()
-                blockItemLoading = false
+                loadingVar.value = false
             },
             onError = { error ->
                 alertText = error
                 showAlert.value = true
-                blockItemLoading = false
+                loadingVar.value = false
             }
         )
     }
+
+    fun onBook() =
+        updateStatus(bookItemLoading, ItemStatus.BOOKED)
+
+    fun onUnbook() =
+        updateStatus(unbookItemLoading, ItemStatus.PUBLISHED)
 
     LaunchedEffect(true) {
         getItemLoading = true
@@ -127,14 +137,18 @@ fun ItemPage(state: AppState, itemId: String) {
                     Spacer(modifier = Modifier.height(70.dp))
                 }
 
-                Button(
-                    onClick = { onBlock() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(horizontal = 10.dp, vertical = 20.dp)
-                ) {
-                    Text(text = "Забронировать")
+                if (item.status == ItemStatus.PUBLISHED) {
+                    ActionButton(
+                        text = "Забронировать",
+                        action = { onBook() }
+                    )
+                }
+
+                if (item.status == ItemStatus.BOOKED) {
+                    ActionButton(
+                        text = "Снять бронирование",
+                        action = { onUnbook() }
+                    )
                 }
             }
         }

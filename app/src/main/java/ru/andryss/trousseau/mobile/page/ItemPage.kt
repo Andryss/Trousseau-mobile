@@ -35,7 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.getItem
+import ru.andryss.trousseau.mobile.client.updateItemStatus
+import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.widget.ImagePager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +46,7 @@ import ru.andryss.trousseau.mobile.widget.ImagePager
 fun ItemPage(state: AppState, itemId: String) {
 
     var getItemLoading by remember { mutableStateOf(false) }
+    var blockItemLoading by remember { mutableStateOf(false) }
 
     var item by remember { mutableStateOf(PublicItemDto("", "", listOf(), "")) }
     val imageUris = remember { mutableStateListOf<Uri>() }
@@ -51,7 +55,20 @@ fun ItemPage(state: AppState, itemId: String) {
     var alertText by remember { mutableStateOf("") }
 
     fun onBlock() {
-        /* TODO */
+        blockItemLoading = true
+        state.updateItemStatus(
+            item.id,
+            UpdateItemStatus(status = ItemStatus.BOOKED),
+            onSuccess = {
+                state.navigateProfilePage()
+                blockItemLoading = false
+            },
+            onError = { error ->
+                alertText = error
+                showAlert = true
+                blockItemLoading = false
+            }
+        )
     }
 
     LaunchedEffect(true) {
@@ -61,10 +78,12 @@ fun ItemPage(state: AppState, itemId: String) {
             onSuccess = { response ->
                 item = response
                 imageUris.addAll(response.media.map { it.href.toUri() })
+                getItemLoading = false
             },
             onError = { error ->
                 alertText = error
                 showAlert = true
+                getItemLoading = false
             }
         )
     }

@@ -16,9 +16,34 @@ fun AppState.updateSellerItemStatus(
     onError: (error: String) -> Unit,
 ) {
     Log.i(TAG, "Send update seller item $id status $update request")
+    updateItemStatusCommon(
+        "/seller/items/$id/status",
+        update, onSuccess, onError
+    )
+}
+
+fun AppState.updateItemStatus(
+    id: String,
+    update: UpdateItemStatus,
+    onSuccess: () -> Unit,
+    onError: (error: String) -> Unit,
+) {
+    Log.i(TAG, "Send update item $id status $update request")
+    updateItemStatusCommon(
+        "/public/items/$id/status",
+        update, onSuccess, onError
+    )
+}
+
+private fun AppState.updateItemStatusCommon(
+    url: String,
+    update: UpdateItemStatus,
+    onSuccess: () -> Unit,
+    onError: (error: String) -> Unit,
+) {
     httpRequest(
         "PUT",
-        "/seller/items/$id/status",
+        url,
         mapper.writeValueAsString(update),
         noResponseCallbackObj(
             onSuccess = onSuccess,

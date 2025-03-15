@@ -6,10 +6,10 @@ enum class ItemStatus(
     val value: String,
     val color: Color,
 ) {
-    DRAFT("ЧЕРНОВИК", Color.Gray),
-    READY("ГОТОВО К ПУБЛИКАЦИИ", Color.Yellow),
-    PUBLISHED("ОПУБЛИКОВАНО", Color.Green),
-    BOOKED("ЗАБРОНИРОВАНО", Color.Cyan),
-    ARCHIVED("В АРХИВЕ", Color.Magenta),
-    UNKNOWN("???", Color.Red)
+    DRAFT("ЧЕРНОВИК", Color(0xFFFFC107)),
+    READY("ГОТОВО К ПУБЛИКАЦИИ", Color(0xFF2196F3)),
+    PUBLISHED("ОПУБЛИКОВАНО", Color(0xFF4CAF50)),
+    BOOKED("ЗАБРОНИРОВАНО", Color(0xFF9C27B0)),
+    ARCHIVED("В АРХИВЕ", Color(0xFF757575)),
+    UNKNOWN("???", Color(0xFFF44336))
 }

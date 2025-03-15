@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.AssistChip
@@ -53,7 +55,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     var status by remember { mutableStateOf(item.status) }
 
     fun doItemEdit() {
-        // TODO: disable editing when PUBLISHED status
+        // TODO: on card click -> show item preview (edit only from chip)
         menuExpanded = false
         state.navigateSellerItemEditPage(item.id)
     }
@@ -85,6 +87,12 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
 
     fun doItemUnpublish() =
         doItemStatusChange(unpublishItemLoading, ItemStatus.READY)
+
+    fun doItemUnbook() =
+        doItemStatusChange(unpublishItemLoading, ItemStatus.PUBLISHED)
+
+    fun doItemArchive() =
+        doItemStatusChange(unpublishItemLoading, ItemStatus.ARCHIVED)
 
     AlertWrapper(
         isShown = showAlert,
@@ -133,6 +141,18 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                                         text = "Снять с публикации",
                                         onClick = { doItemUnpublish() },
                                         icon = Icons.Default.Download
+                                    )
+                                }
+                                if (status == ItemStatus.BOOKED) {
+                                    SellerItemCardDropDown(
+                                        text = "Отказать в бронировании",
+                                        onClick = { doItemUnbook() },
+                                        icon = Icons.Default.Cancel
+                                    )
+                                    SellerItemCardDropDown(
+                                        text = "Закрыть объявление",
+                                        onClick = { doItemArchive() },
+                                        icon = Icons.Default.Flag
                                     )
                                 }
                                 if (status in listOf(ItemStatus.DRAFT, ItemStatus.READY)) {

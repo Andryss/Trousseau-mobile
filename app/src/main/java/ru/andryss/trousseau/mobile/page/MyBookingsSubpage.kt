@@ -23,17 +23,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.getBookings
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.PublicItemCard
+import ru.andryss.trousseau.mobile.widget.ItemCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBookingsSubpage(state: AppState) {
 
-    val bookingsList = remember { mutableStateListOf<PublicItemDto>() }
+    val bookingsList = remember { mutableStateListOf<ItemDto>() }
 
     var getBookingsLoading by remember { mutableStateOf(false) }
 
@@ -80,7 +80,7 @@ fun MyBookingsSubpage(state: AppState) {
                     Text("*нет бронирований*")
                 } else {
                     for (item in bookingsList) {
-                        PublicItemCard(state, item)
+                        ItemCard(state, item)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))

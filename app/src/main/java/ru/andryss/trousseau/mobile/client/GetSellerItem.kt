@@ -15,7 +15,7 @@ fun AppState.getSellerItem(
         "/seller/items/$id",
         callbackObj<ItemDto>(
             onSuccess = {
-                Log.i(TAG, "Got item ${it.id}")
+                Log.i(TAG, "Got item $it")
                 onSuccess(it)
             },
             onError = onError

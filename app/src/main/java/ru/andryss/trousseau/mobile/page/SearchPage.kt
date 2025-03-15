@@ -30,13 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.SearchInfo
 import ru.andryss.trousseau.mobile.client.searchItems
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
-import ru.andryss.trousseau.mobile.widget.PublicItemCard
+import ru.andryss.trousseau.mobile.widget.ItemCard
 import ru.andryss.trousseau.mobile.widget.TopBar
 
 @Composable
@@ -45,7 +45,7 @@ fun SearchPage(state: AppState) {
     var searchItemsLoading by remember { mutableStateOf(false) }
 
     var searchText by remember { mutableStateOf("") }
-    val itemList = remember { mutableStateListOf<PublicItemDto>() }
+    val itemList = remember { mutableStateListOf<ItemDto>() }
 
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -114,7 +114,7 @@ fun SearchPage(state: AppState) {
                             Text("*нет объявлений*")
                         } else {
                             for (item in itemList) {
-                                PublicItemCard(state, item)
+                                ItemCard(state, item)
                             }
                         }
                         Spacer(modifier = Modifier.height(20.dp))

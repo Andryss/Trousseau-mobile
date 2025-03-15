@@ -35,13 +35,14 @@ data class ItemDto(
     val media: List<ItemMediaDto>,
     val description: String?,
     var status: ItemStatus,
-)
+) {
+    companion object {
+        val EMPTY = ItemDto("", "", listOf(), "", ItemStatus.UNKNOWN)
+    }
+}
 
-data class PublicItemDto(
-    val id: String,
-    val title: String,
-    val media: List<ItemMediaDto>,
-    val description: String,
+data class ItemListResponse(
+    val items: List<ItemDto>,
 )
 
 val mapper = jacksonObjectMapper()

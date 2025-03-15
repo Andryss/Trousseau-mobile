@@ -31,7 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.PublicItemDto
+import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.getItem
 import ru.andryss.trousseau.mobile.client.updateItemStatus
@@ -46,7 +46,7 @@ fun ItemPage(state: AppState, itemId: String) {
     var getItemLoading by remember { mutableStateOf(false) }
     var blockItemLoading by remember { mutableStateOf(false) }
 
-    var item by remember { mutableStateOf(PublicItemDto("", "", listOf(), "")) }
+    var item by remember { mutableStateOf(ItemDto.EMPTY) }
     val imageUris = remember { mutableStateListOf<Uri>() }
 
     val showAlert = remember { mutableStateOf(false) }
@@ -114,13 +114,13 @@ fun ItemPage(state: AppState, itemId: String) {
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text(
-                        text = item.title,
+                        text = item.title ?: "",
                         modifier = Modifier.padding(horizontal = 15.dp),
                         style = MaterialTheme.typography.titleLarge
                     )
                     ImagePager(images = imageUris)
                     Text(
-                        text = item.description,
+                        text = item.description ?: "",
                         modifier = Modifier.padding(horizontal = 10.dp),
                         style = MaterialTheme.typography.bodyLarge
                     )

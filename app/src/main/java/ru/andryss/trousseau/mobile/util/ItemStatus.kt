@@ -10,5 +10,6 @@ enum class ItemStatus(
     READY("ГОТОВО К ПУБЛИКАЦИИ", Color.Yellow),
     PUBLISHED("ОПУБЛИКОВАНО", Color.Green),
     BOOKED("ЗАБРОНИРОВАНО", Color.Cyan),
+    ARCHIVED("В АРХИВЕ", Color.Magenta),
     UNKNOWN("???", Color.Red)
 }

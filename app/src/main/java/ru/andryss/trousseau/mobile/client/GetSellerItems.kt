@@ -4,10 +4,6 @@ import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 
-data class GetItemsResponse(
-    val items: List<ItemDto>,
-)
-
 fun AppState.getSellerItems(
     onSuccess: (items: List<ItemDto>) -> Unit,
     onError: (error: String) -> Unit,
@@ -16,7 +12,7 @@ fun AppState.getSellerItems(
     httpRequest(
         "GET",
         "/seller/items",
-        callbackObj<GetItemsResponse>(
+        callbackObj<ItemListResponse>(
             onSuccess = {
                 Log.i(TAG, "Got ${it.items.size} items")
                 onSuccess(it.items)

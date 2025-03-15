@@ -17,12 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
-import ru.andryss.trousseau.mobile.client.PublicItemDto
 import ru.andryss.trousseau.mobile.page.navigateItemPage
+import ru.andryss.trousseau.mobile.util.ItemStatus
 
 @Composable
-fun PublicItemCard(state: AppState, item: PublicItemDto) {
+fun ItemCard(state: AppState, item: ItemDto) {
 
     val imageUris = remember { item.media.map { it.href.toUri() } }
 
@@ -42,14 +43,14 @@ fun PublicItemCard(state: AppState, item: PublicItemDto) {
                         .padding(10.dp)
                 ) {
                     Text(
-                        text = item.title,
+                        text = item.title ?: "",
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = item.description,
+                        text = item.description ?: "",
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -63,8 +64,8 @@ fun PublicItemCard(state: AppState, item: PublicItemDto) {
 
 @Preview
 @Composable
-fun PublicItemCardPreview() {
-    val item = PublicItemDto(
+fun ItemCardPreview() {
+    val item = ItemDto(
         id = "1234-4321-1234",
         title = "TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE",
         media = listOf(
@@ -72,7 +73,8 @@ fun PublicItemCardPreview() {
             ItemMediaDto(id = "234-432", href = "https://images.wallpaperscraft.ru/image/single/gory_ozero_vershiny_129263_800x1280.jpg"),
             ItemMediaDto(id = "345-543", href = "https://static10.tgstat.ru/channels/_0/2d/2df0da7fd2de748e028bdd78ea3845b9.jpg"),
         ),
-        description = "description description description description description description description description description description description description description"
+        description = "description description description description description description description description description description description description description",
+        status = ItemStatus.PUBLISHED,
     )
-    PublicItemCard(AppState(), item)
+    ItemCard(AppState(), item)
 }

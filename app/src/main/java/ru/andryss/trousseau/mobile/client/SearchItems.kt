@@ -8,13 +8,9 @@ data class SearchInfo(
     val text: String,
 )
 
-data class SearchItemsResponse(
-    val items: List<PublicItemDto>,
-)
-
 fun AppState.searchItems(
     search: SearchInfo,
-    onSuccess: (items: List<PublicItemDto>) -> Unit,
+    onSuccess: (items: List<ItemDto>) -> Unit,
     onError: (error: String) -> Unit,
 ) {
     Log.i(TAG, "Send search items request")
@@ -22,7 +18,7 @@ fun AppState.searchItems(
         "POST",
         "/public/items:search",
         mapper.writeValueAsString(search),
-        callbackObj<SearchItemsResponse>(
+        callbackObj<ItemListResponse>(
             onSuccess = {
                 Log.i(TAG, "Found ${it.items.size} items")
                 onSuccess(it.items)

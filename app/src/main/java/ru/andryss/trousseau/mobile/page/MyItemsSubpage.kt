@@ -12,14 +12,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +33,7 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.createSellerItem
 import ru.andryss.trousseau.mobile.client.getSellerItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
+import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.SellerItemCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +45,7 @@ fun MyItemsSubpage(state: AppState) {
     var getItemsLoading by remember { mutableStateOf(false) }
     var createItemLoading by remember { mutableStateOf(false) }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getItems() {
@@ -57,9 +55,9 @@ fun MyItemsSubpage(state: AppState) {
                 itemList.replaceAllFrom(it)
                 getItemsLoading = false
             },
-            onError = {
-                alertText = it
-                showAlert = true
+            onError = { error ->
+                alertText = error
+                showAlert.value = true
                 getItemsLoading = false
             }
         )
@@ -72,9 +70,9 @@ fun MyItemsSubpage(state: AppState) {
                 state.navigateSellerItemEditPage(it.id)
                 createItemLoading = false
             },
-            onError = {
-                alertText = it
-                showAlert = true
+            onError = { error ->
+                alertText = error
+                showAlert.value = true
                 createItemLoading = false
             }
         )
@@ -84,8 +82,9 @@ fun MyItemsSubpage(state: AppState) {
         getItems()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
     ) {
         PullToRefreshBox(
             isRefreshing = getItemsLoading,
@@ -126,19 +125,6 @@ fun MyItemsSubpage(state: AppState) {
                     Icon(Icons.Filled.Add, "Create new icon button")
                 }
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

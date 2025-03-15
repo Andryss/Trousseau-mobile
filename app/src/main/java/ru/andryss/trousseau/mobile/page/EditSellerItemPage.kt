@@ -13,15 +13,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -46,6 +43,7 @@ import ru.andryss.trousseau.mobile.client.updateSellerItem
 import ru.andryss.trousseau.mobile.client.uploadMedia
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
+import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.MultipleImagePicker
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +63,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     var description by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(ItemStatus.UNKNOWN) }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getTitle() = title.trim()
@@ -103,7 +101,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 loadingVar.value = false
             }
         )
@@ -134,7 +132,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 },
                 onError = { error ->
                     alertText = error
-                    showAlert = true
+                    showAlert.value = true
                 }
             )
         }
@@ -162,7 +160,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 getItemLoading = false
             }
         )
@@ -186,7 +184,10 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
         }
     }
 
-    Box {
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -243,19 +244,6 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                     Text(text = "Сохранить")
                 }
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

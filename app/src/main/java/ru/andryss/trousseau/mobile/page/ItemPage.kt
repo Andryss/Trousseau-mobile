@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +36,7 @@ import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.getItem
 import ru.andryss.trousseau.mobile.client.updateItemStatus
 import ru.andryss.trousseau.mobile.util.ItemStatus
+import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.ImagePager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +49,7 @@ fun ItemPage(state: AppState, itemId: String) {
     var item by remember { mutableStateOf(PublicItemDto("", "", listOf(), "")) }
     val imageUris = remember { mutableStateListOf<Uri>() }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun onBlock() {
@@ -65,7 +63,7 @@ fun ItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 blockItemLoading = false
             }
         )
@@ -82,13 +80,16 @@ fun ItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 getItemLoading = false
             }
         )
     }
 
-    Box {
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -136,19 +137,6 @@ fun ItemPage(state: AppState, itemId: String) {
                     Text(text = "Забронировать")
                 }
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

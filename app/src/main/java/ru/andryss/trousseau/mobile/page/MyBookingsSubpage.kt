@@ -1,7 +1,6 @@
 package ru.andryss.trousseau.mobile.page
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,13 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +26,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.PublicItemDto
 import ru.andryss.trousseau.mobile.client.getBookings
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
+import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.PublicItemCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +37,7 @@ fun MyBookingsSubpage(state: AppState) {
 
     var getBookingsLoading by remember { mutableStateOf(false) }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getBookings() {
@@ -54,7 +49,7 @@ fun MyBookingsSubpage(state: AppState) {
             },
             onError = {
                 alertText = it
-                showAlert = true
+                showAlert.value = true
                 getBookingsLoading = false
             }
         )
@@ -64,8 +59,9 @@ fun MyBookingsSubpage(state: AppState) {
         getBookings()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
     ) {
         PullToRefreshBox(
             isRefreshing = getBookingsLoading,
@@ -89,19 +85,6 @@ fun MyBookingsSubpage(state: AppState) {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

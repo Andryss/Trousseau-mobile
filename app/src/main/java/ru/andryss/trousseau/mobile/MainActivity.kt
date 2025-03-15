@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
 import ru.andryss.trousseau.mobile.page.MainPage
 import ru.andryss.trousseau.mobile.theme.TrousseauTheme
+import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_CONNECT_TIMEOUT
 import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_REQUEST_TIMEOUT
 import java.util.Properties
 import java.util.concurrent.TimeUnit
@@ -28,7 +29,8 @@ fun AppState.configureWith(applicationContext: Context) {
     }
 
     httpClient = OkHttpClient.Builder()
-        .callTimeout(properties.getProperty(TROUSSEAU_REQUEST_TIMEOUT, "30").toLong(), TimeUnit.SECONDS)
+        .connectTimeout(properties.getProperty(TROUSSEAU_CONNECT_TIMEOUT, "5").toLong(), TimeUnit.SECONDS)
+        .callTimeout(properties.getProperty(TROUSSEAU_REQUEST_TIMEOUT, "10").toLong(), TimeUnit.SECONDS)
         .build()
 }
 

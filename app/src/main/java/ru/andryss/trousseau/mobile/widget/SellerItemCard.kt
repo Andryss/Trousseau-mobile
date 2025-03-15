@@ -1,7 +1,6 @@
 package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,10 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Upload
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -21,7 +18,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -51,7 +47,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
 
     var menuExpanded by remember { mutableStateOf(false) }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     var status by remember { mutableStateOf(item.status) }
@@ -77,7 +73,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 loadingVar.value = false
                 menuExpanded = false
             }
@@ -90,7 +86,10 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     fun doItemUnpublish() =
         doItemStatusChange(unpublishItemLoading, ItemStatus.READY)
 
-    Box {
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -172,19 +171,6 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                     )
                 }
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

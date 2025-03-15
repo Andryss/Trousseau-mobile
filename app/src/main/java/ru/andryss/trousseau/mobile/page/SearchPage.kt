@@ -13,14 +13,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +33,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.PublicItemDto
 import ru.andryss.trousseau.mobile.client.SearchInfo
 import ru.andryss.trousseau.mobile.client.searchItems
+import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.PublicItemCard
@@ -49,7 +47,7 @@ fun SearchPage(state: AppState) {
     var searchText by remember { mutableStateOf("") }
     val itemList = remember { mutableStateListOf<PublicItemDto>() }
 
-    var showAlert by remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun doSearch() {
@@ -63,13 +61,16 @@ fun SearchPage(state: AppState) {
             },
             onError = { error ->
                 alertText = error
-                showAlert = true
+                showAlert.value = true
                 searchItemsLoading = false
             }
         )
     }
 
-    Box {
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
+    ) {
         Scaffold(
             topBar = { TopBar() },
             bottomBar = { BottomBar(state, BottomPage.SEARCH) }
@@ -120,19 +121,6 @@ fun SearchPage(state: AppState) {
                     }
                 }
             }
-        }
-
-        if (showAlert) {
-            AlertDialog(
-                onDismissRequest = { showAlert = false },
-                confirmButton = {
-                    TextButton(onClick = { showAlert = false }) {
-                        Text("ОК")
-                    }
-                },
-                icon = { Icon(Icons.Filled.Error, "Error icon") },
-                text = { Text(alertText) }
-            )
         }
     }
 }

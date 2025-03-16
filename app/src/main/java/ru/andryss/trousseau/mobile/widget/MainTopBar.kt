@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun MainTopBar() {
     TopAppBar(
         title = { Text("ПРИДАНОЕ") }
     )

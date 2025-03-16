@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.page.navigateProfilePage
+import ru.andryss.trousseau.mobile.page.navigateProfileBookingsPage
 import ru.andryss.trousseau.mobile.page.navigateSearchPage
 
 enum class BottomPage(
@@ -26,7 +26,7 @@ enum class BottomPage(
     PROFILE(
         Icons.Default.AccountCircle,
         "Профиль",
-        { it.navigateProfilePage() }
+        { it.navigateProfileBookingsPage() }
     )
 }
 

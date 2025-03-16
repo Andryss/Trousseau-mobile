@@ -39,6 +39,7 @@ import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
+import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
 
 @Composable
@@ -53,12 +54,6 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     var alertText by remember { mutableStateOf("") }
 
     var status by remember { mutableStateOf(item.status) }
-
-    fun doItemEdit() {
-        // TODO: on card click -> show item preview (edit only from chip)
-        menuExpanded = false
-        state.navigateSellerItemEditPage(item.id)
-    }
 
     fun doItemStatusChange(
         loadingVar: MutableState<Boolean>,
@@ -102,7 +97,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
-                .clickable { doItemEdit() },
+                .clickable { state.navigateSellerItemPreviewPage(item.id) },
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
@@ -158,7 +153,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                                 if (status in listOf(ItemStatus.DRAFT, ItemStatus.READY)) {
                                     SellerItemCardDropDown(
                                         text = "Редактировать",
-                                        onClick = { doItemEdit() },
+                                        onClick = { state.navigateSellerItemEditPage(item.id) },
                                         icon = Icons.Default.Edit
                                     )
                                 }

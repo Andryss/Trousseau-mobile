@@ -19,13 +19,23 @@ import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
-import ru.andryss.trousseau.mobile.widget.TopBar
+import ru.andryss.trousseau.mobile.widget.MainTopBar
 
 enum class ProfileTab(
+    val path: String,
     val title: String
 ) {
-    BOOKINGS("Мои бронирования"),
-    ITEMS("Мои объявления")
+    BOOKINGS("bookings", "Мои бронирования"),
+    ITEMS("items", "Мои объявления");
+
+    companion object {
+        fun fromPath(path: String?): ProfileTab? {
+            entries.forEach {
+                if (it.path == path) return it
+            }
+            return null
+        }
+    }
 }
 
 @Composable
@@ -34,7 +44,7 @@ fun ProfilePage(state: AppState, selectedTab: ProfileTab = ProfileTab.BOOKINGS) 
     var selectedIndex by remember { mutableIntStateOf(selectedTab.ordinal) }
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { MainTopBar() },
         bottomBar = { BottomBar(state, BottomPage.PROFILE) },
     ) { padding ->
         Box(

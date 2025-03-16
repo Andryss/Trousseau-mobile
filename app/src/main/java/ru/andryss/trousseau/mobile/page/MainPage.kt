@@ -14,12 +14,20 @@ fun AppState.navigateItemPage(itemId: String) {
     navController.navigate("public/items/$itemId")
 }
 
-fun AppState.navigateProfilePage() {
-    navController.navigate("profile")
+fun AppState.navigateProfileBookingsPage() {
+    navController.navigate("profile/bookings")
+}
+
+fun AppState.navigateProfileItemsPage() {
+    navController.navigate("profile/items")
 }
 
 fun AppState.navigateSellerItemEditPage(itemId: String) {
     navController.navigate("seller/items/$itemId")
+}
+
+fun AppState.navigateSellerItemPreviewPage(itemId: String) {
+    navController.navigate("seller/items/$itemId/preview")
 }
 
 @Composable
@@ -43,13 +51,25 @@ fun MainPage(state: AppState) {
                     )
                 }
             }
-            composable("profile") {
-                ProfilePage(state = state)
+            composable("profile/{tab}") {
+                val tab = it.arguments?.getString("tab")
+                ProfileTab.fromPath(tab)?.let { selected ->
+                    ProfilePage(state = state, selectedTab = selected)
+                }
             }
             composable("seller/items/{itemId}") {
                 val itemId = it.arguments?.getString("itemId")
                 itemId?.let {
                     EditSellerItemPage(
+                        state = state,
+                        itemId = itemId
+                    )
+                }
+            }
+            composable("seller/items/{itemId}/preview") {
+                val itemId = it.arguments?.getString("itemId")
+                itemId?.let {
+                    ItemPreviewPage(
                         state = state,
                         itemId = itemId
                     )

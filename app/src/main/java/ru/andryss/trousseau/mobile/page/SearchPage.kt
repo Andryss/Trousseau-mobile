@@ -37,7 +37,7 @@ import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
-import ru.andryss.trousseau.mobile.widget.TopBar
+import ru.andryss.trousseau.mobile.widget.MainTopBar
 
 @Composable
 fun SearchPage(state: AppState) {
@@ -72,7 +72,7 @@ fun SearchPage(state: AppState) {
         text = alertText
     ) {
         Scaffold(
-            topBar = { TopBar() },
+            topBar = { MainTopBar() },
             bottomBar = { BottomBar(state, BottomPage.SEARCH) }
         ) { padding ->
             Box(
@@ -105,8 +105,7 @@ fun SearchPage(state: AppState) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
-                            .padding(top = 10.dp, bottom = 50.dp),
+                            .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -117,7 +116,7 @@ fun SearchPage(state: AppState) {
                                 ItemCard(state, item)
                             }
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(70.dp))
                     }
                 }
             }

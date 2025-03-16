@@ -19,11 +19,13 @@ import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
+import ru.andryss.trousseau.mobile.page.ItemPageCallback
 import ru.andryss.trousseau.mobile.page.navigateItemPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
+import ru.andryss.trousseau.mobile.util.Strings
 
 @Composable
-fun ItemCard(state: AppState, item: ItemDto) {
+fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
 
     val imageUris = remember { item.media.map { it.href.toUri() } }
 
@@ -32,7 +34,7 @@ fun ItemCard(state: AppState, item: ItemDto) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
-                .clickable { state.navigateItemPage(item.id) },
+                .clickable { state.navigateItemPage(item.id, callback) },
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
@@ -43,14 +45,14 @@ fun ItemCard(state: AppState, item: ItemDto) {
                         .padding(10.dp)
                 ) {
                     Text(
-                        text = item.title ?: "",
+                        text = item.title ?: Strings.EMPTY_ITEM_TITLE,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = item.description ?: "",
+                        text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -76,5 +78,5 @@ fun ItemCardPreview() {
         description = "description description description description description description description description description description description description description",
         status = ItemStatus.PUBLISHED,
     )
-    ItemCard(AppState(), item)
+    ItemCard(AppState(), item, ItemPageCallback.SEARCH)
 }

@@ -24,7 +24,7 @@ import ru.andryss.trousseau.mobile.widget.ItemInfo
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
 @Composable
-fun ItemPage(state: AppState, itemId: String) {
+fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
 
     var getItemLoading by remember { mutableStateOf(false) }
     val bookItemLoading = remember { mutableStateOf(false) }
@@ -84,8 +84,12 @@ fun ItemPage(state: AppState, itemId: String) {
         Scaffold(
             topBar = {
                 ReturnBackTopBar(
-                    /* TODO: navigate on source */
-                    onReturn = { state.navigateSearchPage() }
+                    onReturn = {
+                        when (callback) {
+                            ItemPageCallback.SEARCH -> state.navigateSearchPage()
+                            ItemPageCallback.BOOKINGS -> state.navigateProfileBookingsPage()
+                        }
+                    }
                 )
             }
         ) { padding ->
@@ -110,6 +114,22 @@ fun ItemPage(state: AppState, itemId: String) {
                     )
                 }
             }
+        }
+    }
+}
+
+enum class ItemPageCallback(
+    val path: String
+) {
+    SEARCH("search"),
+    BOOKINGS("bookings");
+
+    companion object {
+        fun fromPath(path: String): ItemPageCallback {
+            entries.forEach {
+                if (it.path == path) return it
+            }
+            throw IllegalArgumentException("Unknown callback path $path")
         }
     }
 }

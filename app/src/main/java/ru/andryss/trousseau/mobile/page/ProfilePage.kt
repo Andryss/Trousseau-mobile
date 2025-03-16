@@ -21,23 +21,6 @@ import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.MainTopBar
 
-enum class ProfileTab(
-    val path: String,
-    val title: String
-) {
-    BOOKINGS("bookings", "Мои бронирования"),
-    ITEMS("items", "Мои объявления");
-
-    companion object {
-        fun fromPath(path: String?): ProfileTab? {
-            entries.forEach {
-                if (it.path == path) return it
-            }
-            return null
-        }
-    }
-}
-
 @Composable
 fun ProfilePage(state: AppState, selectedTab: ProfileTab = ProfileTab.BOOKINGS) {
 
@@ -76,6 +59,23 @@ fun ProfilePage(state: AppState, selectedTab: ProfileTab = ProfileTab.BOOKINGS) 
                     1 -> MyItemsSubpage(state)
                 }
             }
+        }
+    }
+}
+
+enum class ProfileTab(
+    val path: String,
+    val title: String
+) {
+    BOOKINGS("bookings", "Мои бронирования"),
+    ITEMS("items", "Мои объявления");
+
+    companion object {
+        fun fromPath(path: String): ProfileTab {
+            entries.forEach {
+                if (it.path == path) return it
+            }
+            throw IllegalArgumentException("Unknown profile tab path $path")
         }
     }
 }

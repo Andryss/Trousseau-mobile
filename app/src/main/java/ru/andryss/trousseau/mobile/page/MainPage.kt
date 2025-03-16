@@ -1,6 +1,7 @@
 package ru.andryss.trousseau.mobile.page
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -10,8 +11,8 @@ fun AppState.navigateSearchPage() {
     navController.navigate("search")
 }
 
-fun AppState.navigateItemPage(itemId: String) {
-    navController.navigate("public/items/$itemId")
+fun AppState.navigateItemPage(itemId: String, callback: ItemPageCallback) {
+    navController.navigate("public/items/$itemId?callback=${callback.path}")
 }
 
 fun AppState.navigateProfileBookingsPage() {
@@ -42,39 +43,40 @@ fun MainPage(state: AppState) {
             composable("search") {
                 SearchPage(state = state)
             }
-            composable("public/items/{itemId}") {
-                val itemId = it.arguments?.getString("itemId")
-                itemId?.let {
-                    ItemPage(
-                        state = state,
-                        itemId = itemId
-                    )
-                }
+            composable("public/items/{itemId}?callback={callbackPage}") {
+                val itemId = it.string("itemId")
+                val callbackPage = ItemPageCallback.fromPath(it.string("callbackPage"))
+                ItemPage(
+                    state = state,
+                    itemId = itemId,
+                    callback = callbackPage
+                )
             }
             composable("profile/{tab}") {
-                val tab = it.arguments?.getString("tab")
-                ProfileTab.fromPath(tab)?.let { selected ->
-                    ProfilePage(state = state, selectedTab = selected)
-                }
+                val tab = ProfileTab.fromPath(it.string("tab"))
+                ProfilePage(
+                    state = state,
+                    selectedTab = tab
+                )
             }
             composable("seller/items/{itemId}") {
-                val itemId = it.arguments?.getString("itemId")
-                itemId?.let {
-                    EditSellerItemPage(
-                        state = state,
-                        itemId = itemId
-                    )
-                }
+                val itemId = it.string("itemId")
+                EditSellerItemPage(
+                    state = state,
+                    itemId = itemId
+                )
             }
             composable("seller/items/{itemId}/preview") {
-                val itemId = it.arguments?.getString("itemId")
-                itemId?.let {
-                    ItemPreviewPage(
-                        state = state,
-                        itemId = itemId
-                    )
-                }
+                val itemId = it.string("itemId")
+                ItemPreviewPage(
+                    state = state,
+                    itemId = itemId
+                )
             }
         }
     )
 }
+
+private fun NavBackStackEntry.string(key: String) =
+    arguments?.getString(key)
+        ?: throw IllegalStateException("$key is not in arguments")

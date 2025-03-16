@@ -105,7 +105,8 @@ fun SearchPage(state: AppState) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .verticalScroll(rememberScrollState()),
+                            .verticalScroll(rememberScrollState())
+                            .padding(vertical = 10.dp),
                         verticalArrangement = Arrangement.spacedBy(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -113,7 +114,7 @@ fun SearchPage(state: AppState) {
                             Text("*нет объявлений*")
                         } else {
                             for (item in itemList) {
-                                ItemCard(state, item)
+                                ItemCard(state, item, ItemPageCallback.SEARCH)
                             }
                         }
                         Spacer(modifier = Modifier.height(70.dp))

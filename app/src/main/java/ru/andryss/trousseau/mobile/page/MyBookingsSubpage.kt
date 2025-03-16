@@ -80,7 +80,7 @@ fun MyBookingsSubpage(state: AppState) {
                     Text("*нет бронирований*")
                 } else {
                     for (item in bookingsList) {
-                        ItemCard(state, item)
+                        ItemCard(state, item, ItemPageCallback.BOOKINGS)
                     }
                 }
                 Spacer(modifier = Modifier.height(20.dp))

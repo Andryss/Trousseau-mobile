@@ -41,6 +41,7 @@ import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
+import ru.andryss.trousseau.mobile.util.Strings
 
 @Composable
 fun SellerItemCard(state: AppState, item: ItemDto) {
@@ -171,14 +172,14 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                         .padding(10.dp)
                 ) {
                     Text(
-                        text = item.title ?: "*пустой заголовок*",
+                        text = item.title ?: Strings.EMPTY_ITEM_TITLE,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = item.description ?: "*пустое описание*",
+                        text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,

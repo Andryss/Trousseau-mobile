@@ -183,8 +183,8 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     ) {
         Scaffold(
             topBar = {
-                // TODO: add heading "Изменение объявления"
                 ReturnBackTopBar(
+                    title = "Редактирование объявления",
                     onReturn = { state.navigateProfileItemsPage() }
                 )
             }

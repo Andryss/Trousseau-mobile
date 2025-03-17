@@ -113,6 +113,14 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                         action = { onUnbook() }
                     )
                 }
+
+                if (item.status == ItemStatus.ARCHIVED) {
+                    ActionButton(
+                        text = "Объявление в архиве",
+                        action = { },
+                        enabled = false
+                    )
+                }
             }
         }
     }

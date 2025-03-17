@@ -13,14 +13,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BoxScope.ActionButton(
     text: String,
-    action: () -> Unit
+    action: () -> Unit,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = action,
         modifier = Modifier
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
-            .padding(horizontal = 10.dp, vertical = 20.dp)
+            .padding(horizontal = 10.dp, vertical = 20.dp),
+        enabled = enabled,
     ) {
         Text(text = text)
     }

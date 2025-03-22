@@ -35,6 +35,7 @@ data class ItemDto(
     val media: List<ItemMediaDto>,
     val description: String?,
     var status: ItemStatus,
+    var isFavourite: Boolean = false,
 ) {
     companion object {
         val EMPTY = ItemDto("", "", listOf(), "", ItemStatus.UNKNOWN)

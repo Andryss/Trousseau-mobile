@@ -87,6 +87,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                     onReturn = {
                         when (callback) {
                             ItemPageCallback.SEARCH -> state.navigateSearchPage()
+                            ItemPageCallback.FAVOURITES -> state.navigateFavouritesPage()
                             ItemPageCallback.BOOKINGS -> state.navigateProfileBookingsPage()
                         }
                     }
@@ -130,6 +131,7 @@ enum class ItemPageCallback(
     val path: String
 ) {
     SEARCH("search"),
+    FAVOURITES("favourites"),
     BOOKINGS("bookings");
 
     companion object {

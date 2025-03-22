@@ -33,6 +33,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.SearchInfo
 import ru.andryss.trousseau.mobile.client.searchItems
+import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
@@ -55,8 +56,7 @@ fun SearchPage(state: AppState) {
         state.searchItems(
             SearchInfo(searchText),
             onSuccess = { items ->
-                itemList.clear()
-                itemList.addAll(items)
+                itemList.replaceAllFrom(items)
                 searchItemsLoading = false
             },
             onError = { error ->

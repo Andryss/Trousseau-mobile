@@ -31,6 +31,10 @@ fun AppState.navigateSellerItemPreviewPage(itemId: String) {
     navController.navigate("seller/items/$itemId/preview")
 }
 
+fun AppState.navigateFavouritesPage() {
+    navController.navigate("favourites")
+}
+
 @Composable
 fun MainPage(state: AppState) {
     val navController = rememberNavController()
@@ -51,6 +55,9 @@ fun MainPage(state: AppState) {
                     itemId = itemId,
                     callback = callbackPage
                 )
+            }
+            composable("favourites") {
+                FavouritesPage(state = state)
             }
             composable("profile/{tab}") {
                 val tab = ProfileTab.fromPath(it.string("tab"))

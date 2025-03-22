@@ -1,17 +1,27 @@
 package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +29,7 @@ import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
+import ru.andryss.trousseau.mobile.client.changeItemFavourite
 import ru.andryss.trousseau.mobile.page.ItemPageCallback
 import ru.andryss.trousseau.mobile.page.navigateItemPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
@@ -28,8 +39,29 @@ import ru.andryss.trousseau.mobile.util.Strings
 fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
 
     val imageUris = remember { item.media.map { it.href.toUri() } }
+    var isFavourite by remember { mutableStateOf(item.isFavourite) }
 
-    Box {
+    val showAlert = remember { mutableStateOf(false) }
+    var alertText by remember { mutableStateOf("") }
+
+    fun onChangeFavourite() {
+        state.changeItemFavourite(
+            itemId = item.id,
+            isFavourite = !isFavourite,
+            onSuccess = {
+                isFavourite = !isFavourite
+            },
+            onError = { error ->
+                alertText = error
+                showAlert.value = true
+            }
+        )
+    }
+
+    AlertWrapper(
+        isShown = showAlert,
+        text = alertText
+    ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -38,7 +70,32 @@ fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
-                ImagePager(images = imageUris)
+                ImagePager(
+                    images = imageUris,
+                    content = {
+                        IconButton(
+                            onClick = { onChangeFavourite() },
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(10.dp)
+                        ) {
+                            if (isFavourite) {
+                                Icon(
+                                    imageVector = Icons.Default.Favorite,
+                                    contentDescription = "Favourite",
+                                    modifier = Modifier.size(30.dp),
+                                    tint = Color.Red
+                                )
+                            }
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "Favourite border",
+                                modifier = Modifier.size(30.dp),
+                                tint = Color.Black
+                            )
+                        }
+                    }
+                )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

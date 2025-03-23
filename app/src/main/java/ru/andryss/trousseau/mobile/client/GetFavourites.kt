@@ -11,7 +11,7 @@ fun AppState.getFavourites(
     Log.i(TAG, "Send get favourites request")
     httpRequest(
         "GET",
-        "/public/favourites",
+        "/public/items/favourites",
         callbackObj<ItemListResponse>(
             onSuccess = {
                 Log.i(TAG, "Got ${it.items.size} items")

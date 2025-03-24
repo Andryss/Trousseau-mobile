@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -13,6 +14,7 @@ import okhttp3.ResponseBody
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import java.io.IOException
+import java.util.Random
 
 const val IO_EXCEPTION_ERROR_MESSAGE = "Произошла непредвиденная ошибка, повторите попытку позже"
 const val RESPONSE_PARSE_ERROR_MESSAGE = "Произошла ошибка чтения, свяжитесь с поддержкой"
@@ -58,6 +60,7 @@ inline fun <reified T> callbackObj(
         val result = mapper.readValue<T>(response.bytes())
         Log.i(TAG, "Got response $result")
         callbackScope.launch {
+            uxDelay()
             onSuccess(result)
         }
     },
@@ -69,12 +72,17 @@ inline fun noResponseCallbackObj(
     crossinline onError: (error: String) -> Unit
 ) = commonCallbackObj(
     onSuccess = {
+        Log.i(TAG, "Got empty response")
         callbackScope.launch {
+            uxDelay()
             onSuccess()
         }
     },
     onError = onError
 )
+
+suspend fun uxDelay() =
+    delay((800 + 200 * Random().nextGaussian()).toLong())
 
 inline fun commonCallbackObj(
     crossinline onSuccess: (response: ResponseBody) -> Unit,

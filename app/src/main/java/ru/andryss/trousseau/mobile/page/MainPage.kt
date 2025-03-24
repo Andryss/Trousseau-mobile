@@ -7,6 +7,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.andryss.trousseau.mobile.AppState
 
+fun AppState.navigateHomePage() {
+    navController.navigate("home")
+}
+
 fun AppState.navigateSearchPage() {
     navController.navigate("search")
 }
@@ -42,8 +46,11 @@ fun MainPage(state: AppState) {
 
     NavHost(
         navController = navController,
-        startDestination = "search",
+        startDestination = "home",
         builder = {
+            composable("home") {
+                HomePage(state = state)
+            }
             composable("search") {
                 SearchPage(state = state)
             }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -84,14 +85,18 @@ fun FavouritesPage(state: AppState) {
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (favourites.isEmpty()) {
-                        Text("*нет избранного*")
+                    if (getFavouritesLoading) {
+                        CircularProgressIndicator()
                     } else {
-                        for (item in favourites) {
-                            ItemCard(state, item, ItemPageCallback.FAVOURITES)
+                        if (favourites.isEmpty()) {
+                            Text("*нет избранного*")
+                        } else {
+                            for (item in favourites) {
+                                ItemCard(state, item, ItemPageCallback.FAVOURITES)
+                            }
                         }
+                        Spacer(modifier = Modifier.height(70.dp))
                     }
-                    Spacer(modifier = Modifier.height(70.dp))
                 }
             }
         }

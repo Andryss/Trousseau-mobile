@@ -86,6 +86,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                 ReturnBackTopBar(
                     onReturn = {
                         when (callback) {
+                            ItemPageCallback.HOME -> state.navigateHomePage()
                             ItemPageCallback.SEARCH -> state.navigateSearchPage()
                             ItemPageCallback.FAVOURITES -> state.navigateFavouritesPage()
                             ItemPageCallback.BOOKINGS -> state.navigateProfileBookingsPage()
@@ -130,6 +131,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
 enum class ItemPageCallback(
     val path: String
 ) {
+    HOME("home"),
     SEARCH("search"),
     FAVOURITES("favourites"),
     BOOKINGS("bookings");

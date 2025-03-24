@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -86,9 +85,7 @@ fun MyItemsSubpage(state: AppState) {
         isShown = showAlert,
         text = alertText
     ) {
-        PullToRefreshBox(
-            isRefreshing = getItemsLoading,
-            onRefresh = ::getItems,
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
@@ -99,14 +96,18 @@ fun MyItemsSubpage(state: AppState) {
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (itemList.isEmpty()) {
-                    Text("*нет объявлений*")
+                if (getItemsLoading) {
+                    CircularProgressIndicator()
                 } else {
-                    for (item in itemList) {
-                        SellerItemCard(state, item)
+                    if (itemList.isEmpty()) {
+                        Text("*нет объявлений*")
+                    } else {
+                        for (item in itemList) {
+                            SellerItemCard(state, item)
+                        }
                     }
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
-                Spacer(modifier = Modifier.height(20.dp))
             }
         }
 

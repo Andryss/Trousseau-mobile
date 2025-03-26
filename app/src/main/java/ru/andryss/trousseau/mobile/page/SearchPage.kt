@@ -31,8 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.FilterInfo
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.SearchInfo
+import ru.andryss.trousseau.mobile.client.SortInfo
+import ru.andryss.trousseau.mobile.client.SortOrder
 import ru.andryss.trousseau.mobile.client.searchItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -55,7 +58,16 @@ fun SearchPage(state: AppState) {
     fun doSearch() {
         searchItemsLoading = true
         state.searchItems(
-            SearchInfo(searchText),
+            SearchInfo(
+                text = searchText,
+                sort = SortInfo(
+                    field = "created_at",
+                    order = SortOrder.DESC,
+                ),
+                filter = FilterInfo(
+                    conditions = listOf()
+                ),
+            ),
             onSuccess = { items ->
                 itemList.replaceAllFrom(items)
                 searchItemsLoading = false

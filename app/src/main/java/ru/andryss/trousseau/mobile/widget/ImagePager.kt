@@ -2,6 +2,7 @@ package ru.andryss.trousseau.mobile.widget
 
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -51,25 +52,28 @@ fun ImagePager(
             ) { page ->
                 ImageWithBlurredFit(images[page])
             }
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                repeat(pagerState.pageCount) { iteration ->
-                    val color = MaterialTheme.colorScheme.run {
-                        if (pagerState.currentPage == iteration) primary else onPrimary
+            if (images.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    repeat(pagerState.pageCount) { iteration ->
+                        val color = MaterialTheme.colorScheme.run {
+                            if (pagerState.currentPage == iteration) primary else onPrimary
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .clip(CircleShape)
+                                .background(color)
+                                .border(2.dp, MaterialTheme.colorScheme.secondary, CircleShape)
+                                .size(16.dp)
+                        )
                     }
-                    Box(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                            .size(16.dp)
-                    )
                 }
             }
         }

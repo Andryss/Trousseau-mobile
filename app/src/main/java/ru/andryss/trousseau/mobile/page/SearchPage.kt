@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.FilterInfo
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.PageInfo
 import ru.andryss.trousseau.mobile.client.SearchInfo
+import ru.andryss.trousseau.mobile.client.SortField
 import ru.andryss.trousseau.mobile.client.SortInfo
 import ru.andryss.trousseau.mobile.client.SortOrder
 import ru.andryss.trousseau.mobile.client.searchItems
@@ -61,11 +63,15 @@ fun SearchPage(state: AppState) {
             SearchInfo(
                 text = searchText,
                 sort = SortInfo(
-                    field = "created_at",
+                    field = SortField.CREATED_AT,
                     order = SortOrder.DESC,
                 ),
                 filter = FilterInfo(
                     conditions = listOf()
+                ),
+                page = PageInfo(
+                    size = 100,
+                    token = null
                 ),
             ),
             onSuccess = { items ->

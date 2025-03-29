@@ -47,12 +47,13 @@ import ru.andryss.trousseau.mobile.widget.MainTopBar
 fun HomePage(state: AppState) {
 
     val fetchSize = 4
+    val cache = remember { state.cache.homePageCache }
 
     var feedLoading by remember { mutableStateOf(false) }
     var refreshItemsLoading by remember { mutableStateOf(false) }
 
-    val feedList = remember { state.cache.feedItems }
-    val listState = rememberLazyListState()
+    val feedList = remember { cache.feedItems }
+    val listState = rememberLazyListState(cache.visibleItemIndex, cache.visibleItemOffset)
     var isStopFetching by remember { mutableStateOf(false) }
 
     val showAlert = remember { mutableStateOf(false) }
@@ -92,6 +93,7 @@ fun HomePage(state: AppState) {
 
     fun onRefresh() {
         refreshItemsLoading = true
+        isStopFetching = false
         feedList.clear()
         fetchNextBatch()
     }
@@ -100,6 +102,16 @@ fun HomePage(state: AppState) {
         if (feedList.isEmpty()) {
             fetchNextBatch()
         }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .collect { cache.visibleItemIndex = it }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemScrollOffset }
+            .collect { cache.visibleItemOffset = it }
     }
 
     LaunchedEffect(listState) {

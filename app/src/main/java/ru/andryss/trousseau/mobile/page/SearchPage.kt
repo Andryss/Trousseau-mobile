@@ -1,22 +1,34 @@
 package ru.andryss.trousseau.mobile.page
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -46,6 +58,21 @@ import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
 import ru.andryss.trousseau.mobile.widget.MainTopBar
 
+enum class SortingFilter(
+    val label: String,
+    val sortInfo: SortInfo
+) {
+    NEW_FIRST(
+        "сначала новые",
+        SortInfo(field = SortField.CREATED_AT, order = SortOrder.DESC)
+    ),
+    OLD_FIRST(
+        "сначала старые",
+        SortInfo(field = SortField.CREATED_AT, order = SortOrder.ASC)
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchPage(state: AppState) {
 
@@ -54,6 +81,10 @@ fun SearchPage(state: AppState) {
     var searchText by remember { mutableStateOf("") }
     val itemList = remember { mutableStateListOf<ItemDto>() }
 
+    var isFiltersExpanded by remember { mutableStateOf(false) }
+    var selectedSorting by remember { mutableStateOf(SortingFilter.NEW_FIRST) }
+    var isSortingExpanded by remember { mutableStateOf(false) }
+
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
@@ -61,11 +92,8 @@ fun SearchPage(state: AppState) {
         searchItemsLoading = true
         state.searchItems(
             SearchInfo(
-                text = searchText,
-                sort = SortInfo(
-                    field = SortField.CREATED_AT,
-                    order = SortOrder.DESC,
-                ),
+                text = searchText.trim(),
+                sort = selectedSorting.sortInfo,
                 filter = FilterInfo(
                     conditions = listOf()
                 ),
@@ -121,6 +149,77 @@ fun SearchPage(state: AppState) {
                             onSearch = { doSearch() }
                         )
                     )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { isFiltersExpanded = !isFiltersExpanded },
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Расширенный поиск")
+                            Icon(
+                                imageVector = Icons.Default.run {
+                                    if (isFiltersExpanded) ArrowDropUp else ArrowDropDown
+                                },
+                                contentDescription = null,
+                                modifier = Modifier.padding(10.dp)
+                            )
+                        }
+                        if (isFiltersExpanded) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("Сортировать")
+                                    ExposedDropdownMenuBox(
+                                        expanded = isSortingExpanded,
+                                        onExpandedChange = { isSortingExpanded = it }
+                                    ) {
+                                        TextField(
+                                            value = selectedSorting.label,
+                                            onValueChange = { },
+                                            modifier = Modifier
+                                                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                                .width(200.dp),
+                                            readOnly = true,
+                                            trailingIcon = {
+                                                ExposedDropdownMenuDefaults.TrailingIcon(
+                                                    expanded = isSortingExpanded
+                                                )
+                                            }
+                                        )
+                                        ExposedDropdownMenu(
+                                            expanded = isSortingExpanded,
+                                            onDismissRequest = { isSortingExpanded = false }
+                                        ) {
+                                            SortingFilter.entries.forEach { sort ->
+                                                DropdownMenuItem(
+                                                    text = { Text(sort.label) },
+                                                    onClick = {
+                                                        selectedSorting = sort
+                                                        isSortingExpanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        HorizontalDivider()
+                    }
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()

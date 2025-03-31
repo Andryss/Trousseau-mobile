@@ -52,7 +52,11 @@ fun BottomBar(state: AppState, page: BottomPage) {
                 icon = { Icon(entry.icon, null) },
                 label = { Text(entry.text) },
                 selected = (page == entry),
-                onClick = { entry.onClick(state) }
+                onClick = {
+                    if (page != entry) {
+                        entry.onClick(state)
+                    }
+                }
             )
         }
     }

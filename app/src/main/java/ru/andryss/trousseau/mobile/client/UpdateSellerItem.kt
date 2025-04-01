@@ -5,9 +5,10 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 
 data class UpdateItemInfo(
-    val title: String?,
-    val media: List<String>,
-    val description: String?,
+    val title: String? = null,
+    val media: List<String> = listOf(),
+    val description: String? = null,
+    val category: String? = null
 )
 
 fun AppState.updateSellerItem(

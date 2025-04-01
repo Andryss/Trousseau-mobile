@@ -31,16 +31,22 @@ data class ItemMediaDto(
     val href: String,
 )
 
+data class CategoryDto(
+    val id: String,
+    val name: String
+)
+
 data class ItemDto(
     val id: String,
-    val title: String?,
-    val media: List<ItemMediaDto>,
-    val description: String?,
     var status: ItemStatus,
+    val title: String? = null,
+    val media: List<ItemMediaDto> = listOf(),
+    val description: String? = null,
+    val category: CategoryDto? = null,
     var isFavourite: Boolean = false,
 ) {
     companion object {
-        val EMPTY = ItemDto("", "", listOf(), "", ItemStatus.UNKNOWN)
+        val EMPTY = ItemDto("", ItemStatus.UNKNOWN)
     }
 }
 

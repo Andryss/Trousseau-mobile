@@ -2,6 +2,8 @@ package ru.andryss.trousseau.mobile.page
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +30,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.delay
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.CategoryNode
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemInfo
 import ru.andryss.trousseau.mobile.client.getSellerItem
@@ -37,6 +40,7 @@ import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.ActionButton
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.CategorySelectorModal
 import ru.andryss.trousseau.mobile.widget.MultipleImagePicker
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
@@ -54,7 +58,10 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     val imageUris = remember { mutableStateListOf<Uri>() }
     val imageIds = remember { mutableStateListOf<String>() }
     var description by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf(CategoryNode.EMPTY) }
     var status by remember { mutableStateOf(ItemStatus.UNKNOWN) }
+
+    var showCategoryModal by remember { mutableStateOf(false) }
 
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -67,18 +74,23 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
         .replaceRepeatableWhitespace()
         .ifBlank { null }
 
+    fun getCategory() = category.id
+        .ifBlank { null }
+
     fun isMediaDiffers() = lastSavedMediaUris.size != imageUris.size
             || !lastSavedMediaUris.containsAll(imageUris)
 
     fun hasLocalChangesMade() = lastSavedState.title != getTitle()
             || lastSavedState.description != getDescription()
+            || lastSavedState.category?.id != getCategory()
             || isMediaDiffers()
 
     fun getItemInfo() =
         UpdateItemInfo(
             getTitle(),
             imageIds,
-            getDescription()
+            getDescription(),
+            getCategory(),
         )
 
     fun updateItemInternal(
@@ -146,6 +158,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 imageIds.replaceAllFrom(item.media.map { it.id })
                 imageUris.replaceAllFrom(item.media.map { it.href.toUri() })
                 description = item.description ?: ""
+                category = CategoryNode.fromDto(item.category)
                 status = item.status
                 lastSavedState = item
                 lastSavedMediaUris.replaceAllFrom(imageUris)
@@ -216,6 +229,25 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                         label = { Text(text = "Описание") },
                         minLines = 5
                     )
+                    TextField(
+                        value = category.name,
+                        onValueChange = { },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        label = { Text(text = "Категория") },
+                        readOnly = true,
+                        interactionSource = remember { MutableInteractionSource() }
+                            .also { interactionSource ->
+                                LaunchedEffect(interactionSource) {
+                                    interactionSource.interactions.collect {
+                                        if (it is PressInteraction.Release) {
+                                            showCategoryModal = true
+                                        }
+                                    }
+                                }
+                            }
+                    )
                     Spacer(modifier = Modifier.height(70.dp))
                 }
 
@@ -223,6 +255,14 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                     text = "Сохранить",
                     action = { onSave() }
                 )
+
+                if (showCategoryModal) {
+                    CategorySelectorModal(
+                        state = state,
+                        onSelect = { category = it },
+                        onDismiss = { showCategoryModal = false }
+                    )
+                }
             }
         }
     }

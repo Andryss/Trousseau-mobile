@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -41,7 +40,6 @@ import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
-import ru.andryss.trousseau.mobile.util.Strings
 
 @Composable
 fun SellerItemCard(state: AppState, item: ItemDto) {
@@ -166,26 +164,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                         )
                     )
                 }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    Text(
-                        text = item.title ?: Strings.EMPTY_ITEM_TITLE,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Text(
-                        text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
+                ItemCardContent(item)
             }
         }
     }

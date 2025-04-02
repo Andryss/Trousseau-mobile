@@ -219,7 +219,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                             .padding(horizontal = 10.dp),
                         label = { Text(text = "Название") },
                     )
-                    MultipleImagePicker(imageUris)
+                    MultipleImagePicker(state, imageUris)
                     TextField(
                         value = description,
                         onValueChange = { description = it },

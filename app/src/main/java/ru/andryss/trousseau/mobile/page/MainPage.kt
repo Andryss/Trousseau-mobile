@@ -43,6 +43,10 @@ fun AppState.navigateFavouritesPage() {
     navController.navigate("favourites")
 }
 
+fun AppState.navigateSubscriptionsPage() {
+    navController.navigate("subscriptions")
+}
+
 @Composable
 fun MainPage(state: AppState) {
     val navController = rememberNavController()
@@ -69,6 +73,9 @@ fun MainPage(state: AppState) {
             }
             composable("favourites") {
                 FavouritesPage(state = state)
+            }
+            composable("subscriptions") {
+                SubscriptionsPage(state = state)
             }
             composable("profile") {
                 ProfilePage(state = state)

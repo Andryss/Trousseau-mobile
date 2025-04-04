@@ -259,7 +259,8 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 if (showCategoryModal) {
                     CategorySelectorModal(
                         state = state,
-                        onSelect = { category = it },
+                        onSelect = { category = it[0] },
+                        isSingleSelect = true,
                         onDismiss = { showCategoryModal = false }
                     )
                 }

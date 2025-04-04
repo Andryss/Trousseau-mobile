@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Lock
@@ -48,6 +49,12 @@ fun ProfilePage(state: AppState) {
                     text = "Уведомления",
                     icon = Icons.Default.NotificationsNone,
                     onClick = { }
+                )
+                HorizontalDivider()
+                ProfileRow(
+                    text = "Подписки",
+                    icon = Icons.Default.Alarm,
+                    onClick = { state.navigateSubscriptionsPage() }
                 )
                 HorizontalDivider()
                 ProfileRow(

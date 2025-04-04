@@ -36,7 +36,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
-import ru.andryss.trousseau.mobile.client.updateSellerItemStatus
+import ru.andryss.trousseau.mobile.client.seller.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
 import ru.andryss.trousseau.mobile.util.ItemStatus

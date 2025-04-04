@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
-import ru.andryss.trousseau.mobile.client.getItem
-import ru.andryss.trousseau.mobile.client.updateItemStatus
+import ru.andryss.trousseau.mobile.client.pub.getItem
+import ru.andryss.trousseau.mobile.client.pub.updateItemStatus
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.widget.ActionButton
 import ru.andryss.trousseau.mobile.widget.AlertWrapper

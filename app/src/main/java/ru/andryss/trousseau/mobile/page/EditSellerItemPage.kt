@@ -30,12 +30,12 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.delay
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.client.CategoryNode
+import ru.andryss.trousseau.mobile.client.pub.CategoryNode
 import ru.andryss.trousseau.mobile.client.ItemDto
-import ru.andryss.trousseau.mobile.client.UpdateItemInfo
-import ru.andryss.trousseau.mobile.client.getSellerItem
-import ru.andryss.trousseau.mobile.client.updateSellerItem
-import ru.andryss.trousseau.mobile.client.uploadMedia
+import ru.andryss.trousseau.mobile.client.seller.UpdateItemInfo
+import ru.andryss.trousseau.mobile.client.seller.getSellerItem
+import ru.andryss.trousseau.mobile.client.seller.updateSellerItem
+import ru.andryss.trousseau.mobile.client.media.uploadMedia
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.ActionButton

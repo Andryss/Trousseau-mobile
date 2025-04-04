@@ -1,4 +1,4 @@
-package ru.andryss.trousseau.mobile.client
+package ru.andryss.trousseau.mobile.client.media
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,6 +12,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.callbackObj
+import ru.andryss.trousseau.mobile.client.httpRequest
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream

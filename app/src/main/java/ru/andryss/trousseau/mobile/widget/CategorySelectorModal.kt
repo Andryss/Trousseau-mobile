@@ -38,8 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.CategoryNode
-import ru.andryss.trousseau.mobile.client.getCategoryTree
+import ru.andryss.trousseau.mobile.client.pub.CategoryNode
+import ru.andryss.trousseau.mobile.client.pub.getCategoryTree
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

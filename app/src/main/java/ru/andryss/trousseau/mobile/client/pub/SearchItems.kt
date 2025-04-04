@@ -1,9 +1,14 @@
-package ru.andryss.trousseau.mobile.client
+package ru.andryss.trousseau.mobile.client.pub
 
 import android.util.Log
 import com.fasterxml.jackson.annotation.JsonValue
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.ItemListResponse
+import ru.andryss.trousseau.mobile.client.callbackObj
+import ru.andryss.trousseau.mobile.client.httpRequest
+import ru.andryss.trousseau.mobile.client.mapper
 
 enum class SortField(
     @get:JsonValue val value: String,

@@ -26,7 +26,7 @@ import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
-import ru.andryss.trousseau.mobile.client.changeItemFavourite
+import ru.andryss.trousseau.mobile.client.pub.changeItemFavourite
 import ru.andryss.trousseau.mobile.page.ItemPageCallback
 import ru.andryss.trousseau.mobile.page.navigateItemPage
 import ru.andryss.trousseau.mobile.util.ItemStatus

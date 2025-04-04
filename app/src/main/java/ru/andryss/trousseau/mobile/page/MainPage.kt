@@ -19,12 +19,16 @@ fun AppState.navigateItemPage(itemId: String, callback: ItemPageCallback) {
     navController.navigate("public/items/$itemId?callback=${callback.path}")
 }
 
-fun AppState.navigateProfileBookingsPage() {
-    navController.navigate("profile/bookings")
+fun AppState.navigateProfilePage() {
+    navController.navigate("profile")
 }
 
-fun AppState.navigateProfileItemsPage() {
-    navController.navigate("profile/items")
+fun AppState.navigateBookingsPage() {
+    navController.navigate("bookings")
+}
+
+fun AppState.navigateSellerItemsPage() {
+    navController.navigate("seller/items")
 }
 
 fun AppState.navigateSellerItemEditPage(itemId: String) {
@@ -66,12 +70,14 @@ fun MainPage(state: AppState) {
             composable("favourites") {
                 FavouritesPage(state = state)
             }
-            composable("profile/{tab}") {
-                val tab = ProfileTab.fromPath(it.string("tab"))
-                ProfilePage(
-                    state = state,
-                    selectedTab = tab
-                )
+            composable("profile") {
+                ProfilePage(state = state)
+            }
+            composable("bookings") {
+                MyBookingsPage(state = state)
+            }
+            composable("seller/items") {
+                MyItemsPage(state = state)
             }
             composable("seller/items/{itemId}") {
                 val itemId = it.string("itemId")

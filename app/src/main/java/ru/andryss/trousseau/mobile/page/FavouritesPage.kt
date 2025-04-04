@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +31,8 @@ import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
-import ru.andryss.trousseau.mobile.widget.MainTopBar
+import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavouritesPage(state: AppState) {
 
@@ -69,8 +67,13 @@ fun FavouritesPage(state: AppState) {
         text = alertText
     ) {
         Scaffold(
-            topBar = { MainTopBar() },
-            bottomBar = { BottomBar(state, BottomPage.FAVOURITES) }
+            topBar = {
+                ReturnBackTopBar(
+                    title = "Избранное",
+                    onReturn = { state.navigateProfilePage() }
+                )
+            },
+            bottomBar = { BottomBar(state, BottomPage.PROFILE) }
         ) { padding ->
             Box(
                 modifier = Modifier

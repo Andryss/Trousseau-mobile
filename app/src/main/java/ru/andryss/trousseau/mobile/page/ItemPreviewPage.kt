@@ -52,7 +52,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
         Scaffold(
             topBar = {
                 ReturnBackTopBar(
-                    onReturn = { state.navigateProfileItemsPage() }
+                    onReturn = { state.navigateSellerItemsPage() }
                 )
             }
         ) { padding ->

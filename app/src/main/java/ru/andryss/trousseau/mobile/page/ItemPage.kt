@@ -44,7 +44,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
             item.id,
             UpdateItemStatus(status = targetStatus),
             onSuccess = {
-                state.navigateProfileBookingsPage()
+                state.navigateBookingsPage()
                 loadingVar.value = false
             },
             onError = { error ->
@@ -89,7 +89,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                             ItemPageCallback.HOME -> state.navigateHomePage()
                             ItemPageCallback.SEARCH -> state.navigateSearchPage()
                             ItemPageCallback.FAVOURITES -> state.navigateFavouritesPage()
-                            ItemPageCallback.BOOKINGS -> state.navigateProfileBookingsPage()
+                            ItemPageCallback.BOOKINGS -> state.navigateBookingsPage()
                         }
                     }
                 )

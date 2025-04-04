@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,11 +28,13 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.getBookings
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
+import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyBookingsSubpage(state: AppState) {
+fun MyBookingsPage(state: AppState) {
 
     val bookingsList = remember { mutableStateListOf<ItemDto>() }
 
@@ -64,28 +66,40 @@ fun MyBookingsSubpage(state: AppState) {
         isShown = showAlert,
         text = alertText
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
+        Scaffold(
+            topBar = {
+                ReturnBackTopBar(
+                    title = "Мои бронирования",
+                    onReturn = { state.navigateProfilePage() }
+                )
+            },
+            bottomBar = { BottomBar(state = state, page = BottomPage.PROFILE) }
+        ) { padding ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(top = 10.dp, bottom = 50.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(padding)
             ) {
-                if (getBookingsLoading) {
-                    CircularProgressIndicator()
-                } else {
-                    if (bookingsList.isEmpty()) {
-                        Text("*нет бронирований*")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(top = 10.dp, bottom = 50.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (getBookingsLoading) {
+                        CircularProgressIndicator()
                     } else {
-                        for (item in bookingsList) {
-                            ItemCard(state, item, ItemPageCallback.BOOKINGS)
+                        if (bookingsList.isEmpty()) {
+                            Text("*нет бронирований*")
+                        } else {
+                            for (item in bookingsList) {
+                                ItemCard(state, item, ItemPageCallback.BOOKINGS)
+                            }
                         }
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

@@ -146,7 +146,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     fun onSave() =
         updateAsync(
             loadingVar = saveItemLoading,
-            onSuccess = { state.navigateProfileItemsPage() }
+            onSuccess = { state.navigateSellerItemsPage() }
         )
 
     LaunchedEffect(true) {
@@ -198,7 +198,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             topBar = {
                 ReturnBackTopBar(
                     title = "Редактирование объявления",
-                    onReturn = { state.navigateProfileItemsPage() }
+                    onReturn = { state.navigateSellerItemsPage() }
                 )
             }
         ) { padding ->

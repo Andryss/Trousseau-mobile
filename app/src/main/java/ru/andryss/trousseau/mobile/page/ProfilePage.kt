@@ -1,12 +1,16 @@
 package ru.andryss.trousseau.mobile.page
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Alarm
@@ -17,20 +21,43 @@ import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.MainTopBar
 
 @Composable
 fun ProfilePage(state: AppState) {
+
+    var unreadNotifications by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(true) {
+        state.getUnreadNotificationsCount(
+            onSuccess = { count ->
+                unreadNotifications = count.coerceAtMost(99)
+            },
+            onError = { error ->
+                Log.e(TAG, "Got error while fetching unread notifications count: $error")
+            }
+        )
+    }
 
     Scaffold(
         topBar = { MainTopBar() },
@@ -47,31 +74,65 @@ fun ProfilePage(state: AppState) {
                 HorizontalDivider()
                 ProfileRow(
                     text = "Уведомления",
-                    icon = Icons.Default.NotificationsNone,
-                    onClick = { }
+                    icon = {
+                        Box {
+                            Icon(Icons.Default.NotificationsNone, null)
+                            if (unreadNotifications > 0) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
+                                        .size(15.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.error,
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.TopCenter
+                                ) {
+                                    Text(
+                                        text = unreadNotifications.toString(),
+                                        color = MaterialTheme.colorScheme.onError,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        lineHeight = 15.sp,
+                                        maxLines = 1
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    onClick = { state.navigateNotificationsPage() }
                 )
                 HorizontalDivider()
                 ProfileRow(
                     text = "Подписки",
-                    icon = Icons.Default.Alarm,
+                    icon = {
+                        Icon(Icons.Default.Alarm, null)
+                    },
                     onClick = { state.navigateSubscriptionsPage() }
                 )
                 HorizontalDivider()
                 ProfileRow(
                     text = "Избранное",
-                    icon = Icons.Default.BookmarkBorder,
+                    icon = {
+                        Icon(Icons.Default.BookmarkBorder, null)
+                    },
                     onClick = { state.navigateFavouritesPage() }
                 )
                 HorizontalDivider()
                 ProfileRow(
                     text = "Мои бронирования",
-                    icon = Icons.Default.Lock,
+                    icon = {
+                        Icon(Icons.Default.Lock, null)
+                    },
                     onClick = { state.navigateBookingsPage() }
                 )
                 HorizontalDivider()
                 ProfileRow(
                     text = "Мои объявления",
-                    icon = Icons.Default.Description,
+                    icon = {
+                        Icon(Icons.Default.Description, null)
+                    },
                     onClick = { state.navigateSellerItemsPage() }
                 )
                 HorizontalDivider()
@@ -83,17 +144,14 @@ fun ProfilePage(state: AppState) {
 @Composable
 fun ProfileRow(
     text: String,
-    icon: ImageVector,
+    icon: @Composable () -> Unit,
     onClick: () -> Unit
 ) {
     ListItem(
         headlineContent = { Text(text) },
         modifier = Modifier.clickable { onClick() },
         leadingContent = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null
-            )
+            icon()
         },
         trailingContent = {
             Icon(

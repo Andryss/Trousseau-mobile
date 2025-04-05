@@ -47,6 +47,10 @@ fun AppState.navigateSubscriptionsPage() {
     navController.navigate("subscriptions")
 }
 
+fun AppState.navigateNotificationsPage() {
+    navController.navigate("notifications")
+}
+
 @Composable
 fun MainPage(state: AppState) {
     val navController = rememberNavController()
@@ -70,6 +74,9 @@ fun MainPage(state: AppState) {
                     itemId = itemId,
                     callback = callbackPage
                 )
+            }
+            composable("notifications") {
+                NotificationsPage(state = state)
             }
             composable("favourites") {
                 FavouritesPage(state = state)

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.pub.CategoryNode
+import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionData
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
+import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionInfoRequest
+import ru.andryss.trousseau.mobile.client.pub.subscriptions.createSubscription
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.getSubscriptions
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -51,12 +55,17 @@ import ru.andryss.trousseau.mobile.widget.SubscriptionCard
 fun SubscriptionsPage(state: AppState) {
 
     var getSubscriptionsLoading by remember { mutableStateOf(false) }
+    var createSubscriptionLoading by remember { mutableStateOf(false) }
 
     val subscriptions = remember { mutableStateListOf<SubscriptionDto>() }
 
     var isAdding by remember { mutableStateOf(false) }
+
     var newSubName by remember { mutableStateOf("") }
+    var newSubNameError by remember { mutableStateOf(false) }
+
     val newSubCategories = remember { mutableStateListOf<CategoryNode>() }
+    var newSubCategoriesError by remember { mutableStateOf(false) }
     var newSubCategoriesText by remember { mutableStateOf("") }
 
     var showCategoryModal by remember { mutableStateOf(false) }
@@ -64,12 +73,18 @@ fun SubscriptionsPage(state: AppState) {
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
+    fun onNameChange(value: String) {
+        newSubName = value
+        newSubNameError = false
+    }
+
     fun onCategoriesSelect(nodes: List<CategoryNode>) {
         newSubCategoriesText = nodes.joinToString(
             separator = ",\n",
             transform = { it.name }
         )
         newSubCategories.replaceAllFrom(nodes)
+        newSubCategoriesError = false
     }
 
     fun onStartAdd() {
@@ -79,12 +94,48 @@ fun SubscriptionsPage(state: AppState) {
         isAdding = true
     }
 
-    fun onSubmitAdd() {
-        isAdding = false
-    }
+    fun getName() =
+        newSubName.trim()
+
+    fun getCategories() =
+        newSubCategories.map { it.id }
 
     fun onCancelAdd() {
         isAdding = false
+    }
+
+    fun onSubmitAdd() {
+        if (getName().isBlank()) {
+            newSubNameError = true
+            return
+        }
+        newSubNameError = false
+
+        if (newSubCategories.isEmpty()) {
+            newSubCategoriesError = true
+            return
+        }
+        newSubCategoriesError = false
+
+        createSubscriptionLoading = true
+        state.createSubscription(
+            SubscriptionInfoRequest(
+                name = getName(),
+                data = SubscriptionData(
+                    categoryIds = getCategories()
+                )
+            ),
+            onSuccess = { subscription ->
+                subscriptions.add(subscription)
+                isAdding = false
+                createSubscriptionLoading = false
+            },
+            onError = { error ->
+                alertText = error
+                showAlert.value = true
+                createSubscriptionLoading = false
+            }
+        )
     }
 
     LaunchedEffect(true) {
@@ -138,7 +189,7 @@ fun SubscriptionsPage(state: AppState) {
                         item {
                             Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .width(200.dp)
                                     .border(
                                         width = 3.dp,
                                         color = MaterialTheme.colorScheme.primary,
@@ -162,10 +213,11 @@ fun SubscriptionsPage(state: AppState) {
                                     } else {
                                         OutlinedTextField(
                                             value = newSubName,
-                                            onValueChange = { newSubName = it },
+                                            onValueChange = { onNameChange(it) },
                                             modifier = Modifier.fillMaxWidth(),
                                             label = { Text("Название") },
-                                            singleLine = true
+                                            singleLine = true,
+                                            isError = newSubNameError
                                         )
                                         OutlinedTextField(
                                             value = newSubCategoriesText,
@@ -173,6 +225,7 @@ fun SubscriptionsPage(state: AppState) {
                                             modifier = Modifier.fillMaxWidth(),
                                             label = { Text("Категории") },
                                             readOnly = true,
+                                            isError = newSubCategoriesError,
                                             interactionSource = remember { MutableInteractionSource() }
                                                 .also { interactionSource ->
                                                     LaunchedEffect(interactionSource) {

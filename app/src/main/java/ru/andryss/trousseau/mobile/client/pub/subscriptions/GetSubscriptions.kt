@@ -6,16 +6,6 @@ import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 
-data class SubscriptionData(
-    val categoryIds: List<String>
-)
-
-data class SubscriptionDto(
-    val id: String,
-    val name: String,
-    val data: SubscriptionData
-)
-
 data class SubscriptionListResponse(
     val subscriptions: List<SubscriptionDto>
 )

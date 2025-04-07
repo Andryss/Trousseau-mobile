@@ -66,7 +66,7 @@ fun NotificationCard(state: AppState, notification: NotificationDto) {
             ) {
                 Text(
                     text = notification.title,
-                    modifier = Modifier.width(300.dp),
+                    modifier = Modifier.width(270.dp),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = if (isRead) FontWeight.Normal else FontWeight.Bold,
                     overflow = TextOverflow.Ellipsis,

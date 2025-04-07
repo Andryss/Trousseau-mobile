@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.io.coil.kt.coil3.network)
     implementation(libs.squareup.okhttp3.okhttp)
     implementation(libs.fasterxml.jackson.kotlin)
+    implementation(libs.fasterxml.jackson.datatype.jsr310)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

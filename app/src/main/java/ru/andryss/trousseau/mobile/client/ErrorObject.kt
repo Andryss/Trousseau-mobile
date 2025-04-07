@@ -1,6 +1,7 @@
 package ru.andryss.trousseau.mobile.client
 
 import android.util.Log
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,9 @@ data class ItemListResponse(
     val items: List<ItemDto>,
 )
 
-val mapper = jacksonObjectMapper()
+val mapper = jacksonObjectMapper().apply {
+    registerModule(JavaTimeModule())
+}
 
 val callbackScope = CoroutineScope(Dispatchers.Main)
 

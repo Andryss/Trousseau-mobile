@@ -6,6 +6,11 @@ data class SubscriptionData(
     val categoryIds: List<String>
 )
 
+data class SubscriptionInfoRequest(
+    val name: String,
+    val data: SubscriptionData
+)
+
 data class SubscriptionDataDto(
     val categories: List<CategoryDto>
 )

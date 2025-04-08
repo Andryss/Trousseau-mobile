@@ -7,19 +7,20 @@ import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 import ru.andryss.trousseau.mobile.client.mapper
 
-fun AppState.createSubscription(
+fun AppState.updateSubscription(
+    id: String,
     request: SubscriptionInfoRequest,
     onSuccess: (subscription: SubscriptionDto) -> Unit,
     onError: (error: String) -> Unit,
 ) {
-    Log.i(TAG, "Send create subscription request $request")
+    Log.i(TAG, "Send update subscription $id request $request")
     httpRequest(
-        "POST",
-        "/public/subscriptions",
+        "PUT",
+        "/public/subscriptions/$id",
         mapper.writeValueAsString(request),
         callbackObj<SubscriptionDto>(
             onSuccess = {
-                Log.i(TAG, "Created ${it.id} subscription")
+                Log.i(TAG, "Updated ${it.id} subscription")
                 onSuccess(it)
             },
             onError = onError

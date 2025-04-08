@@ -1,29 +1,16 @@
 package ru.andryss.trousseau.mobile.page
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,8 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.pub.CategoryNode
-import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionData
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionInfoRequest
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.createSubscription
@@ -47,9 +32,9 @@ import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
-import ru.andryss.trousseau.mobile.widget.CategorySelectorModal
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 import ru.andryss.trousseau.mobile.widget.SubscriptionCard
+import ru.andryss.trousseau.mobile.widget.SubscriptionForm
 
 @Composable
 fun SubscriptionsPage(state: AppState) {
@@ -61,70 +46,17 @@ fun SubscriptionsPage(state: AppState) {
 
     var isAdding by remember { mutableStateOf(false) }
 
-    var newSubName by remember { mutableStateOf("") }
-    var newSubNameError by remember { mutableStateOf(false) }
-
-    val newSubCategories = remember { mutableStateListOf<CategoryNode>() }
-    var newSubCategoriesError by remember { mutableStateOf(false) }
-    var newSubCategoriesText by remember { mutableStateOf("") }
-
-    var showCategoryModal by remember { mutableStateOf(false) }
-
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
-    fun onNameChange(value: String) {
-        newSubName = value
-        newSubNameError = false
-    }
-
-    fun onCategoriesSelect(nodes: List<CategoryNode>) {
-        newSubCategoriesText = nodes.joinToString(
-            separator = ",\n",
-            transform = { it.name }
-        )
-        newSubCategories.replaceAllFrom(nodes)
-        newSubCategoriesError = false
-    }
-
     fun onStartAdd() {
-        newSubName = ""
-        newSubCategories.clear()
-        newSubCategoriesText = ""
         isAdding = true
     }
 
-    fun getName() =
-        newSubName.trim()
-
-    fun getCategories() =
-        newSubCategories.map { it.id }
-
-    fun onCancelAdd() {
-        isAdding = false
-    }
-
-    fun onSubmitAdd() {
-        if (getName().isBlank()) {
-            newSubNameError = true
-            return
-        }
-        newSubNameError = false
-
-        if (newSubCategories.isEmpty()) {
-            newSubCategoriesError = true
-            return
-        }
-        newSubCategoriesError = false
-
+    fun onSubmitAdd(request: SubscriptionInfoRequest) {
         createSubscriptionLoading = true
         state.createSubscription(
-            SubscriptionInfoRequest(
-                name = getName(),
-                data = SubscriptionData(
-                    categoryIds = getCategories()
-                )
-            ),
+            request,
             onSuccess = { subscription ->
                 subscriptions.add(subscription)
                 isAdding = false
@@ -136,6 +68,10 @@ fun SubscriptionsPage(state: AppState) {
                 createSubscriptionLoading = false
             }
         )
+    }
+
+    fun onCancelAdd() {
+        isAdding = false
     }
 
     LaunchedEffect(true) {
@@ -183,88 +119,36 @@ fun SubscriptionsPage(state: AppState) {
                         items(subscriptions) { subscription ->
                             SubscriptionCard(
                                 state = state,
-                                subscription = subscription
+                                dto = subscription,
+                                onSubscriptionDelete = { subscriptions.remove(subscription) }
                             )
                         }
                         item {
-                            Box(
-                                modifier = Modifier
-                                    .width(200.dp)
-                                    .border(
-                                        width = 3.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(10.dp)
-                                    )
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(10.dp)
-                                ) {
-                                    if (!isAdding) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .clickable { onStartAdd() },
-                                            horizontalArrangement = Arrangement.Center,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text("Новая подписка")
-                                            Icon(Icons.Default.Add, null)
-                                        }
-                                    } else {
-                                        OutlinedTextField(
-                                            value = newSubName,
-                                            onValueChange = { onNameChange(it) },
-                                            modifier = Modifier.fillMaxWidth(),
-                                            label = { Text("Название") },
-                                            singleLine = true,
-                                            isError = newSubNameError
+                            if (isAdding) {
+                                Card {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(5.dp)
+                                    ) {
+                                        SubscriptionForm(
+                                            state = state,
+                                            onSubmit = { onSubmitAdd(it) },
+                                            onCancel = { onCancelAdd() }
                                         )
-                                        OutlinedTextField(
-                                            value = newSubCategoriesText,
-                                            onValueChange = { },
-                                            modifier = Modifier.fillMaxWidth(),
-                                            label = { Text("Категории") },
-                                            readOnly = true,
-                                            isError = newSubCategoriesError,
-                                            interactionSource = remember { MutableInteractionSource() }
-                                                .also { interactionSource ->
-                                                    LaunchedEffect(interactionSource) {
-                                                        interactionSource.interactions.collect {
-                                                            if (it is PressInteraction.Release) {
-                                                                showCategoryModal = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                        )
-                                        Row {
-                                            Button(
-                                                onClick = { onSubmitAdd() }
-                                            ) {
-                                                Text("Добавить")
-                                            }
-                                            OutlinedButton(
-                                                onClick = { onCancelAdd() }
-                                            ) {
-                                                Text("Отменить")
-                                            }
-                                        }
                                     }
+                                }
+                            } else {
+                                OutlinedButton(
+                                    onClick = { onStartAdd() }
+                                ) {
+                                    Text("Новая подписка")
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-
-        if (showCategoryModal) {
-            CategorySelectorModal(
-                state = state,
-                onSelect = { onCategoriesSelect(it) },
-                isSingleSelect = false,
-                onDismiss = { showCategoryModal = false }
-            )
         }
     }
 

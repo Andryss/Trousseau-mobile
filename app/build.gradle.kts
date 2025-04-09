@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.io.coil.kt.coil3)
     implementation(libs.io.coil.kt.coil3.network)
     implementation(libs.squareup.okhttp3.okhttp)

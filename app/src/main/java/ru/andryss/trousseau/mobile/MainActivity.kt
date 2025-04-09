@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import ru.andryss.trousseau.mobile.notification.configureNotificationWorker
 import ru.andryss.trousseau.mobile.page.MainPage
 import ru.andryss.trousseau.mobile.theme.TrousseauTheme
 
@@ -15,6 +16,8 @@ class MainActivity : ComponentActivity() {
 
         val appState = application as AppState
         appState.configureWith(applicationContext)
+
+        configureNotificationWorker()
 
         enableEdgeToEdge()
         setContent {

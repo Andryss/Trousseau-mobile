@@ -4,7 +4,9 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.util.Log
@@ -16,6 +18,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.MainActivity
 import ru.andryss.trousseau.mobile.R
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
@@ -99,11 +102,19 @@ class NotificationWorker(
     private fun showNotification(unreadCount: Int) {
         val notificationManager = applicationContext.getNotificationManager()
 
+        val intent = PendingIntent.getActivity(
+            applicationContext,
+            Random().nextInt(),
+            Intent(applicationContext, MainActivity::class.java),
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATIONS_CHANNEL_ID)
             .setContentTitle(NOTIFICATION_TITLE)
             .setContentText(NOTIFICATION_TEXT.format(unreadCount))
             .setSmallIcon(R.mipmap.trousseau_round)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(intent)
             .build()
 
         notificationManager.notify(Random().nextInt(), notification)

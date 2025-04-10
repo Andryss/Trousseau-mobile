@@ -80,7 +80,6 @@ fun CategorySelectorModal(
             onError = { error ->
                 alertText = error
                 showAlert.value = true
-                onDismiss()
                 getCategoryTreeLoading = false
             }
         )

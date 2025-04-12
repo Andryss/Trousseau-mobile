@@ -11,19 +11,6 @@ import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_REQUES
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 
-fun AppState.configureWith(applicationContext: Context) {
-    properties = Properties().apply {
-        load(applicationContext.assets.open("app.properties"))
-    }
-
-    httpClient = OkHttpClient.Builder()
-        .connectTimeout(properties.getProperty(TROUSSEAU_CONNECT_TIMEOUT, "5").toLong(), TimeUnit.SECONDS)
-        .callTimeout(properties.getProperty(TROUSSEAU_REQUEST_TIMEOUT, "10").toLong(), TimeUnit.SECONDS)
-        .build()
-
-    cache = AppCache()
-}
-
 class AppState : Application() {
     lateinit var properties: Properties
     lateinit var httpClient: OkHttpClient
@@ -39,4 +26,17 @@ class HomePageCache {
     val feedItems = mutableStateListOf<ItemDto>()
     var visibleItemIndex = 0
     var visibleItemOffset = 0
+}
+
+fun AppState.configureWith(applicationContext: Context) {
+    properties = Properties().apply {
+        load(applicationContext.assets.open("app.properties"))
+    }
+
+    httpClient = OkHttpClient.Builder()
+        .connectTimeout(properties.getProperty(TROUSSEAU_CONNECT_TIMEOUT, "5").toLong(), TimeUnit.SECONDS)
+        .callTimeout(properties.getProperty(TROUSSEAU_REQUEST_TIMEOUT, "10").toLong(), TimeUnit.SECONDS)
+        .build()
+
+    cache = AppCache()
 }

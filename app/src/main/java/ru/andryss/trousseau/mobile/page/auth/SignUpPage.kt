@@ -26,14 +26,12 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
-import ru.andryss.trousseau.mobile.client.auth.SignInRequest
-import ru.andryss.trousseau.mobile.client.auth.signIn
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 
 @Composable
-fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
+fun SignUpPage(state: AppState, onAuthSuccess: (String) -> Unit) {
 
-    var signInLoading by remember { mutableStateOf(false) }
+    var signUpLoading by remember { mutableStateOf(false) }
 
     var username by remember { mutableStateOf("") }
     var isUsernameError by remember { mutableStateOf(false) }
@@ -50,34 +48,8 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
     fun getPassword() =
         password.trim()
 
-    fun onSignIn() {
-        val usernameValue = getUsername()
-        if (usernameValue.isBlank()) {
-            isUsernameError = true
-            return
-        }
-        isUsernameError = false
+    fun onSignUp() {
 
-        val passwordValue = getPassword()
-        if (passwordValue.isBlank()) {
-            isPasswordError = true
-            return
-        }
-        isPasswordError = false
-
-        signInLoading = true
-        state.signIn(
-            SignInRequest(usernameValue, passwordValue),
-            onSuccess = { result ->
-                onAuthSuccess(result)
-                signInLoading = false
-            },
-            onError = { error ->
-                alertText = error
-                showAlert.value = true
-                signInLoading = false
-            }
-        )
     }
 
     AlertWrapper(
@@ -117,20 +89,20 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                     singleLine = true
                 )
                 OutlinedButton(
-                    onClick = { onSignIn() }
+                    onClick = { onSignUp() }
                 ) {
-                    Text(text = "Войти")
+                    Text(text = "Зарегистрироваться")
                 }
                 Text(
                     text = buildAnnotatedString {
-                        append("Еще нет аккаунта? ")
+                        append("Уже есть аккаунт? ")
                         val link = LinkAnnotation.Clickable(
-                            tag = "sign up",
-                            linkInteractionListener = { state.navigateSignUpPage() }
+                            tag = "sign in",
+                            linkInteractionListener = { state.navigateSignInPage() }
                         )
                         withLink(link) {
                             withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append("Зарегистрироваться")
+                                append("Войти")
                             }
                         }
                     },

@@ -2,6 +2,7 @@ package ru.andryss.trousseau.mobile
 
 import android.app.Application
 import android.content.Context
+import androidx.activity.ComponentActivity.MODE_PRIVATE
 import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
@@ -15,8 +16,13 @@ class AppState : Application() {
     lateinit var properties: Properties
     lateinit var httpClient: OkHttpClient
     lateinit var navController: NavHostController
+    lateinit var userInfo: UserInfo
     lateinit var cache: AppCache
 }
+
+data class UserInfo(
+    var accessToken: String
+)
 
 class AppCache {
     val homePageCache = HomePageCache()
@@ -37,6 +43,11 @@ fun AppState.configureWith(applicationContext: Context) {
         .connectTimeout(properties.getProperty(TROUSSEAU_CONNECT_TIMEOUT, "5").toLong(), TimeUnit.SECONDS)
         .callTimeout(properties.getProperty(TROUSSEAU_REQUEST_TIMEOUT, "10").toLong(), TimeUnit.SECONDS)
         .build()
+
+    userInfo = UserInfo(
+        accessToken = applicationContext.getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE)
+            .getString(AUTH_TOKEN_KEY, null) ?: "default_mock_token"
+    )
 
     cache = AppCache()
 }

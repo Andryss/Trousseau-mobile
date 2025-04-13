@@ -67,7 +67,10 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
 
         signInLoading = true
         state.signIn(
-            SignInRequest(usernameValue, passwordValue),
+            SignInRequest(
+                username = usernameValue,
+                password = passwordValue
+            ),
             onSuccess = { result ->
                 onAuthSuccess(result)
                 signInLoading = false
@@ -93,7 +96,7 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "ПРИДАНОЕ",
+                    text = "Вход",
                     style = MaterialTheme.typography.headlineSmall
                 )
                 OutlinedTextField(

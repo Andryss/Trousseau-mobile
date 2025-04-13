@@ -15,14 +15,14 @@ class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appState = application as AppState
-        appState.configureWith(applicationContext)
-
         val preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE)
         val authToken = preferences.getString(AUTH_TOKEN_KEY, null)
         if (authToken != null) {
             switchToMainActivity()
         }
+
+        val appState = application as AppState
+        appState.configureWith(applicationContext)
 
         val onAuthSuccess = { token: String ->
             preferences.edit().putString(AUTH_TOKEN_KEY, token).apply()

@@ -14,24 +14,64 @@ import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_BASE_U
 
 val JSON_MEDIA_TYPE = "application/json".toMediaType()
 
+fun AppState.authHeaders() =
+    mapOf("Authorization" to "Bearer ${userInfo.accessToken}")
+
 @Suppress("CAST_NEVER_SUCCEEDS")
-fun AppState.httpRequest(method: String, url: String, callback: Callback) =
-    httpRequest(method, url, null as? String, callback)
+fun AppState.httpRequest(
+    method: String,
+    url: String,
+    callback: Callback,
+    headers: Map<String, String> = emptyMap()
+) = httpRequest(
+    method = method,
+    url = url,
+    body = null as? String,
+    callback = callback,
+    headers = headers
+)
 
-fun AppState.httpRequest(method: String, url: String, body: String?, callback: Callback) =
-    httpRequest(method, url, body?.toRequestBody(JSON_MEDIA_TYPE), callback)
+fun AppState.httpRequest(
+    method: String,
+    url: String,
+    body: String?,
+    callback: Callback,
+    headers: Map<String, String> = emptyMap()
+) = httpRequest(
+    method = method,
+    url = url,
+    body = body?.toRequestBody(JSON_MEDIA_TYPE),
+    callback = callback,
+    headers = headers
+)
 
-fun AppState.httpRequest(method: String, url: String, body: RequestBody?, callback: Callback) {
-    val call = buildHttpCall(url, method, body)
+fun AppState.httpRequest(
+    method: String,
+    url: String,
+    body: RequestBody?,
+    callback: Callback,
+    headers: Map<String, String> = emptyMap()
+) {
+    val call = buildHttpCall(url, method, body, headers)
     call.enqueue(callback)
 }
 
-fun AppState.httpRequest(method: String, url: String, body: RequestBody?): Response {
-    val call = buildHttpCall(url, method, body)
+fun AppState.httpRequest(
+    method: String,
+    url: String,
+    body: RequestBody? = null,
+    headers: Map<String, String> = emptyMap()
+): Response {
+    val call = buildHttpCall(url, method, body, headers)
     return call.execute()
 }
 
-private fun AppState.buildHttpCall(url: String, method: String, body: RequestBody?): Call {
+private fun AppState.buildHttpCall(
+    url: String,
+    method: String,
+    body: RequestBody?,
+    headers: Map<String, String>
+): Call {
     val baseUrl = properties.getProperty(TROUSSEAU_BASE_URL, "http://localhost:8080")
     val fullUrl = baseUrl + url
 
@@ -39,6 +79,11 @@ private fun AppState.buildHttpCall(url: String, method: String, body: RequestBod
     val request = Request.Builder()
         .url(fullUrl)
         .method(method, body)
+        .apply {
+            headers.forEach { (name, value) ->
+                header(name, value)
+            }
+        }
         .build()
 
     return httpClient.newCall(request)

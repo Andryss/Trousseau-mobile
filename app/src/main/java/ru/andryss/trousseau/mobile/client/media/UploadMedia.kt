@@ -12,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 import java.io.ByteArrayOutputStream
@@ -51,7 +52,8 @@ fun AppState.uploadMedia(
                 onSuccess(it.id)
             },
             onError = onError
-        )
+        ),
+        authHeaders(),
     )
 }
 

@@ -4,6 +4,7 @@ import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 import ru.andryss.trousseau.mobile.client.mapper
@@ -32,6 +33,7 @@ fun AppState.updateSellerItem(
                 onSuccess(it)
             },
             onError = onError
-        )
+        ),
+        authHeaders(),
     )
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.CategoryDto
+import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 
@@ -39,6 +40,7 @@ fun AppState.getCategoryTree(
                 onSuccess(it.root)
             },
             onError = onError
-        )
+        ),
+        authHeaders(),
     )
 }

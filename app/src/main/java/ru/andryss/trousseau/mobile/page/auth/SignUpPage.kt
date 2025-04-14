@@ -249,7 +249,7 @@ fun SignUpPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                 if (isExpandSellerFields) {
                     OutlinedTextField(
                         value = room,
-                        onValueChange = { setRoom(room) },
+                        onValueChange = { setRoom(it) },
                         modifier = Modifier.width(320.dp),
                         label = { Text("Комната") },
                         isError = isRoomError,

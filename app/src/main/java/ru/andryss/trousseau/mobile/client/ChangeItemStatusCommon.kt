@@ -20,6 +20,7 @@ fun AppState.updateItemStatusCommon(
         noResponseCallbackObj(
             onSuccess = onSuccess,
             onError = onError
-        )
+        ),
+        authHeaders(),
     )
 }

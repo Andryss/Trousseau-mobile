@@ -52,7 +52,7 @@ fun AppState.navigateNotificationsPage() {
 }
 
 @Composable
-fun MainPage(state: AppState) {
+fun MainPage(state: AppState, onSignOutSuccess: () -> Unit) {
     val navController = rememberNavController()
     state.navController = navController
 
@@ -85,7 +85,7 @@ fun MainPage(state: AppState) {
                 SubscriptionsPage(state = state)
             }
             composable("profile") {
-                ProfilePage(state = state)
+                ProfilePage(state = state, onSignOutSuccess = onSignOutSuccess)
             }
             composable("bookings") {
                 MyBookingsPage(state = state)

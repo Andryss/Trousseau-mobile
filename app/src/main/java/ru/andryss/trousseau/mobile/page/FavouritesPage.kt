@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getFavourites
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -51,7 +52,7 @@ fun FavouritesPage(state: AppState) {
                 getFavouritesLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getFavouritesLoading = false
             }

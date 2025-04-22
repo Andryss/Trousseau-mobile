@@ -3,6 +3,8 @@ package ru.andryss.trousseau.mobile.client.pub.subscriptions
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
+import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 
@@ -12,7 +14,7 @@ data class SubscriptionListResponse(
 
 fun AppState.getSubscriptions(
     onSuccess: (subscriptions: List<SubscriptionDto>) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send get subscriptions request")
     httpRequest(
@@ -24,6 +26,7 @@ fun AppState.getSubscriptions(
                 onSuccess(it.subscriptions)
             },
             onError = onError
-        )
+        ),
+        authHeaders()
     )
 }

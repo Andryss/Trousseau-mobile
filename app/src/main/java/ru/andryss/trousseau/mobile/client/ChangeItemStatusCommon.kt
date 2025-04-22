@@ -11,7 +11,7 @@ fun AppState.updateItemStatusCommon(
     url: String,
     update: UpdateItemStatus,
     onSuccess: () -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     httpRequest(
         "PUT",

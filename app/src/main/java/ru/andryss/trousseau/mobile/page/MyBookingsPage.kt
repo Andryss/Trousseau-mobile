@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getBookings
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -51,7 +52,7 @@ fun MyBookingsPage(state: AppState) {
                 getBookingsLoading = false
             },
             onError = {
-                alertText = it
+                alertText = formatError(it)
                 showAlert.value = true
                 getBookingsLoading = false
             }

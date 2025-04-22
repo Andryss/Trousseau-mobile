@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.pub.FilterInfo
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.PageInfo
 import ru.andryss.trousseau.mobile.client.pub.SearchInfo
 import ru.andryss.trousseau.mobile.client.pub.SortField
@@ -107,7 +108,7 @@ fun SearchPage(state: AppState) {
                 searchItemsLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 searchItemsLoading = false
             }

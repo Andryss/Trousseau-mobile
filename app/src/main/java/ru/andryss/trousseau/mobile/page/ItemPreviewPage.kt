@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.getSellerItem
 import ru.andryss.trousseau.mobile.widget.ActionButton
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -38,7 +39,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
                 getItemLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getItemLoading = false
             }

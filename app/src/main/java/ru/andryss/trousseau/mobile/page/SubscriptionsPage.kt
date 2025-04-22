@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionInfoRequest
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.createSubscription
@@ -63,7 +64,7 @@ fun SubscriptionsPage(state: AppState) {
                 createSubscriptionLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 createSubscriptionLoading = false
             }
@@ -82,7 +83,7 @@ fun SubscriptionsPage(state: AppState) {
                 getSubscriptionsLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getSubscriptionsLoading = false
             }

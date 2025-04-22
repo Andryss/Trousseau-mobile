@@ -4,6 +4,7 @@ import android.util.Log
 import com.fasterxml.jackson.annotation.JsonValue
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemListResponse
 import ru.andryss.trousseau.mobile.client.authHeaders
@@ -48,7 +49,7 @@ data class PageInfo(
 fun AppState.searchItems(
     search: SearchInfo,
     onSuccess: (items: List<ItemDto>) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send search items request $search")
     httpRequest(

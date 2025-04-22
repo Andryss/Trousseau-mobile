@@ -3,6 +3,7 @@ package ru.andryss.trousseau.mobile.client.auth
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 import ru.andryss.trousseau.mobile.client.mapper
@@ -10,7 +11,7 @@ import ru.andryss.trousseau.mobile.client.mapper
 fun AppState.signUp(
     request: SignUpRequest,
     onSuccess: (token: String) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send sign up request for " +
             "${request.username}, ${request.contacts}, ${request.room}")

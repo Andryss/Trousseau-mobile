@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.CategoryNode
 import ru.andryss.trousseau.mobile.client.pub.getCategoryTree
 
@@ -78,7 +79,7 @@ fun CategorySelectorModal(
                 getCategoryTreeLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getCategoryTreeLoading = false
             }

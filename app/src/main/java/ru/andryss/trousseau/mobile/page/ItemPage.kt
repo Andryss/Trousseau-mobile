@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getItem
 import ru.andryss.trousseau.mobile.client.pub.updateItemStatus
 import ru.andryss.trousseau.mobile.util.ItemStatus
@@ -48,7 +49,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                 loadingVar.value = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 loadingVar.value = false
             }
@@ -70,7 +71,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                 getItemLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getItemLoading = false
             }

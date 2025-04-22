@@ -1,6 +1,7 @@
 package ru.andryss.trousseau.mobile.client.pub
 
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.httpRequest
 import ru.andryss.trousseau.mobile.client.mapper
@@ -14,7 +15,7 @@ fun AppState.changeItemFavourite(
     itemId: String,
     isFavourite: Boolean,
     onSuccess: () -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     httpRequest(
         "POST",

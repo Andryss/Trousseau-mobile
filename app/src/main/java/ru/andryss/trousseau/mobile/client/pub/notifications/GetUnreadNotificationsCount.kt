@@ -4,7 +4,9 @@ import android.util.Log
 import com.fasterxml.jackson.module.kotlin.readValue
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.RESPONSE_PARSE_ERROR_MESSAGE
+import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
 import ru.andryss.trousseau.mobile.client.mapper
@@ -15,7 +17,7 @@ data class NotificationCountResponse(
 
 fun AppState.getUnreadNotificationsCount(
     onSuccess: (count: Int) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send get unread notifications request")
     httpRequest(
@@ -27,7 +29,8 @@ fun AppState.getUnreadNotificationsCount(
                 onSuccess(it.count)
             },
             onError = onError
-        )
+        ),
+        authHeaders()
     )
 }
 

@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.auth.signOut
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 import ru.andryss.trousseau.mobile.widget.BottomBar
@@ -72,7 +73,7 @@ fun ProfilePage(state: AppState, onSignOutSuccess: () -> Unit) {
                 logoutLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 logoutLoading = false
             }

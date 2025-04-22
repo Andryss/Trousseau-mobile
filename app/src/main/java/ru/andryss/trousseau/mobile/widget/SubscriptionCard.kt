@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.CategoryDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDataDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionInfoRequest
@@ -75,7 +76,7 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
                 updateSubscriptionLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 updateSubscriptionLoading = false
             }
@@ -95,7 +96,7 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
                 deleteSubscriptionLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 deleteSubscriptionLoading = false
             }

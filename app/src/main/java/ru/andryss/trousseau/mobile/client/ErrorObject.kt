@@ -63,7 +63,7 @@ val callbackScope = CoroutineScope(Dispatchers.Main)
 
 inline fun <reified T> callbackObj(
     crossinline onSuccess: (result: T) -> Unit,
-    crossinline onError: (error: String) -> Unit,
+    crossinline onError: (error: ErrorObject) -> Unit,
 ) = commonCallbackObj(
     onSuccess = { response ->
         val result = mapper.readValue<T>(response.bytes())
@@ -78,7 +78,7 @@ inline fun <reified T> callbackObj(
 
 inline fun noResponseCallbackObj(
     crossinline onSuccess: () -> Unit,
-    crossinline onError: (error: String) -> Unit
+    crossinline onError: (error: ErrorObject) -> Unit
 ) = commonCallbackObj(
     onSuccess = {
         Log.i(TAG, "Got empty response")
@@ -95,31 +95,70 @@ suspend fun uxDelay() =
 
 inline fun commonCallbackObj(
     crossinline onSuccess: (response: ResponseBody) -> Unit,
-    crossinline onError: (error: String) -> Unit,
+    crossinline onError: (error: ErrorObject) -> Unit,
 ) = object : Callback {
     override fun onFailure(call: Call, e: IOException) {
         Log.e(TAG, "Error when sending request", e)
         callbackScope.launch {
-            onError(IO_EXCEPTION_ERROR_MESSAGE)
+            onError(
+                ErrorObject(
+                    code = 1,
+                    message = "io.error",
+                    humanMessage = IO_EXCEPTION_ERROR_MESSAGE
+                )
+            )
         }
     }
 
     override fun onResponse(call: Call, response: Response) {
+        val body = response.body
         if (response.code == 200) {
-            response.body?.use {
-                onSuccess(it)
-            } ?: callbackScope.launch {
-                onError(RESPONSE_PARSE_ERROR_MESSAGE)
+            if (body == null) {
+                callbackScope.launch {
+                    onError(
+                        ErrorObject(
+                            code = 1,
+                            message = "response.200.parse.error",
+                            humanMessage = RESPONSE_PARSE_ERROR_MESSAGE
+                        )
+                    )
+                }
+            } else {
+                body.use { onSuccess(it) }
+            }
+        } else if (body == null) {
+            callbackScope.launch {
+                onError(
+                    ErrorObject(
+                        code = 1,
+                        message = "response.no200.parse.error",
+                        humanMessage = RESPONSE_PARSE_ERROR_MESSAGE
+                    )
+                )
             }
         } else {
-            response.body?.use {
-                val error = mapper.readValue<ErrorObject>(it.bytes())
-                callbackScope.launch {
-                    onError(ERROR_RESPONSE_MESSAGE_TEMPLATE.format(error.humanMessage, error.code))
+            body.use {
+                try {
+                    val error = mapper.readValue<ErrorObject>(it.bytes())
+                    Log.i(TAG, "Got error object response $error")
+                    callbackScope.launch {
+                        onError(error)
+                    }
+                } catch (e: Exception) {
+                    callbackScope.launch {
+                        onError(
+                            ErrorObject(
+                                code = 1,
+                                message = "response.invalid.body.error",
+                                humanMessage = RESPONSE_PARSE_ERROR_MESSAGE
+                            )
+                        )
+                    }
                 }
-            } ?: callbackScope.launch {
-                onError(RESPONSE_PARSE_ERROR_MESSAGE)
             }
         }
     }
 }
+
+fun formatError(error: ErrorObject) =
+    ERROR_RESPONSE_MESSAGE_TEMPLATE.format(error.humanMessage, error.code)

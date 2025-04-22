@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -30,12 +30,13 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.delay
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
-import ru.andryss.trousseau.mobile.client.pub.CategoryNode
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
+import ru.andryss.trousseau.mobile.client.media.uploadMedia
+import ru.andryss.trousseau.mobile.client.pub.CategoryNode
 import ru.andryss.trousseau.mobile.client.seller.UpdateItemInfo
 import ru.andryss.trousseau.mobile.client.seller.getSellerItem
 import ru.andryss.trousseau.mobile.client.seller.updateSellerItem
-import ru.andryss.trousseau.mobile.client.media.uploadMedia
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
 import ru.andryss.trousseau.mobile.widget.ActionButton
@@ -105,7 +106,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 loadingVar.value = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 loadingVar.value = false
             }
@@ -136,7 +137,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                     updateItemInternal(onSuccess, loadingVar)
                 },
                 onError = { error ->
-                    alertText = error
+                    alertText = formatError(error)
                     showAlert.value = true
                 }
             )
@@ -165,7 +166,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 getItemLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getItemLoading = false
             }
@@ -211,7 +212,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    TextField(
+                    OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
                         modifier = Modifier
@@ -220,7 +221,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                         label = { Text(text = "Название") },
                     )
                     MultipleImagePicker(state, imageUris)
-                    TextField(
+                    OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
                         modifier = Modifier
@@ -229,7 +230,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                         label = { Text(text = "Описание") },
                         minLines = 5
                     )
-                    TextField(
+                    OutlinedTextField(
                         value = category.name,
                         onValueChange = { },
                         modifier = Modifier

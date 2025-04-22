@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.createSellerItem
 import ru.andryss.trousseau.mobile.client.seller.getSellerItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
@@ -57,7 +58,7 @@ fun MyItemsPage(state: AppState) {
                 getItemsLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getItemsLoading = false
             }
@@ -72,7 +73,7 @@ fun MyItemsPage(state: AppState) {
                 createItemLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 createItemLoading = false
             }

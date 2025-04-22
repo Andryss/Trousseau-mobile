@@ -36,6 +36,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
@@ -68,7 +69,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                 menuExpanded = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 loadingVar.value = false
                 menuExpanded = false

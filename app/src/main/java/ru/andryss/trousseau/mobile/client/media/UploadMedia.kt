@@ -12,6 +12,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
@@ -26,14 +27,20 @@ data class UploadMediaResponse(
 fun AppState.uploadMedia(
     mediaUri: Uri,
     onSuccess: (id: String) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send upload media request")
     val file = try {
         compressImage(mediaUri)
     } catch (e: Exception) {
         Log.e(TAG, "Error occurred during file compressing", e)
-        onError("Внутренняя ошибка, попробуйте еще раз позже")
+        onError(
+            ErrorObject(
+                code = 2,
+                message = "media.compress.error",
+                humanMessage = "Внутренняя ошибка, попробуйте еще раз позже"
+            )
+        )
         return
     }
     val contentType = contentResolver.getType(mediaUri)

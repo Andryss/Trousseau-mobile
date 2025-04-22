@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.NotificationDto
 import ru.andryss.trousseau.mobile.client.pub.notifications.getNotifications
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
@@ -45,7 +46,7 @@ fun NotificationsPage(state: AppState) {
                 getNotificationsLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 getNotificationsLoading = false
             }

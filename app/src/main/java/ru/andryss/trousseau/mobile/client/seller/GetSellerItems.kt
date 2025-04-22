@@ -3,6 +3,7 @@ package ru.andryss.trousseau.mobile.client.seller
 import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemListResponse
 import ru.andryss.trousseau.mobile.client.authHeaders
@@ -11,7 +12,7 @@ import ru.andryss.trousseau.mobile.client.httpRequest
 
 fun AppState.getSellerItems(
     onSuccess: (items: List<ItemDto>) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send get seller items request")
     httpRequest(

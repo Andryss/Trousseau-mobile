@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.auth.SignInRequest
 import ru.andryss.trousseau.mobile.client.auth.signIn
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 
 @Composable
@@ -76,7 +77,7 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                 signInLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 signInLoading = false
             }

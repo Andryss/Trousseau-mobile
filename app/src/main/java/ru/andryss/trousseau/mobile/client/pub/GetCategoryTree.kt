@@ -4,6 +4,7 @@ import android.util.Log
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.CategoryDto
+import ru.andryss.trousseau.mobile.client.ErrorObject
 import ru.andryss.trousseau.mobile.client.authHeaders
 import ru.andryss.trousseau.mobile.client.callbackObj
 import ru.andryss.trousseau.mobile.client.httpRequest
@@ -28,7 +29,7 @@ data class CategoryNode(
 
 fun AppState.getCategoryTree(
     onSuccess: (root: CategoryNode) -> Unit,
-    onError: (error: String) -> Unit,
+    onError: (error: ErrorObject) -> Unit,
 ) {
     Log.i(TAG, "Send get category tree request")
     httpRequest(

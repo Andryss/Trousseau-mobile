@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.auth.SignUpRequest
 import ru.andryss.trousseau.mobile.client.auth.signUp
+import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 
 @Composable
@@ -134,7 +135,7 @@ fun SignUpPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                 signUpLoading = false
             },
             onError = { error ->
-                alertText = error
+                alertText = formatError(error)
                 showAlert.value = true
                 signUpLoading = false
             }

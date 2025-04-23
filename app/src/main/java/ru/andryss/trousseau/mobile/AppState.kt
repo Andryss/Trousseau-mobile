@@ -1,5 +1,6 @@
 package ru.andryss.trousseau.mobile
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.activity.ComponentActivity.MODE_PRIVATE
@@ -13,6 +14,7 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 class AppState : Application() {
+    lateinit var activity: Activity
     lateinit var properties: Properties
     lateinit var httpClient: OkHttpClient
     lateinit var navController: NavHostController
@@ -34,7 +36,9 @@ class HomePageCache {
     var visibleItemOffset = 0
 }
 
-fun AppState.configureWith(applicationContext: Context) {
+fun AppState.configureWith(applicationContext: Context, activity: Activity? = null) {
+    activity?.let { this.activity = activity }
+
     properties = Properties().apply {
         load(applicationContext.assets.open("app.properties"))
     }

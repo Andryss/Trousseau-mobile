@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -32,7 +33,9 @@ import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
 
 @Composable
-fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
+fun SignInPage(state: AppState) {
+
+    val context = LocalContext.current
 
     var signInLoading by remember { mutableStateOf(false) }
 
@@ -73,7 +76,7 @@ fun SignInPage(state: AppState, onAuthSuccess: (String) -> Unit) {
                 password = passwordValue
             ),
             onSuccess = { result ->
-                onAuthSuccess(result)
+                state.signIn(context, result)
                 signInLoading = false
             },
             onError = { error ->

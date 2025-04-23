@@ -1,6 +1,8 @@
 package ru.andryss.trousseau.mobile.widget
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -34,11 +36,25 @@ fun ItemCardContent(item: ItemDto) {
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        Text(
-            text = item.category?.name ?: Strings.EMPTY_ITEM_CATEGORY,
-            style = MaterialTheme.typography.bodyLarge,
-            maxLines = 1,
-            modifier = Modifier.padding(top = 4.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = item.author.username,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1
+            )
+
+            item.publishedAt?.let {
+                TimeText(it)
+            } ?: Text(
+                text = Strings.EMPTY_PUBLISHED_AT,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1
+            )
+        }
     }
 }

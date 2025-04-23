@@ -15,6 +15,7 @@ import okhttp3.ResponseBody
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import java.io.IOException
+import java.time.OffsetDateTime
 import java.util.Random
 
 const val IO_EXCEPTION_ERROR_MESSAGE = "Произошла непредвиденная ошибка, повторите попытку позже"
@@ -25,6 +26,12 @@ data class ErrorObject(
     val code: Int,
     val message: String,
     val humanMessage: String,
+)
+
+data class AuthorDto(
+    val username: String,
+    val contacts: List<String>,
+    val room: String,
 )
 
 data class ItemMediaDto(
@@ -39,15 +46,17 @@ data class CategoryDto(
 
 data class ItemDto(
     val id: String,
+    val author: AuthorDto,
     var status: ItemStatus,
     val title: String? = null,
     val media: List<ItemMediaDto> = listOf(),
     val description: String? = null,
     val category: CategoryDto? = null,
     var isFavourite: Boolean = false,
+    val publishedAt: OffsetDateTime? = null,
 ) {
     companion object {
-        val EMPTY = ItemDto("", ItemStatus.UNKNOWN)
+        val EMPTY = ItemDto("", AuthorDto("", listOf(), ""), ItemStatus.UNKNOWN)
     }
 }
 

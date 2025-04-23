@@ -18,27 +18,19 @@ class AuthActivity : ComponentActivity() {
         val preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE)
         val authToken = preferences.getString(AUTH_TOKEN_KEY, null)
         if (authToken != null) {
-            switchToMainActivity()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         val appState = application as AppState
-        appState.configureWith(applicationContext)
-
-        val onAuthSuccess = { token: String ->
-            preferences.edit().putString(AUTH_TOKEN_KEY, token).apply()
-            switchToMainActivity()
-        }
+        appState.configureWith(applicationContext, this)
 
         enableEdgeToEdge()
         setContent {
             TrousseauTheme {
-                MainAuthPage(state = appState, onAuthSuccess = onAuthSuccess)
+                MainAuthPage(state = appState)
             }
         }
     }
 
-    private fun switchToMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-    }
 }

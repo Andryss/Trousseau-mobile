@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.formatError
@@ -46,6 +47,8 @@ import ru.andryss.trousseau.mobile.widget.MainTopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(state: AppState) {
+
+    val context = LocalContext.current
 
     val fetchSize = 4
     val cache = remember { state.cache.homePageCache }
@@ -85,6 +88,10 @@ fun HomePage(state: AppState) {
                 }
             },
             onError = { error ->
+                if (error.code == 401) {
+                    state.signOut(context)
+                    return@searchItems
+                }
                 alertText = formatError(error)
                 showAlert.value = true
                 feedLoading = false

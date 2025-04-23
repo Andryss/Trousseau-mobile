@@ -18,29 +18,20 @@ class MainActivity : ComponentActivity() {
         val preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE)
         val authToken = preferences.getString(AUTH_TOKEN_KEY, null)
         if (authToken == null) {
-            switchToAuthActivity()
+            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
         }
 
         val appState = application as AppState
-        appState.configureWith(applicationContext)
+        appState.configureWith(applicationContext, this)
 
         configureNotificationWorker()
-
-        val onSignOutSuccess = {
-            preferences.edit().remove(AUTH_TOKEN_KEY).apply()
-            switchToAuthActivity()
-        }
 
         enableEdgeToEdge()
         setContent {
             TrousseauTheme {
-                MainPage(state = appState, onSignOutSuccess = onSignOutSuccess)
+                MainPage(state = appState)
             }
         }
-    }
-
-    private fun switchToAuthActivity() {
-        startActivity(Intent(this, AuthActivity::class.java))
-        finish()
     }
 }

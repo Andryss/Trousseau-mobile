@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.AuthorDto
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
@@ -194,6 +195,11 @@ fun SellerItemCardDropDown(
 fun SellerItemCardPreview() {
     val item = ItemDto(
         id = "1234-4321-1234",
+        author = AuthorDto(
+            username = "author",
+            contacts = listOf(),
+            room = "room 500"
+        ),
         title = "TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE",
         media = listOf(
             ItemMediaDto(id = "123-321", href = "https://sun9-56.userapi.com/s/v1/if1/ckE_uGxsdilADkg6PhXSDEz085PkwaybhjnY7-ImthF1P8c1f0Xf05RM0gMzCYykSM1kOeZ4.jpg?quality=96&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,1600x900&from=bu&u=IKBz0svfrhEd8FUISYfVekg2XFYJjaBY5zPcDcszsF4&cs=604x340"),

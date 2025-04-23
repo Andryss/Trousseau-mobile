@@ -5,5 +5,6 @@ class Strings {
         const val EMPTY_ITEM_TITLE = "*пустой заголовок*"
         const val EMPTY_ITEM_DESCRIPTION = "*пустое описание*"
         const val EMPTY_ITEM_CATEGORY = "*без категории*"
+        const val EMPTY_PUBLISHED_AT = "*еще не опубликовано*"
     }
 }

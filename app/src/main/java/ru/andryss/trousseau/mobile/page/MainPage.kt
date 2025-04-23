@@ -1,11 +1,18 @@
 package ru.andryss.trousseau.mobile.page
 
+import android.app.Activity
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ru.andryss.trousseau.mobile.AUTH_TOKEN_KEY
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.AuthActivity
+import ru.andryss.trousseau.mobile.SHARED_PREF_NAME
 
 fun AppState.navigateHomePage() {
     navController.navigate("home")
@@ -51,8 +58,20 @@ fun AppState.navigateNotificationsPage() {
     navController.navigate("notifications")
 }
 
+fun AppState.signOut(localContext: Context) {
+    if (localContext !is Activity) {
+        throw IllegalArgumentException("context == LocalContext.current")
+    }
+
+    val preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE)
+    preferences.edit().remove(AUTH_TOKEN_KEY).apply()
+
+    localContext.startActivity(Intent(this, AuthActivity::class.java))
+    localContext.finish()
+}
+
 @Composable
-fun MainPage(state: AppState, onSignOutSuccess: () -> Unit) {
+fun MainPage(state: AppState) {
     val navController = rememberNavController()
     state.navController = navController
 
@@ -85,7 +104,7 @@ fun MainPage(state: AppState, onSignOutSuccess: () -> Unit) {
                 SubscriptionsPage(state = state)
             }
             composable("profile") {
-                ProfilePage(state = state, onSignOutSuccess = onSignOutSuccess)
+                ProfilePage(state = state)
             }
             composable("bookings") {
                 MyBookingsPage(state = state)

@@ -101,7 +101,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                ItemInfo(item)
+                ItemInfo(state = state, item = item)
 
                 if (item.status == ItemStatus.PUBLISHED) {
                     ActionButton(

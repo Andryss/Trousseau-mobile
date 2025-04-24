@@ -2,6 +2,9 @@ package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,14 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.AuthorDto
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.Strings
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ItemInfo(item: ItemDto) {
+fun ItemInfo(state: AppState, item: ItemDto) {
 
     val imageUris = remember(item) { item.media.map { it.href.toUri() } }
 
@@ -39,8 +44,43 @@ fun ItemInfo(item: ItemDto) {
             style = MaterialTheme.typography.titleLarge
         )
         ImagePager(images = imageUris)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = item.author.username,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1
+            )
+
+            item.publishedAt?.let {
+                TimeText(it)
+            } ?: Text(
+                text = Strings.EMPTY_PUBLISHED_AT,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1
+            )
+        }
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            item.author.contacts.forEach { contact ->
+                AuthorContact(state = state, contact = contact)
+            }
+        }
         Text(
             text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
+            modifier = Modifier.padding(horizontal = 10.dp),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            text = item.category?.name ?: Strings.EMPTY_ITEM_CATEGORY,
             modifier = Modifier.padding(horizontal = 10.dp),
             style = MaterialTheme.typography.bodyLarge
         )
@@ -75,5 +115,5 @@ fun ItemInfoPreview() {
         """.trimIndent(),
         status = ItemStatus.READY
     )
-    ItemInfo(item)
+    ItemInfo(AppState(), item)
 }

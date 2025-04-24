@@ -62,7 +62,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                ItemInfo(item)
+                ItemInfo(state = state, item = item)
 
                 ActionButton(
                     text = "Редактировать",

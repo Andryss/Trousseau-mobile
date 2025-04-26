@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -48,6 +49,9 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
 
     val publishItemLoading = remember { mutableStateOf(false) }
     val unpublishItemLoading = remember { mutableStateOf(false) }
+    val unbookItemLoading = remember { mutableStateOf(false) }
+    val archiveItemLoading = remember { mutableStateOf(false) }
+    var getBookingInfoLoading by remember { mutableStateOf(false) }
 
     var menuExpanded by remember { mutableStateOf(false) }
 
@@ -85,10 +89,16 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
         doItemStatusChange(unpublishItemLoading, ItemStatus.READY)
 
     fun doItemUnbook() =
-        doItemStatusChange(unpublishItemLoading, ItemStatus.PUBLISHED)
+        doItemStatusChange(unbookItemLoading, ItemStatus.PUBLISHED)
 
     fun doItemArchive() =
-        doItemStatusChange(unpublishItemLoading, ItemStatus.ARCHIVED)
+        doItemStatusChange(archiveItemLoading, ItemStatus.ARCHIVED)
+
+    fun doGetBookingInfo() {
+        getBookingInfoLoading = true
+        // TODO
+        getBookingInfoLoading = false
+    }
 
     AlertWrapper(
         isShown = showAlert,
@@ -140,6 +150,11 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                                     )
                                 }
                                 if (status == ItemStatus.BOOKED) {
+                                    SellerItemCardDropDown(
+                                        text = "Информация о бронировании",
+                                        onClick = { doGetBookingInfo() },
+                                        icon = Icons.Default.Person
+                                    )
                                     SellerItemCardDropDown(
                                         text = "Отказать в бронировании",
                                         onClick = { doItemUnbook() },

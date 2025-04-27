@@ -33,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.CategoryDto
+import ru.andryss.trousseau.mobile.client.auth.Privilege.SUBSCRIPTIONS_EDIT
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDataDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
@@ -42,6 +44,8 @@ import ru.andryss.trousseau.mobile.client.pub.subscriptions.updateSubscription
 
 @Composable
 fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete: () -> Unit) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     var subscription by remember { mutableStateOf(dto) }
 
@@ -162,22 +166,24 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
                         )
                         Text(categoriesText)
                     }
-                    Row(
-                        modifier = Modifier.padding(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = { onEditStart() }
+                    if (profile.hasPrivilege(SUBSCRIPTIONS_EDIT)) {
+                        Row(
+                            modifier = Modifier.padding(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            Text("Редактировать")
-                        }
-                        OutlinedButton(
-                            onClick = { onDelete() },
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = MaterialTheme.colorScheme.error
-                            )
-                        ) {
-                            Text("Удалить")
+                            OutlinedButton(
+                                onClick = { onEditStart() }
+                            ) {
+                                Text("Редактировать")
+                            }
+                            OutlinedButton(
+                                onClick = { onDelete() },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.error
+                                )
+                            ) {
+                                Text("Удалить")
+                            }
                         }
                     }
                 }

@@ -13,6 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_CREATE
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.getSellerItem
 import ru.andryss.trousseau.mobile.widget.ActionButton
@@ -22,6 +24,8 @@ import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
 @Composable
 fun ItemPreviewPage(state: AppState, itemId: String) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     var getItemLoading by remember { mutableStateOf(false) }
 
@@ -64,10 +68,12 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
             ) {
                 ItemInfo(state = state, item = item)
 
-                ActionButton(
-                    text = "Редактировать",
-                    action = { state.navigateSellerItemEditPage(itemId) }
-                )
+                if (profile.hasPrivilege(ITEMS_CREATE)) {
+                    ActionButton(
+                        text = "Редактировать",
+                        action = { state.navigateSellerItemEditPage(itemId) }
+                    )
+                }
             }
         }
     }

@@ -24,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
+import ru.andryss.trousseau.mobile.client.auth.Privilege.SUBSCRIPTIONS_EDIT
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionDto
 import ru.andryss.trousseau.mobile.client.pub.subscriptions.SubscriptionInfoRequest
@@ -39,6 +41,8 @@ import ru.andryss.trousseau.mobile.widget.SubscriptionForm
 
 @Composable
 fun SubscriptionsPage(state: AppState) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     var getSubscriptionsLoading by remember { mutableStateOf(false) }
     var createSubscriptionLoading by remember { mutableStateOf(false) }
@@ -124,26 +128,28 @@ fun SubscriptionsPage(state: AppState) {
                                 onSubscriptionDelete = { subscriptions.remove(subscription) }
                             )
                         }
-                        item {
-                            if (isAdding) {
-                                Card {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(5.dp)
-                                    ) {
-                                        SubscriptionForm(
-                                            state = state,
-                                            onSubmit = { onSubmitAdd(it) },
-                                            onCancel = { onCancelAdd() }
-                                        )
+                        if (profile.hasPrivilege(SUBSCRIPTIONS_EDIT)) {
+                            item {
+                                if (isAdding) {
+                                    Card {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(5.dp)
+                                        ) {
+                                            SubscriptionForm(
+                                                state = state,
+                                                onSubmit = { onSubmitAdd(it) },
+                                                onCancel = { onCancelAdd() }
+                                            )
+                                        }
                                     }
-                                }
-                            } else {
-                                OutlinedButton(
-                                    onClick = { onStartAdd() }
-                                ) {
-                                    Text("Новая подписка")
+                                } else {
+                                    OutlinedButton(
+                                        onClick = { onStartAdd() }
+                                    ) {
+                                        Text("Новая подписка")
+                                    }
                                 }
                             }
                         }

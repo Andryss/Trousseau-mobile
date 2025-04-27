@@ -27,6 +27,8 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.AuthorDto
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_FAVOURITES
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.changeItemFavourite
 import ru.andryss.trousseau.mobile.page.ItemPageCallback
@@ -36,6 +38,8 @@ import java.time.OffsetDateTime
 
 @Composable
 fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     val imageUris = remember { item.media.map { it.href.toUri() } }
     var isFavourite by remember { mutableStateOf(item.isFavourite) }
@@ -72,26 +76,28 @@ fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
                 ImagePager(
                     images = imageUris,
                     content = {
-                        IconButton(
-                            onClick = { onChangeFavourite() },
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(10.dp)
-                        ) {
-                            if (isFavourite) {
+                        if (profile.hasPrivilege(ITEMS_FAVOURITES)) {
+                            IconButton(
+                                onClick = { onChangeFavourite() },
+                                modifier = Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(10.dp)
+                            ) {
+                                if (isFavourite) {
+                                    Icon(
+                                        imageVector = Icons.Default.Favorite,
+                                        contentDescription = "Favourite",
+                                        modifier = Modifier.size(30.dp),
+                                        tint = Color.Red
+                                    )
+                                }
                                 Icon(
-                                    imageVector = Icons.Default.Favorite,
-                                    contentDescription = "Favourite",
+                                    imageVector = Icons.Default.FavoriteBorder,
+                                    contentDescription = "Favourite border",
                                     modifier = Modifier.size(30.dp),
-                                    tint = Color.Red
+                                    tint = Color.Black
                                 )
                             }
-                            Icon(
-                                imageVector = Icons.Default.FavoriteBorder,
-                                contentDescription = "Favourite border",
-                                modifier = Modifier.size(30.dp),
-                                tint = Color.Black
-                            )
                         }
                     }
                 )

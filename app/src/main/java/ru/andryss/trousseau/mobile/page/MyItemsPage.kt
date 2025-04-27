@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_CREATE
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.createSellerItem
 import ru.andryss.trousseau.mobile.client.seller.getSellerItems
@@ -41,6 +43,8 @@ import ru.andryss.trousseau.mobile.widget.SellerItemCard
 
 @Composable
 fun MyItemsPage(state: AppState) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     val itemList = remember { mutableStateListOf<ItemDto>() }
 
@@ -97,16 +101,18 @@ fun MyItemsPage(state: AppState) {
             },
             bottomBar = { BottomBar(state = state, page = BottomPage.PROFILE) },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { if (!createItemLoading) onCreateNewItem() }
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center
+                if (profile.hasPrivilege(ITEMS_CREATE)) {
+                    FloatingActionButton(
+                        onClick = { if (!createItemLoading) onCreateNewItem() }
                     ) {
-                        if (createItemLoading) {
-                            CircularProgressIndicator()
-                        } else {
-                            Icon(Icons.Filled.Add, "Create new icon button")
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (createItemLoading) {
+                                CircularProgressIndicator()
+                            } else {
+                                Icon(Icons.Filled.Add, "Create new icon button")
+                            }
                         }
                     }
                 }

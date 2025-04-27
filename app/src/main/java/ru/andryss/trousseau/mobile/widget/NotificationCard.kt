@@ -85,7 +85,8 @@ fun NotificationCard(state: AppState, notification: NotificationDto) {
             }
             Text(
                 text = notification.content,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = if (isRead) FontWeight.Normal else FontWeight.Bold,
             )
             if (notification.links.isNotEmpty()) {
                 Row(

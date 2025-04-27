@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_PUBLISHED_STATUS_CHANGED
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getItem
 import ru.andryss.trousseau.mobile.client.pub.updateItemStatus
@@ -26,6 +28,8 @@ import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
 @Composable
 fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
+
+    val profile by remember { state.cache.profileCache.profile }
 
     var getItemLoading by remember { mutableStateOf(false) }
     val bookItemLoading = remember { mutableStateOf(false) }
@@ -103,26 +107,28 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
             ) {
                 ItemInfo(state = state, item = item)
 
-                if (item.status == ItemStatus.PUBLISHED) {
-                    ActionButton(
-                        text = "Забронировать",
-                        action = { onBook() }
-                    )
-                }
+                if (profile.hasPrivilege(ITEMS_PUBLISHED_STATUS_CHANGED)) {
+                    if (item.status == ItemStatus.PUBLISHED) {
+                        ActionButton(
+                            text = "Забронировать",
+                            action = { onBook() }
+                        )
+                    }
 
-                if (item.status == ItemStatus.BOOKED) {
-                    ActionButton(
-                        text = "Снять бронирование",
-                        action = { onUnbook() }
-                    )
-                }
+                    if (item.status == ItemStatus.BOOKED) {
+                        ActionButton(
+                            text = "Снять бронирование",
+                            action = { onUnbook() }
+                        )
+                    }
 
-                if (item.status == ItemStatus.ARCHIVED) {
-                    ActionButton(
-                        text = "Объявление в архиве",
-                        action = { },
-                        enabled = false
-                    )
+                    if (item.status == ItemStatus.ARCHIVED) {
+                        ActionButton(
+                            text = "Объявление в архиве",
+                            action = { },
+                            enabled = false
+                        )
+                    }
                 }
             }
         }

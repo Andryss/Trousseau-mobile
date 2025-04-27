@@ -23,6 +23,8 @@ import ru.andryss.trousseau.mobile.R
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
 import ru.andryss.trousseau.mobile.configureWith
+import java.time.LocalTime
+import java.time.OffsetDateTime
 import java.util.Random
 import java.util.concurrent.TimeUnit
 
@@ -35,6 +37,9 @@ const val NOTIFICATIONS_CHANNEL_NAME = "Notifications"
 const val NOTIFICATION_TITLE = "Новые уведомления"
 const val NOTIFICATION_TEXT = "У вас есть непрочитанные уведомления: %s"
 
+val START_TIME: LocalTime = LocalTime.of(9, 0)
+val FINISH_TIME: LocalTime = LocalTime.of(23, 0)
+
 fun Activity.configureNotificationWorker() {
     Log.i(TAG, "Configuring notification worker")
 
@@ -44,14 +49,12 @@ fun Activity.configureNotificationWorker() {
         }
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(
-            NOTIFICATIONS_CHANNEL_ID,
-            NOTIFICATIONS_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        getNotificationManager().createNotificationChannel(channel)
-    }
+    val channel = NotificationChannel(
+        NOTIFICATIONS_CHANNEL_ID,
+        NOTIFICATIONS_CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_DEFAULT
+    )
+    getNotificationManager().createNotificationChannel(channel)
 
     val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
         .setInitialDelay(1, TimeUnit.MINUTES)
@@ -72,6 +75,13 @@ class NotificationWorker(
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result {
         Log.i(NOTIFICATION_TAG, "Notification worker started")
+
+        val time = OffsetDateTime.now().toLocalTime()
+        if (time.isBefore(START_TIME) || time.isAfter(FINISH_TIME)) {
+            Log.i(NOTIFICATION_TAG, "Skipping notification:" +
+                    " current time $time is out of bounds ($START_TIME-$FINISH_TIME)")
+            return Result.success()
+        }
 
         if (ContextCompat.checkSelfPermission(applicationContext, POST_NOTIFICATIONS) != PERMISSION_GRANTED) {
             Log.i(NOTIFICATION_TAG, "Notification worker finished cause permission denied")

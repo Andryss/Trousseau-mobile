@@ -31,6 +31,7 @@ import ru.andryss.trousseau.mobile.client.pub.notifications.NotificationDto
 import ru.andryss.trousseau.mobile.client.pub.notifications.markNotificationRead
 import ru.andryss.trousseau.mobile.page.ItemPageCallback
 import ru.andryss.trousseau.mobile.page.navigateItemPage
+import ru.andryss.trousseau.mobile.page.navigateSellerItemsPage
 import ru.andryss.trousseau.mobile.page.navigateSubscriptionsPage
 import java.time.OffsetDateTime
 
@@ -104,11 +105,13 @@ fun NotificationCard(state: AppState, notification: NotificationDto) {
 
 val notificationEntities: Map<String, String> = mapOf(
     "item" to "Объявление",
+    "sellerItem" to "Объявление",
     "subscription" to "Подписка"
 )
 
 val notificationActions: Map<String, (AppState, String) -> Unit> = mapOf(
     "item" to { state, id -> state.navigateItemPage(id, ItemPageCallback.HOME) },
+    "sellerItem" to { state, _ -> state.navigateSellerItemsPage() },
     "subscription" to { state, _ -> state.navigateSubscriptionsPage() }
 )
 

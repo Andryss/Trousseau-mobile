@@ -44,7 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.TAG
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_BOOKINGS_VIEW
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_CREATED_VIEW
+import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_FAVOURITES
+import ru.andryss.trousseau.mobile.client.auth.Privilege.NOTIFICATIONS_VIEW
+import ru.andryss.trousseau.mobile.client.auth.Privilege.SUBSCRIPTIONS_VIEW
+import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.auth.signOut
+import ru.andryss.trousseau.mobile.client.auth.updateProfileInfo
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
@@ -62,6 +69,8 @@ fun ProfilePage(state: AppState) {
     var unreadNotifications by remember { mutableIntStateOf(0) }
 
     var isShowLogoutDialog by remember { mutableStateOf(false) }
+
+    val profile by remember { state.cache.profileCache.profile }
 
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -92,6 +101,10 @@ fun ProfilePage(state: AppState) {
         )
     }
 
+    LaunchedEffect(true) {
+        state.updateProfileInfo()
+    }
+
     AlertWrapper(
         isShown = showAlert,
         text = alertText
@@ -108,70 +121,80 @@ fun ProfilePage(state: AppState) {
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    HorizontalDivider()
-                    ProfileRow(
-                        text = "Уведомления",
-                        icon = {
-                            Box {
-                                Icon(Icons.Default.NotificationsNone, null)
-                                if (unreadNotifications > 0) {
-                                    Box(
-                                        modifier = Modifier
-                                            .align(Alignment.TopEnd)
-                                            .offset(x = 4.dp, y = (-4).dp)
-                                            .size(15.dp)
-                                            .background(
-                                                color = MaterialTheme.colorScheme.error,
-                                                shape = CircleShape
-                                            ),
-                                        contentAlignment = Alignment.TopCenter
-                                    ) {
-                                        Text(
-                                            text = unreadNotifications.toString(),
-                                            color = MaterialTheme.colorScheme.onError,
-                                            fontSize = 10.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            lineHeight = 15.sp,
-                                            maxLines = 1
-                                        )
+                    if (profile.hasPrivilege(NOTIFICATIONS_VIEW)) {
+                        HorizontalDivider()
+                        ProfileRow(
+                            text = "Уведомления",
+                            icon = {
+                                Box {
+                                    Icon(Icons.Default.NotificationsNone, null)
+                                    if (unreadNotifications > 0) {
+                                        Box(
+                                            modifier = Modifier
+                                                .align(Alignment.TopEnd)
+                                                .offset(x = 4.dp, y = (-4).dp)
+                                                .size(15.dp)
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.error,
+                                                    shape = CircleShape
+                                                ),
+                                            contentAlignment = Alignment.TopCenter
+                                        ) {
+                                            Text(
+                                                text = unreadNotifications.toString(),
+                                                color = MaterialTheme.colorScheme.onError,
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                lineHeight = 15.sp,
+                                                maxLines = 1
+                                            )
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        onClick = { state.navigateNotificationsPage() }
-                    )
-                    HorizontalDivider()
-                    ProfileRow(
-                        text = "Подписки",
-                        icon = {
-                            Icon(Icons.Default.Alarm, null)
-                        },
-                        onClick = { state.navigateSubscriptionsPage() }
-                    )
-                    HorizontalDivider()
-                    ProfileRow(
-                        text = "Избранное",
-                        icon = {
-                            Icon(Icons.Default.BookmarkBorder, null)
-                        },
-                        onClick = { state.navigateFavouritesPage() }
-                    )
-                    HorizontalDivider()
-                    ProfileRow(
-                        text = "Мои бронирования",
-                        icon = {
-                            Icon(Icons.Default.Lock, null)
-                        },
-                        onClick = { state.navigateBookingsPage() }
-                    )
-                    HorizontalDivider()
-                    ProfileRow(
-                        text = "Мои объявления",
-                        icon = {
-                            Icon(Icons.Default.Description, null)
-                        },
-                        onClick = { state.navigateSellerItemsPage() }
-                    )
+                            },
+                            onClick = { state.navigateNotificationsPage() }
+                        )
+                    }
+                    if (profile.hasPrivilege(SUBSCRIPTIONS_VIEW)) {
+                        HorizontalDivider()
+                        ProfileRow(
+                            text = "Подписки",
+                            icon = {
+                                Icon(Icons.Default.Alarm, null)
+                            },
+                            onClick = { state.navigateSubscriptionsPage() }
+                        )
+                    }
+                    if (profile.hasPrivilege(ITEMS_FAVOURITES)) {
+                        HorizontalDivider()
+                        ProfileRow(
+                            text = "Избранное",
+                            icon = {
+                                Icon(Icons.Default.BookmarkBorder, null)
+                            },
+                            onClick = { state.navigateFavouritesPage() }
+                        )
+                    }
+                    if (profile.hasPrivilege(ITEMS_BOOKINGS_VIEW)) {
+                        HorizontalDivider()
+                        ProfileRow(
+                            text = "Мои бронирования",
+                            icon = {
+                                Icon(Icons.Default.Lock, null)
+                            },
+                            onClick = { state.navigateBookingsPage() }
+                        )
+                    }
+                    if (profile.hasPrivilege(ITEMS_CREATED_VIEW)) {
+                        HorizontalDivider()
+                        ProfileRow(
+                            text = "Мои объявления",
+                            icon = {
+                                Icon(Icons.Default.Description, null)
+                            },
+                            onClick = { state.navigateSellerItemsPage() }
+                        )
+                    }
                     HorizontalDivider()
                     ProfileRow(
                         text = "Выйти",

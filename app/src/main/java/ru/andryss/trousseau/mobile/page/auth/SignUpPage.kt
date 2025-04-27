@@ -167,7 +167,8 @@ fun SignUpPage(state: AppState) {
                     modifier = Modifier.width(320.dp),
                     label = { Text("Логин") },
                     isError = isUsernameError,
-                    singleLine = true
+                    singleLine = true,
+                    maxLines = 1
                 )
                 OutlinedTextField(
                     value = password,
@@ -179,7 +180,8 @@ fun SignUpPage(state: AppState) {
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password
                     ),
-                    singleLine = true
+                    singleLine = true,
+                    maxLines = 1
                 )
                 LazyColumn {
                     itemsIndexed(links) { index, link ->
@@ -212,7 +214,8 @@ fun SignUpPage(state: AppState) {
                                         }
                                     }
                                 },
-                                singleLine = true
+                                singleLine = true,
+                                maxLines = 1
                             )
                         }
                     }

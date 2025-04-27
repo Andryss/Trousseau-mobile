@@ -5,9 +5,11 @@ import android.app.Application
 import android.content.Context
 import androidx.activity.ComponentActivity.MODE_PRIVATE
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
 import ru.andryss.trousseau.mobile.client.ItemDto
+import ru.andryss.trousseau.mobile.client.auth.ProfileDto
 import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_CONNECT_TIMEOUT
 import ru.andryss.trousseau.mobile.util.PropertyNames.Companion.TROUSSEAU_REQUEST_TIMEOUT
 import java.util.Properties
@@ -28,12 +30,17 @@ data class UserInfo(
 
 class AppCache {
     val homePageCache = HomePageCache()
+    val profileCache = ProfileCache()
 }
 
 class HomePageCache {
     val feedItems = mutableStateListOf<ItemDto>()
     var visibleItemIndex = 0
     var visibleItemOffset = 0
+}
+
+class ProfileCache {
+    val profile = mutableStateOf(ProfileDto.EMPTY)
 }
 
 fun AppState.configureWith(applicationContext: Context, activity: Activity? = null) {

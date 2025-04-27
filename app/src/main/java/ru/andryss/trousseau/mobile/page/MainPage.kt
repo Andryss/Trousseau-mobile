@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import ru.andryss.trousseau.mobile.AUTH_TOKEN_KEY
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.AuthActivity
 import ru.andryss.trousseau.mobile.SHARED_PREF_NAME
+import ru.andryss.trousseau.mobile.client.auth.updateProfileInfo
 
 fun AppState.navigateHomePage() {
     navController.navigate("home")
@@ -74,6 +76,10 @@ fun AppState.signOut(localContext: Context) {
 fun MainPage(state: AppState) {
     val navController = rememberNavController()
     state.navController = navController
+
+    LaunchedEffect(true) {
+        state.updateProfileInfo()
+    }
 
     NavHost(
         navController = navController,

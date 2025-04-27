@@ -31,8 +31,12 @@ data class ErrorObject(
 data class AuthorDto(
     val username: String,
     val contacts: List<String>,
-    val room: String,
-)
+    val room: String? = null,
+) {
+    companion object {
+        val EMPTY = AuthorDto("", listOf())
+    }
+}
 
 data class ItemMediaDto(
     val id: String,
@@ -56,7 +60,7 @@ data class ItemDto(
     val publishedAt: OffsetDateTime? = null,
 ) {
     companion object {
-        val EMPTY = ItemDto("", AuthorDto("", listOf(), ""), ItemStatus.UNKNOWN)
+        val EMPTY = ItemDto("", AuthorDto.EMPTY, ItemStatus.UNKNOWN)
     }
 }
 

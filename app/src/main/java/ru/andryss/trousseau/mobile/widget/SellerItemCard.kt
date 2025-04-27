@@ -1,7 +1,9 @@
 package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,9 +20,12 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -39,11 +44,14 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.ItemMediaDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
 import ru.andryss.trousseau.mobile.client.formatError
+import ru.andryss.trousseau.mobile.client.seller.BookingDto
+import ru.andryss.trousseau.mobile.client.seller.getItemBookingInfo
 import ru.andryss.trousseau.mobile.client.seller.updateSellerItemStatus
 import ru.andryss.trousseau.mobile.page.navigateSellerItemEditPage
 import ru.andryss.trousseau.mobile.page.navigateSellerItemPreviewPage
 import ru.andryss.trousseau.mobile.util.ItemStatus
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SellerItemCard(state: AppState, item: ItemDto) {
 
@@ -54,6 +62,9 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     var getBookingInfoLoading by remember { mutableStateOf(false) }
 
     var menuExpanded by remember { mutableStateOf(false) }
+
+    var booking by remember { mutableStateOf(BookingDto.EMPTY) }
+    var isBookingShown by remember { mutableStateOf(false) }
 
     val showAlert = remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -96,8 +107,20 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
 
     fun doGetBookingInfo() {
         getBookingInfoLoading = true
-        // TODO
-        getBookingInfoLoading = false
+        state.getItemBookingInfo(
+            item.id,
+            onSuccess = { result ->
+                booking = result
+                isBookingShown = true
+                getBookingInfoLoading = false
+            },
+            onError = { error ->
+                alertText = formatError(error)
+                showAlert.value = true
+                getBookingInfoLoading = false
+                menuExpanded = false
+            }
+        )
     }
 
     AlertWrapper(
@@ -151,7 +174,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                                 }
                                 if (status == ItemStatus.BOOKED) {
                                     SellerItemCardDropDown(
-                                        text = "Информация о бронировании",
+                                        text = "О бронировании",
                                         onClick = { doGetBookingInfo() },
                                         icon = Icons.Default.Person
                                     )
@@ -182,6 +205,34 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                     )
                 }
                 ItemCardContent(item)
+            }
+        }
+
+        if (isBookingShown) {
+            ModalBottomSheet(
+                onDismissRequest = { isBookingShown = false },
+                sheetState = rememberModalBottomSheetState(
+                    skipPartiallyExpanded = true
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = booking.author.username)
+                        TimeText(timestamp = booking.bookedAt)
+                    }
+                    booking.author.contacts.forEach { contact ->
+                        ContactTextField(state = state, contact = contact)
+                    }
+                }
             }
         }
     }

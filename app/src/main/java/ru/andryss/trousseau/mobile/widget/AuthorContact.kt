@@ -33,7 +33,14 @@ fun AuthorContact(state: AppState, contact: String) {
 
     var isDrawerShown by remember { mutableStateOf(false) }
 
-    val text = remember { Uri.parse(contact).host ?: contact }
+    val text = remember {
+        val uri = Uri.parse(contact).host ?: contact
+        return@remember if (uri.length < 15) {
+            uri
+        } else {
+            uri.substring(0, 12) + "..."
+        }
+    }
 
     Box(
         modifier = Modifier.height(35.dp)

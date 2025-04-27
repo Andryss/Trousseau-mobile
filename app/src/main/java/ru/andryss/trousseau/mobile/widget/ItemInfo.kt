@@ -52,7 +52,7 @@ fun ItemInfo(state: AppState, item: ItemDto) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Profile(user = item.author)
+            Profile(username = item.author.username, room = item.author.room)
 
             item.publishedAt?.let {
                 TimeText(it)

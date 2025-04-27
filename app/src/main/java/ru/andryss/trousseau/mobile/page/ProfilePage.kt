@@ -3,8 +3,11 @@ package ru.andryss.trousseau.mobile.page
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -55,10 +58,13 @@ import ru.andryss.trousseau.mobile.client.auth.updateProfileInfo
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
 import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.AuthorContact
 import ru.andryss.trousseau.mobile.widget.BottomBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.MainTopBar
+import ru.andryss.trousseau.mobile.widget.Profile
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ProfilePage(state: AppState) {
 
@@ -121,6 +127,33 @@ fun ProfilePage(state: AppState) {
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "Профиль",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+
+                        Profile(username = profile.username, room = profile.room)
+
+                        Column {
+                            Text(
+                                text = "Контакты",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                profile.contacts.forEach { contact ->
+                                    AuthorContact(state = state, contact = contact)
+                                }
+                            }
+                        }
+                    }
                     if (profile.hasPrivilege(NOTIFICATIONS_VIEW)) {
                         HorizontalDivider()
                         ProfileRow(

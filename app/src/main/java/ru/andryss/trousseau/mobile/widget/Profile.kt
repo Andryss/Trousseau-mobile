@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,12 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.andryss.trousseau.mobile.client.AuthorDto
 
 @Composable
-fun Profile(user: AuthorDto) {
-    val initials = remember(user) {
-        val split = user.username.split("\\s".toRegex())
+fun Profile(username: String, room: String? = null) {
+    val initials = remember(username) {
+        val split = username.split("\\s".toRegex())
 
         val name = if (split.isNotEmpty()) split[0] else ""
         val surname = if (split.size > 1) split[1] else ""
@@ -40,16 +40,27 @@ fun Profile(user: AuthorDto) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(30.dp)
+                .size(50.dp)
                 .background(MaterialTheme.colorScheme.primaryContainer, CircleShape)
                 .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
         ) {
-            Text(text = initials)
+            Text(
+                text = initials,
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
-        Text(
-            text = user.username,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 1
-        )
+        Column {
+            Text(
+                text = username,
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1
+            )
+            room?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
     }
 }

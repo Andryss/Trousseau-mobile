@@ -13,3 +13,5 @@ enum class ItemStatus(
     ARCHIVED("В АРХИВЕ", Color(0xFF757575)),
     UNKNOWN("???", Color(0xFFF44336))
 }
+
+val ITEM_EDITABLE_STATUSES = listOf(ItemStatus.DRAFT, ItemStatus.READY)

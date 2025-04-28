@@ -1,6 +1,7 @@
 package ru.andryss.trousseau.mobile.widget
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
@@ -41,6 +43,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.CategoryNode
 import ru.andryss.trousseau.mobile.client.pub.getCategoryTree
+import ru.andryss.trousseau.mobile.util.Strings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +53,13 @@ fun CategorySelectorModal(
     isSingleSelect: Boolean,
     onDismiss: () -> Unit
 ) {
+
+    val titleText = remember {
+        if (isSingleSelect)
+            Strings.SELECT_SINGLE_CATEGORY
+        else
+            Strings.SELECT_MULTIPLE_CATEGORIES
+    }
 
     var getCategoryTreeLoading by remember { mutableStateOf(false) }
     
@@ -107,11 +117,29 @@ fun CategorySelectorModal(
                 if (getCategoryTreeLoading) {
                     CircularProgressIndicator()
                 } else {
-                    CategoryNodeRootSelector(
-                        category = root,
-                        selected = selected,
-                        onSelect = { onSelect(it) }
+                    Text(
+                        text = titleText,
+                        style = MaterialTheme.typography.titleLarge
                     )
+                    Box(
+                        modifier = Modifier
+                            .height(600.dp)
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                    ) {
+                        Box(
+                            modifier = Modifier.verticalScroll(rememberScrollState())
+                        ) {
+                            CategoryNodeSelector(
+                                category = root,
+                                selected = selected,
+                                onSelect = { onSelect(it) }
+                            )
+                        }
+                    }
                     Button(
                         onClick = {
                             onSelect(selected)
@@ -122,31 +150,6 @@ fun CategorySelectorModal(
                         Text("Выбрать")
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun CategoryNodeRootSelector(
-    category: CategoryNode,
-    selected: List<CategoryNode>,
-    onSelect: (CategoryNode) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = category.name,
-            style = MaterialTheme.typography.titleLarge
-        )
-        Column(
-            modifier = Modifier
-                .height(500.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            category.children.forEach { child ->
-                CategoryNodeSelector(child, selected, onSelect)
             }
         }
     }
@@ -237,7 +240,7 @@ fun CategoryNodePreview() {
 
     Column {
         Spacer(modifier = Modifier.height(50.dp))
-        CategoryNodeRootSelector(
+        CategoryNodeSelector(
             CategoryNode("all", "Все категории", listOf(
                 CategoryNode("clothes", "Одежда и обувь", listOf(
                     CategoryNode("shoes1", "Обувь"),

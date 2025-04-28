@@ -17,8 +17,9 @@ import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_CREATE
 import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.getSellerItem
-import ru.andryss.trousseau.mobile.widget.BottomActionButton
+import ru.andryss.trousseau.mobile.util.ITEM_EDITABLE_STATUSES
 import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomActionButton
 import ru.andryss.trousseau.mobile.widget.ItemPageContent
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
@@ -58,6 +59,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
         Scaffold(
             topBar = {
                 ReturnBackTopBar(
+                    title = "Предпросмотр объявления",
                     onReturn = { state.navigateSellerItemsPage() }
                 )
             }
@@ -69,7 +71,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
             ) {
                 ItemPageContent(state = state, item = item)
 
-                if (profile.hasPrivilege(ITEMS_CREATE)) {
+                if (profile.hasPrivilege(ITEMS_CREATE) && item.status in ITEM_EDITABLE_STATUSES) {
                     BottomActionButton(
                         text = "Редактировать",
                         action = { state.navigateSellerItemEditPage(itemId) }

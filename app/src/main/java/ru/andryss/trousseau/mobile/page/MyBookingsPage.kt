@@ -3,14 +3,21 @@ package ru.andryss.trousseau.mobile.page
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.formatError
@@ -94,7 +105,40 @@ fun MyBookingsPage(state: AppState) {
                         CircularProgressIndicator()
                     } else {
                         if (bookingsList.isEmpty()) {
-                            Text("*нет бронирований*")
+                            Text(
+                                text = "Активных бронирований нет",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    contentDescription = null
+                                )
+                                Text(
+                                    text = buildAnnotatedString {
+                                        appendLine("Чтобы забронировать объявление - откройте")
+                                        append("интересующее объявление и нажмите «Забронировать»")
+                                    },
+                                    inlineContent = mapOf(
+                                        "heart" to InlineTextContent(
+                                            placeholder = Placeholder(
+                                                width = 20.sp,
+                                                height = 20.sp,
+                                                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                                            )
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.FavoriteBorder,
+                                                contentDescription = "Favorite"
+                                            )
+                                        }
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
                         } else {
                             for (item in bookingsList) {
                                 ItemCard(state, item, ItemPageCallback.BOOKINGS)

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.NotificationDto
@@ -77,10 +78,15 @@ fun NotificationsPage(state: AppState) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (getNotificationsLoading) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(10.dp)
+                        )
                     } else {
                         if (notifications.isEmpty()) {
-                            Text("*нет уведомлений*")
+                            Text(
+                                text = "Уведомлений пока нет...",
+                                modifier = Modifier.padding(10.dp)
+                            )
                         } else {
                             notifications.forEach {
                                 NotificationCard(

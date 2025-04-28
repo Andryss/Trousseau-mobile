@@ -30,7 +30,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.auth.SignInRequest
 import ru.andryss.trousseau.mobile.client.auth.signIn
 import ru.andryss.trousseau.mobile.client.formatError
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
 
 @Composable
 fun SignInPage(state: AppState) {
@@ -45,7 +45,7 @@ fun SignInPage(state: AppState) {
     var password by remember { mutableStateOf("") }
     var isPasswordError by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getUsername() =
@@ -81,14 +81,15 @@ fun SignInPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 signInLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Box(

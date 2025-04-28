@@ -43,7 +43,7 @@ import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.auth.SignUpRequest
 import ru.andryss.trousseau.mobile.client.auth.signUp
 import ru.andryss.trousseau.mobile.client.formatError
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
 
 @Composable
 fun SignUpPage(state: AppState) {
@@ -66,7 +66,7 @@ fun SignUpPage(state: AppState) {
     var room by remember { mutableStateOf("") }
     var isRoomError by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getUsername() =
@@ -139,14 +139,15 @@ fun SignUpPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 signUpLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Box(

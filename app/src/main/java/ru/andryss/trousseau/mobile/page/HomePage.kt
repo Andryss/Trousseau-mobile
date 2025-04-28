@@ -38,11 +38,11 @@ import ru.andryss.trousseau.mobile.client.pub.SortField
 import ru.andryss.trousseau.mobile.client.pub.SortInfo
 import ru.andryss.trousseau.mobile.client.pub.SortOrder
 import ru.andryss.trousseau.mobile.client.pub.searchItems
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
-import ru.andryss.trousseau.mobile.widget.MainTopBar
+import ru.andryss.trousseau.mobile.widget.AppNameTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +60,7 @@ fun HomePage(state: AppState) {
     val listState = rememberLazyListState(cache.visibleItemIndex, cache.visibleItemOffset)
     var isStopFetching by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun fetchNextBatch() {
@@ -93,7 +93,7 @@ fun HomePage(state: AppState) {
                     return@searchItems
                 }
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 feedLoading = false
             }
         )
@@ -131,13 +131,14 @@ fun HomePage(state: AppState) {
             }
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
-            topBar = { MainTopBar() },
-            bottomBar = { BottomBar(state, BottomPage.HOME) }
+            topBar = { AppNameTopBar() },
+            bottomBar = { BottomNavigationBar(state, BottomPage.HOME) }
         ) { padding ->
             Box(
                 modifier = Modifier

@@ -21,9 +21,9 @@ import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getItem
 import ru.andryss.trousseau.mobile.client.pub.updateItemStatus
 import ru.andryss.trousseau.mobile.util.ItemStatus
-import ru.andryss.trousseau.mobile.widget.ActionButton
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.ItemInfo
+import ru.andryss.trousseau.mobile.widget.BottomActionButton
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.ItemPageContent
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
 @Composable
@@ -37,7 +37,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
 
     var item by remember { mutableStateOf(ItemDto.EMPTY) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun updateStatus(
@@ -54,7 +54,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 loadingVar.value = false
             }
         )
@@ -76,14 +76,15 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getItemLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -105,25 +106,25 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                ItemInfo(state = state, item = item)
+                ItemPageContent(state = state, item = item)
 
                 if (profile.hasPrivilege(ITEMS_PUBLISHED_STATUS_CHANGED)) {
                     if (item.status == ItemStatus.PUBLISHED) {
-                        ActionButton(
+                        BottomActionButton(
                             text = "Забронировать",
                             action = { onBook() }
                         )
                     }
 
                     if (item.status == ItemStatus.BOOKED) {
-                        ActionButton(
+                        BottomActionButton(
                             text = "Снять бронирование",
                             action = { onUnbook() }
                         )
                     }
 
                     if (item.status == ItemStatus.ARCHIVED) {
-                        ActionButton(
+                        BottomActionButton(
                             text = "Объявление в архиве",
                             action = { },
                             enabled = false

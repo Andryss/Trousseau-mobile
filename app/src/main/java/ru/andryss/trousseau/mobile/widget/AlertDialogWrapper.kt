@@ -9,22 +9,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 
 @Composable
-fun AlertWrapper(
-    isShown: MutableState<Boolean>,
+fun AlertDialogWrapper(
+    isShown: Boolean,
+    onDismiss: () -> Unit,
     text: String,
     content: @Composable BoxScope.() -> Unit,
 ) {
     Box {
         content()
 
-        if (isShown.value) {
+        if (isShown) {
             AlertDialog(
-                onDismissRequest = { isShown.value = false },
+                onDismissRequest = { onDismiss() },
                 confirmButton = {
-                    TextButton(onClick = { isShown.value = false }) {
+                    TextButton(onClick = { onDismiss() }) {
                         Text("ОК")
                     }
                 },

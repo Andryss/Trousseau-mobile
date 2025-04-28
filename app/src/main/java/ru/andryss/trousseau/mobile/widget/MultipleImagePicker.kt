@@ -36,7 +36,7 @@ fun MultipleImagePicker(context: Context, imageUris: SnapshotStateList<Uri>) {
 
     var selectedImage by remember { mutableIntStateOf(0) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     val selectLauncher = rememberLauncherForActivityResult(
@@ -46,7 +46,7 @@ fun MultipleImagePicker(context: Context, imageUris: SnapshotStateList<Uri>) {
             context.contentResolver.openInputStream(uri)?.use {
                 if (it.available() > MAX_ALLOWED_FILE_SIZE) {
                     alertText = "Размер файла превышает максимально допустимый (8 МБ)"
-                    showAlert.value = true
+                    showAlert = true
                     return@rememberLauncherForActivityResult
                 }
             }
@@ -55,8 +55,9 @@ fun MultipleImagePicker(context: Context, imageUris: SnapshotStateList<Uri>) {
         selectedImage = 0
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Column(

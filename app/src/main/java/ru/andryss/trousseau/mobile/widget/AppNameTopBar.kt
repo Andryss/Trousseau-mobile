@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar() {
+fun AppNameTopBar() {
     TopAppBar(
         title = { Text("ПРИДАНОЕ") },
         colors = TopAppBarDefaults.topAppBarColors(

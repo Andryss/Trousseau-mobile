@@ -35,8 +35,8 @@ import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.createSellerItem
 import ru.andryss.trousseau.mobile.client.seller.getSellerItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 import ru.andryss.trousseau.mobile.widget.SellerItemCard
@@ -51,7 +51,7 @@ fun MyItemsPage(state: AppState) {
     var getItemsLoading by remember { mutableStateOf(false) }
     var createItemLoading by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getItems() {
@@ -63,7 +63,7 @@ fun MyItemsPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getItemsLoading = false
             }
         )
@@ -78,7 +78,7 @@ fun MyItemsPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 createItemLoading = false
             }
         )
@@ -88,8 +88,9 @@ fun MyItemsPage(state: AppState) {
         getItems()
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -99,7 +100,7 @@ fun MyItemsPage(state: AppState) {
                     onReturn = { state.navigateProfilePage() }
                 )
             },
-            bottomBar = { BottomBar(state = state, page = BottomPage.PROFILE) },
+            bottomBar = { BottomNavigationBar(state = state, page = BottomPage.PROFILE) },
             floatingActionButton = {
                 if (profile.hasPrivilege(ITEMS_CREATE)) {
                     FloatingActionButton(

@@ -39,8 +39,8 @@ import ru.andryss.trousseau.mobile.client.seller.getSellerItem
 import ru.andryss.trousseau.mobile.client.seller.updateSellerItem
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.ActionButton
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
+import ru.andryss.trousseau.mobile.widget.BottomActionButton
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
 import ru.andryss.trousseau.mobile.widget.CategorySelectorModal
 import ru.andryss.trousseau.mobile.widget.MultipleImagePicker
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
@@ -64,7 +64,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
 
     var showCategoryModal by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getTitle() = title.trim()
@@ -107,7 +107,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 loadingVar.value = false
             }
         )
@@ -138,7 +138,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 },
                 onError = { error ->
                     alertText = formatError(error)
-                    showAlert.value = true
+                    showAlert = true
                 }
             )
         }
@@ -167,7 +167,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getItemLoading = false
             }
         )
@@ -191,8 +191,9 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
         }
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -252,7 +253,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                     Spacer(modifier = Modifier.height(70.dp))
                 }
 
-                ActionButton(
+                BottomActionButton(
                     text = "Сохранить",
                     action = { onSave() }
                 )

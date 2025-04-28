@@ -17,9 +17,9 @@ import ru.andryss.trousseau.mobile.client.auth.Privilege.ITEMS_CREATE
 import ru.andryss.trousseau.mobile.client.auth.hasPrivilege
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.seller.getSellerItem
-import ru.andryss.trousseau.mobile.widget.ActionButton
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.ItemInfo
+import ru.andryss.trousseau.mobile.widget.BottomActionButton
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.ItemPageContent
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
 
 @Composable
@@ -31,7 +31,7 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
 
     var item by remember { mutableStateOf(ItemDto.EMPTY) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
@@ -44,14 +44,15 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getItemLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -66,10 +67,10 @@ fun ItemPreviewPage(state: AppState, itemId: String) {
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                ItemInfo(state = state, item = item)
+                ItemPageContent(state = state, item = item)
 
                 if (profile.hasPrivilege(ITEMS_CREATE)) {
-                    ActionButton(
+                    BottomActionButton(
                         text = "Редактировать",
                         action = { state.navigateSellerItemEditPage(itemId) }
                     )

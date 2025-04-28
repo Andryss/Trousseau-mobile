@@ -28,8 +28,8 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getBookings
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
@@ -41,7 +41,7 @@ fun MyBookingsPage(state: AppState) {
 
     var getBookingsLoading by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun getBookings() {
@@ -53,7 +53,7 @@ fun MyBookingsPage(state: AppState) {
             },
             onError = {
                 alertText = formatError(it)
-                showAlert.value = true
+                showAlert = true
                 getBookingsLoading = false
             }
         )
@@ -63,8 +63,9 @@ fun MyBookingsPage(state: AppState) {
         getBookings()
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -74,7 +75,7 @@ fun MyBookingsPage(state: AppState) {
                     onReturn = { state.navigateProfilePage() }
                 )
             },
-            bottomBar = { BottomBar(state = state, page = BottomPage.PROFILE) }
+            bottomBar = { BottomNavigationBar(state = state, page = BottomPage.PROFILE) }
         ) { padding ->
             Box(
                 modifier = Modifier

@@ -29,7 +29,7 @@ import ru.andryss.trousseau.mobile.util.Strings
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ItemInfo(state: AppState, item: ItemDto) {
+fun ItemPageContent(state: AppState, item: ItemDto) {
 
     val imageUris = remember(item) { item.media.map { it.href.toUri() } }
 
@@ -52,10 +52,10 @@ fun ItemInfo(state: AppState, item: ItemDto) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Profile(username = item.author.username, room = item.author.room)
+            UserProfile(username = item.author.username, room = item.author.room)
 
             item.publishedAt?.let {
-                TimeText(it)
+                SomeTimeAgoText(it)
             } ?: Text(
                 text = Strings.EMPTY_PUBLISHED_AT,
                 style = MaterialTheme.typography.bodyMedium,
@@ -69,7 +69,7 @@ fun ItemInfo(state: AppState, item: ItemDto) {
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item.author.contacts.forEach { contact ->
-                AuthorContact(state = state, contact = contact)
+                ContactChip(state = state, contact = contact)
             }
         }
         Text(
@@ -113,5 +113,5 @@ fun ItemInfoPreview() {
         """.trimIndent(),
         status = ItemStatus.READY
     )
-    ItemInfo(AppState(), item)
+    ItemPageContent(AppState(), item)
 }

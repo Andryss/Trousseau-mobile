@@ -28,8 +28,8 @@ import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.getFavourites
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
@@ -41,7 +41,7 @@ fun FavouritesPage(state: AppState) {
 
     val favourites = remember { mutableStateListOf<ItemDto>() }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun doGetFavourite() {
@@ -53,7 +53,7 @@ fun FavouritesPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getFavouritesLoading = false
             }
         )
@@ -63,8 +63,9 @@ fun FavouritesPage(state: AppState) {
         doGetFavourite()
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -74,7 +75,7 @@ fun FavouritesPage(state: AppState) {
                     onReturn = { state.navigateProfilePage() }
                 )
             },
-            bottomBar = { BottomBar(state, BottomPage.PROFILE) }
+            bottomBar = { BottomNavigationBar(state, BottomPage.PROFILE) }
         ) { padding ->
             Box(
                 modifier = Modifier

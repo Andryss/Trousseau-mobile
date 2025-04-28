@@ -66,7 +66,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
     var booking by remember { mutableStateOf(BookingDto.EMPTY) }
     var isBookingShown by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     var status by remember { mutableStateOf(item.status) }
@@ -86,7 +86,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 loadingVar.value = false
                 menuExpanded = false
             }
@@ -116,15 +116,16 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getBookingInfoLoading = false
                 menuExpanded = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Card(
@@ -227,7 +228,7 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(text = booking.author.username)
-                        TimeText(timestamp = booking.bookedAt)
+                        SomeTimeAgoText(timestamp = booking.bookedAt)
                     }
                     booking.author.contacts.forEach { contact ->
                         ContactTextField(state = state, contact = contact)

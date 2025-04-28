@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Profile(username: String, room: String? = null) {
+fun UserProfile(username: String, room: String? = null) {
     val initials = remember(username) {
         val split = username.split("\\s".toRegex())
 

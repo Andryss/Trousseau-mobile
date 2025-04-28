@@ -57,7 +57,7 @@ fun CategorySelectorModal(
 
     val selected = remember { mutableStateListOf<CategoryNode>() }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun onSelect(category: CategoryNode) {
@@ -80,14 +80,15 @@ fun CategorySelectorModal(
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getCategoryTreeLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         ModalBottomSheet(

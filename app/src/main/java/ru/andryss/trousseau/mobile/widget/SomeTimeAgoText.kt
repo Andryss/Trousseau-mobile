@@ -16,7 +16,7 @@ private const val DAYS_IN_MONTH = 30
 private const val DAYS_IN_YEAR = 365
 
 @Composable
-fun TimeText(timestamp: OffsetDateTime) {
+fun SomeTimeAgoText(timestamp: OffsetDateTime) {
 
     val seconds = Duration.between(timestamp, OffsetDateTime.now()).seconds
 
@@ -69,23 +69,23 @@ private fun getPluralForm(value: Long, forms: List<String>): String {
 @Composable
 fun TimeTextPreview() {
     Column {
-        TimeText(OffsetDateTime.now().minusSeconds(5))
-        TimeText(OffsetDateTime.now().minusMinutes(1))
-        TimeText(OffsetDateTime.now().minusMinutes(4))
-        TimeText(OffsetDateTime.now().minusMinutes(15))
-        TimeText(OffsetDateTime.now().minusHours(11))
-        TimeText(OffsetDateTime.now().minusHours(1))
-        TimeText(OffsetDateTime.now().minusHours(3))
-        TimeText(OffsetDateTime.now().minusDays(1))
-        TimeText(OffsetDateTime.now().minusDays(3))
-        TimeText(OffsetDateTime.now().minusDays(5))
-        TimeText(OffsetDateTime.now().minusWeeks(1))
-        TimeText(OffsetDateTime.now().minusWeeks(3))
-        TimeText(OffsetDateTime.now().minusMonths(1))
-        TimeText(OffsetDateTime.now().minusMonths(3))
-        TimeText(OffsetDateTime.now().minusMonths(11))
-        TimeText(OffsetDateTime.now().minusYears(1))
-        TimeText(OffsetDateTime.now().minusYears(4))
-        TimeText(OffsetDateTime.now().minusYears(7))
+        SomeTimeAgoText(OffsetDateTime.now().minusSeconds(5))
+        SomeTimeAgoText(OffsetDateTime.now().minusMinutes(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusMinutes(4))
+        SomeTimeAgoText(OffsetDateTime.now().minusMinutes(15))
+        SomeTimeAgoText(OffsetDateTime.now().minusHours(11))
+        SomeTimeAgoText(OffsetDateTime.now().minusHours(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusHours(3))
+        SomeTimeAgoText(OffsetDateTime.now().minusDays(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusDays(3))
+        SomeTimeAgoText(OffsetDateTime.now().minusDays(5))
+        SomeTimeAgoText(OffsetDateTime.now().minusWeeks(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusWeeks(3))
+        SomeTimeAgoText(OffsetDateTime.now().minusMonths(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusMonths(3))
+        SomeTimeAgoText(OffsetDateTime.now().minusMonths(11))
+        SomeTimeAgoText(OffsetDateTime.now().minusYears(1))
+        SomeTimeAgoText(OffsetDateTime.now().minusYears(4))
+        SomeTimeAgoText(OffsetDateTime.now().minusYears(7))
     }
 }

@@ -44,7 +44,7 @@ fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
     val imageUris = remember { item.media.map { it.href.toUri() } }
     var isFavourite by remember { mutableStateOf(item.isFavourite) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun onChangeFavourite() {
@@ -56,13 +56,14 @@ fun ItemCard(state: AppState, item: ItemDto, callback: ItemPageCallback) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Card(

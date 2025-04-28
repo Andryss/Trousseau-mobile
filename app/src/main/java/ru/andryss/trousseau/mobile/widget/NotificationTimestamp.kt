@@ -13,7 +13,7 @@ val yesterdayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("вче�
 val beforeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM, HH:mm")
 
 @Composable
-fun Timestamp(timestamp: OffsetDateTime) {
+fun NotificationTimestamp(timestamp: OffsetDateTime) {
     val zone = remember { ZoneId.systemDefault() }
     val timestampWithZone = remember { timestamp.atZoneSameInstant(zone) }
     val startOfDay = remember { LocalDate.now().atStartOfDay().atZone(zone) }

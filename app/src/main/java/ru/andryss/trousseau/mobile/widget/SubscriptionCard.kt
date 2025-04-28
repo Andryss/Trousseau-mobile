@@ -62,7 +62,7 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
         )
     }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun onEditStart() {
@@ -81,7 +81,7 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 updateSubscriptionLoading = false
             }
         )
@@ -101,14 +101,15 @@ fun SubscriptionCard(state: AppState, dto: SubscriptionDto, onSubscriptionDelete
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 deleteSubscriptionLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Card(

@@ -81,7 +81,7 @@ fun NotificationCard(state: AppState, notification: NotificationDto) {
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
-                Timestamp(notification.timestamp)
+                NotificationTimestamp(notification.timestamp)
             }
             Text(
                 text = notification.content,

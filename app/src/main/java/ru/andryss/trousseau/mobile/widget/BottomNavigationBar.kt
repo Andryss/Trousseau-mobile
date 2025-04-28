@@ -38,7 +38,7 @@ enum class BottomPage(
 }
 
 @Composable
-fun BottomBar(state: AppState, page: BottomPage) {
+fun BottomNavigationBar(state: AppState, page: BottomPage) {
     NavigationBar {
         BottomPage.entries.forEach { entry ->
             NavigationBarItem(

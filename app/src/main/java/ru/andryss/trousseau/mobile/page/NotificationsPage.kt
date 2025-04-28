@@ -22,8 +22,8 @@ import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.NotificationDto
 import ru.andryss.trousseau.mobile.client.pub.notifications.getNotifications
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.NotificationCard
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
@@ -35,7 +35,7 @@ fun NotificationsPage(state: AppState) {
 
     val notifications = remember { mutableStateListOf<NotificationDto>() }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
@@ -47,14 +47,15 @@ fun NotificationsPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 getNotificationsLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
@@ -64,7 +65,7 @@ fun NotificationsPage(state: AppState) {
                     onReturn = { state.navigateProfilePage() }
                 )
             },
-            bottomBar = { BottomBar(state = state, page = BottomPage.PROFILE) }
+            bottomBar = { BottomNavigationBar(state = state, page = BottomPage.PROFILE) }
         ) { padding ->
             Box(
                 modifier = Modifier

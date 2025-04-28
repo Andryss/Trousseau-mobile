@@ -53,11 +53,11 @@ import ru.andryss.trousseau.mobile.client.pub.SortInfo
 import ru.andryss.trousseau.mobile.client.pub.SortOrder
 import ru.andryss.trousseau.mobile.client.pub.searchItems
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
 import ru.andryss.trousseau.mobile.widget.ItemCard
-import ru.andryss.trousseau.mobile.widget.MainTopBar
+import ru.andryss.trousseau.mobile.widget.AppNameTopBar
 
 enum class SortingFilter(
     val label: String,
@@ -86,7 +86,7 @@ fun SearchPage(state: AppState) {
     var selectedSorting by remember { mutableStateOf(SortingFilter.NEW_FIRST) }
     var isSortingExpanded by remember { mutableStateOf(false) }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun doSearch() {
@@ -109,19 +109,20 @@ fun SearchPage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 searchItemsLoading = false
             }
         )
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
-            topBar = { MainTopBar() },
-            bottomBar = { BottomBar(state, BottomPage.SEARCH) }
+            topBar = { AppNameTopBar() },
+            bottomBar = { BottomNavigationBar(state, BottomPage.SEARCH) }
         ) { padding ->
             Box(
                 modifier = Modifier

@@ -57,12 +57,12 @@ import ru.andryss.trousseau.mobile.client.auth.signOut
 import ru.andryss.trousseau.mobile.client.auth.updateProfileInfo
 import ru.andryss.trousseau.mobile.client.formatError
 import ru.andryss.trousseau.mobile.client.pub.notifications.getUnreadNotificationsCount
-import ru.andryss.trousseau.mobile.widget.AlertWrapper
-import ru.andryss.trousseau.mobile.widget.AuthorContact
-import ru.andryss.trousseau.mobile.widget.BottomBar
+import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.ContactChip
+import ru.andryss.trousseau.mobile.widget.BottomNavigationBar
 import ru.andryss.trousseau.mobile.widget.BottomPage
-import ru.andryss.trousseau.mobile.widget.MainTopBar
-import ru.andryss.trousseau.mobile.widget.Profile
+import ru.andryss.trousseau.mobile.widget.AppNameTopBar
+import ru.andryss.trousseau.mobile.widget.UserProfile
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -78,7 +78,7 @@ fun ProfilePage(state: AppState) {
 
     val profile by remember { state.cache.profileCache.profile }
 
-    val showAlert = remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
 
     fun logOut() {
@@ -90,7 +90,7 @@ fun ProfilePage(state: AppState) {
             },
             onError = { error ->
                 alertText = formatError(error)
-                showAlert.value = true
+                showAlert = true
                 logoutLoading = false
             }
         )
@@ -111,13 +111,14 @@ fun ProfilePage(state: AppState) {
         state.updateProfileInfo()
     }
 
-    AlertWrapper(
+    AlertDialogWrapper(
         isShown = showAlert,
+        onDismiss = { showAlert = false },
         text = alertText
     ) {
         Scaffold(
-            topBar = { MainTopBar() },
-            bottomBar = { BottomBar(state, BottomPage.PROFILE) },
+            topBar = { AppNameTopBar() },
+            bottomBar = { BottomNavigationBar(state, BottomPage.PROFILE) },
         ) { padding ->
             Box(
                 modifier = Modifier
@@ -138,7 +139,7 @@ fun ProfilePage(state: AppState) {
                             style = MaterialTheme.typography.headlineSmall
                         )
 
-                        Profile(username = profile.username, room = profile.room)
+                        UserProfile(username = profile.username, room = profile.room)
 
                         Column {
                             Text(
@@ -149,7 +150,7 @@ fun ProfilePage(state: AppState) {
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 profile.contacts.forEach { contact ->
-                                    AuthorContact(state = state, contact = contact)
+                                    ContactChip(state = state, contact = contact)
                                 }
                             }
                         }

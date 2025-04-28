@@ -44,10 +44,10 @@ fun ItemCardContent(item: ItemDto) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Profile(username = item.author.username, room = item.author.room)
+            UserProfile(username = item.author.username, room = item.author.room)
 
             item.publishedAt?.let {
-                TimeText(it)
+                SomeTimeAgoText(it)
             } ?: Text(
                 text = Strings.EMPTY_PUBLISHED_AT,
                 style = MaterialTheme.typography.bodyMedium,

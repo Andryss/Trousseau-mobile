@@ -62,6 +62,7 @@ fun ContactTextField(state: AppState, contact: String) {
             }
         },
         readOnly = true,
+        singleLine = true,
         maxLines = 1
     )
 }

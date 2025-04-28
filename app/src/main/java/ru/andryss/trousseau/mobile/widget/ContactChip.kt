@@ -29,7 +29,7 @@ import ru.andryss.trousseau.mobile.AppState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthorContact(state: AppState, contact: String) {
+fun ContactChip(state: AppState, contact: String) {
 
     var isDrawerShown by remember { mutableStateOf(false) }
 

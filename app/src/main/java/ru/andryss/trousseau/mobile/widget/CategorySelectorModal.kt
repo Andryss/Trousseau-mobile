@@ -180,32 +180,39 @@ fun CategoryNodeSelector(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Box(
-                    modifier = Modifier.size(40.dp)
+                Row(
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.run {
-                            if (!hasChildren) Icons.AutoMirrored.Filled.ArrowRight
-                            else if (isExpanded) ExpandLess else ExpandMore
-                        },
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.Center)
+                    Box(
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.run {
+                                if (!hasChildren) Icons.AutoMirrored.Filled.ArrowRight
+                                else if (isExpanded) ExpandLess else ExpandMore
+                            },
+                            contentDescription = null,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    Text(
+                        text = category.name,
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
-                Text(
-                    text = category.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            if (category in selected) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
+                if (category in selected) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                            .align(Alignment.CenterEnd)
+                    )
+                }
             }
         }
         if (isExpanded) {

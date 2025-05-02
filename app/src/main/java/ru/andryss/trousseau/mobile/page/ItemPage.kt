@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ru.andryss.trousseau.mobile.AppState
 import ru.andryss.trousseau.mobile.client.ItemDto
 import ru.andryss.trousseau.mobile.client.UpdateItemStatus
@@ -105,6 +106,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
             Box(
                 modifier = Modifier
                     .padding(padding)
+                    .padding(vertical = 10.dp)
                     .fillMaxSize()
             ) {
                 ItemPageContent(state = state, item = item)

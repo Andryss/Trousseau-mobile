@@ -90,6 +90,7 @@ fun ItemPage(state: AppState, itemId: String, callback: ItemPageCallback) {
         Scaffold(
             topBar = {
                 ReturnBackTopBar(
+                    title = "Просмотр объявления",
                     onReturn = {
                         when (callback) {
                             ItemPageCallback.HOME -> state.navigateHomePage()

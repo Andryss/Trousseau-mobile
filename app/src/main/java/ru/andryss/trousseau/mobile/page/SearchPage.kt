@@ -70,6 +70,14 @@ enum class SortingFilter(
     OLD_FIRST(
         "сначала старые",
         SortInfo(field = SortField.CREATED_AT, order = SortOrder.ASC)
+    ),
+    CHEEP_FIRST(
+        "сначала дешевые",
+        SortInfo(field = SortField.COST, order = SortOrder.ASC)
+    ),
+    EXPENSIVE_FIRST(
+        "сначала дорогие",
+        SortInfo(field = SortField.COST, order = SortOrder.DESC)
     )
 }
 
@@ -194,7 +202,7 @@ fun SearchPage(state: AppState) {
                                             onValueChange = { },
                                             modifier = Modifier
                                                 .menuAnchor(MenuAnchorType.PrimaryNotEditable)
-                                                .width(200.dp),
+                                                .width(230.dp),
                                             readOnly = true,
                                             trailingIcon = {
                                                 ExposedDropdownMenuDefaults.TrailingIcon(

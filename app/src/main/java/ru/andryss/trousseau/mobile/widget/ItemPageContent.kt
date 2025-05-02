@@ -46,6 +46,16 @@ fun ItemPageContent(state: AppState, item: ItemDto) {
         )
         ImagePager(images = imageUris)
         Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            Text(
+                text = item.formatCost(),
+                modifier = Modifier.padding(horizontal = 15.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp),
@@ -111,6 +121,7 @@ fun ItemInfoPreview() {
             
             Many lines Many lines Many lines
         """.trimIndent(),
+        cost = 5000,
         status = ItemStatus.READY
     )
     ItemPageContent(AppState(), item)

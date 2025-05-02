@@ -14,7 +14,8 @@ data class UpdateItemInfo(
     val title: String? = null,
     val media: List<String> = listOf(),
     val description: String? = null,
-    val category: String? = null
+    val category: String? = null,
+    val cost: Long? = null,
 )
 
 fun AppState.updateSellerItem(

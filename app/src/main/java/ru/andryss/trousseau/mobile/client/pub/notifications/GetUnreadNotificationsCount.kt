@@ -39,7 +39,8 @@ fun AppState.getUnreadNotificationsCount(): Int {
     val response = httpRequest(
         "GET",
         "/public/notifications/unread/count",
-        null
+        null,
+        authHeaders(),
     )
     val code = response.code
     val body = response.body?.string()

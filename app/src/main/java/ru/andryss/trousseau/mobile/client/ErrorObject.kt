@@ -14,6 +14,7 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import ru.andryss.trousseau.mobile.TAG
 import ru.andryss.trousseau.mobile.util.ItemStatus
+import ru.andryss.trousseau.mobile.util.Strings
 import java.io.IOException
 import java.time.OffsetDateTime
 import java.util.Random
@@ -56,11 +57,18 @@ data class ItemDto(
     val media: List<ItemMediaDto> = listOf(),
     val description: String? = null,
     val category: CategoryDto? = null,
+    val cost: Long? = null,
     var isFavourite: Boolean = false,
     val publishedAt: OffsetDateTime? = null,
 ) {
     companion object {
         val EMPTY = ItemDto("", AuthorDto.EMPTY, ItemStatus.UNKNOWN)
+    }
+    fun formatCost(): String {
+        if (cost == null || cost == 0L) {
+            return Strings.EMPTY_ITEM_COST
+        }
+        return "$cost \u20BD"
     }
 }
 

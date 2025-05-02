@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlinx.coroutines.delay
@@ -39,8 +41,8 @@ import ru.andryss.trousseau.mobile.client.seller.getSellerItem
 import ru.andryss.trousseau.mobile.client.seller.updateSellerItem
 import ru.andryss.trousseau.mobile.util.ItemStatus
 import ru.andryss.trousseau.mobile.util.replaceAllFrom
-import ru.andryss.trousseau.mobile.widget.BottomActionButton
 import ru.andryss.trousseau.mobile.widget.AlertDialogWrapper
+import ru.andryss.trousseau.mobile.widget.BottomActionButton
 import ru.andryss.trousseau.mobile.widget.CategorySelectorModal
 import ru.andryss.trousseau.mobile.widget.MultipleImagePicker
 import ru.andryss.trousseau.mobile.widget.ReturnBackTopBar
@@ -60,9 +62,11 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     val imageIds = remember { mutableStateListOf<String>() }
     var description by remember { mutableStateOf("") }
     var category by remember { mutableStateOf(CategoryNode.EMPTY) }
+    var cost by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(ItemStatus.UNKNOWN) }
 
     var showCategoryModal by remember { mutableStateOf(false) }
+    var isCostError by remember { mutableStateOf(false) }
 
     var showAlert by remember { mutableStateOf(false) }
     var alertText by remember { mutableStateOf("") }
@@ -78,12 +82,21 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     fun getCategory() = category.id
         .ifBlank { null }
 
+    fun getCost() = cost.trim()
+        .toLongOrNull()
+
+    fun setCost(value: String) {
+        cost = value
+        isCostError = false
+    }
+
     fun isMediaDiffers() = lastSavedMediaUris.size != imageUris.size
             || !lastSavedMediaUris.containsAll(imageUris)
 
     fun hasLocalChangesMade() = lastSavedState.title != getTitle()
             || lastSavedState.description != getDescription()
             || lastSavedState.category?.id != getCategory()
+            || lastSavedState.cost != getCost()
             || isMediaDiffers()
 
     fun getItemInfo() =
@@ -92,6 +105,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
             imageIds,
             getDescription(),
             getCategory(),
+            getCost(),
         )
 
     fun updateItemInternal(
@@ -114,6 +128,12 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
     }
 
     fun updateAsync(loadingVar: MutableState<Boolean>, onSuccess: (ItemDto) -> Unit) {
+        val costValue = getCost()
+        if (costValue == null && cost != "") {
+            isCostError = true
+            return
+        }
+
         loadingVar.value = true
         if (imageUris.isEmpty()) {
             imageIds.clear()
@@ -160,6 +180,7 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                 imageUris.replaceAllFrom(item.media.map { it.href.toUri() })
                 description = item.description ?: ""
                 category = CategoryNode.fromDto(item.category)
+                cost = item.cost?.toString() ?: ""
                 status = item.status
                 lastSavedState = item
                 lastSavedMediaUris.replaceAllFrom(imageUris)
@@ -249,6 +270,22 @@ fun EditSellerItemPage(state: AppState, itemId: String) {
                                     }
                                 }
                             }
+                    )
+                    OutlinedTextField(
+                        value = cost,
+                        onValueChange = { setCost(it) },
+                        suffix = { Text(text = "\u20BD") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        label = { Text(text = "Цена") },
+                        placeholder = { Text(text = "Бесплатно") },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        isError = isCostError,
+                        maxLines = 1,
+                        singleLine = true
                     )
                     Spacer(modifier = Modifier.height(70.dp))
                 }

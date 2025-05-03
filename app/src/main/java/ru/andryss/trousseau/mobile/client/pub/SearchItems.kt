@@ -15,7 +15,7 @@ import ru.andryss.trousseau.mobile.client.mapper
 enum class SortField(
     @get:JsonValue val value: String,
 ) {
-    CREATED_AT("created_at"),
+    PUBLISHED_AT("published_at"),
     COST("cost"),
 }
 

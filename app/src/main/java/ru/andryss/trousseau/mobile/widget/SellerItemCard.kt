@@ -222,16 +222,28 @@ fun SellerItemCard(state: AppState, item: ItemDto) {
                         .padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    Text(
+                        text = "Информация о бронировании",
+                        style = MaterialTheme.typography.titleLarge
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = booking.author.username)
+                        UserProfile(username = booking.author.username, room = booking.author.room)
                         SomeTimeAgoText(timestamp = booking.bookedAt)
                     }
-                    booking.author.contacts.forEach { contact ->
-                        ContactTextField(state = state, contact = contact)
+                    Column (
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text(
+                            text = "Контакты"
+                        )
+                        booking.author.contacts.forEach { contact ->
+                            ContactTextField(state = state, contact = contact)
+                        }
                     }
                 }
             }

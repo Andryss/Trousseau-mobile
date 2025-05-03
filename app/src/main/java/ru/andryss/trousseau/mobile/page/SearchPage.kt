@@ -65,11 +65,11 @@ enum class SortingFilter(
 ) {
     NEW_FIRST(
         "сначала новые",
-        SortInfo(field = SortField.CREATED_AT, order = SortOrder.DESC)
+        SortInfo(field = SortField.PUBLISHED_AT, order = SortOrder.DESC)
     ),
     OLD_FIRST(
         "сначала старые",
-        SortInfo(field = SortField.CREATED_AT, order = SortOrder.ASC)
+        SortInfo(field = SortField.PUBLISHED_AT, order = SortOrder.ASC)
     ),
     CHEEP_FIRST(
         "сначала дешевые",

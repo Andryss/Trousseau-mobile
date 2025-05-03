@@ -71,7 +71,7 @@ fun HomePage(state: AppState) {
         state.searchItems(
             SearchInfo(
                 sort = SortInfo(
-                    field = SortField.CREATED_AT,
+                    field = SortField.PUBLISHED_AT,
                     order = SortOrder.DESC,
                 ),
                 page = PageInfo(

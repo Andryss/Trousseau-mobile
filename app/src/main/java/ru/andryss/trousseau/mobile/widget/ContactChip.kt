@@ -14,6 +14,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -70,6 +71,10 @@ fun ContactChip(state: AppState, contact: String) {
                         .padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
+                    Text(
+                        text = "Контакт для связи",
+                        style = MaterialTheme.typography.titleLarge
+                    )
                     ContactTextField(state = state, contact = contact)
                 }
             }

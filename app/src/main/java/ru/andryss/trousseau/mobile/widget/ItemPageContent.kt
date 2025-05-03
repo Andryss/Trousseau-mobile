@@ -82,16 +82,34 @@ fun ItemPageContent(state: AppState, item: ItemDto) {
                 ContactChip(state = state, contact = contact)
             }
         }
-        Text(
-            text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
-            modifier = Modifier.padding(horizontal = 10.dp),
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = item.category?.name ?: Strings.EMPTY_ITEM_CATEGORY,
-            modifier = Modifier.padding(horizontal = 10.dp),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            Text(
+                text = "Описание",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = item.description ?: Strings.EMPTY_ITEM_DESCRIPTION,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            Text(
+                text = "Категория",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = item.category?.name ?: Strings.EMPTY_ITEM_CATEGORY,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
         Spacer(modifier = Modifier.height(70.dp))
     }
 }

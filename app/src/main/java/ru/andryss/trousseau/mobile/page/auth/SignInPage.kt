@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -92,58 +94,64 @@ fun SignInPage(state: AppState) {
         onDismiss = { showAlert = false },
         text = alertText
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Вход",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                OutlinedTextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    modifier = Modifier.width(320.dp),
-                    label = { Text("Логин") },
-                    isError = isUsernameError,
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier.width(320.dp),
-                    label = { Text("Пароль") },
-                    isError = isPasswordError,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password
-                    ),
-                    singleLine = true
-                )
-                OutlinedButton(
-                    onClick = { onSignIn() }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Войти")
-                }
-                Text(
-                    text = buildAnnotatedString {
-                        append("Еще нет аккаунта? ")
-                        val link = LinkAnnotation.Clickable(
-                            tag = "sign up",
-                            linkInteractionListener = { state.navigateSignUpPage() }
-                        )
-                        withLink(link) {
-                            withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append("Зарегистрироваться")
+                    Text(
+                        text = "Вход",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        modifier = Modifier.width(320.dp),
+                        label = { Text("Логин") },
+                        isError = isUsernameError,
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier.width(320.dp),
+                        label = { Text("Пароль") },
+                        isError = isPasswordError,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        ),
+                        singleLine = true
+                    )
+                    OutlinedButton(
+                        onClick = { onSignIn() }
+                    ) {
+                        Text(text = "Войти")
+                    }
+                    Text(
+                        text = buildAnnotatedString {
+                            append("Еще нет аккаунта? ")
+                            val link = LinkAnnotation.Clickable(
+                                tag = "sign up",
+                                linkInteractionListener = { state.navigateSignUpPage() }
+                            )
+                            withLink(link) {
+                                withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append("Зарегистрироваться")
+                                }
                             }
-                        }
-                    },
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                        },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }

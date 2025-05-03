@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -21,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -150,140 +152,146 @@ fun SignUpPage(state: AppState) {
         onDismiss = { showAlert = false },
         text = alertText
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
+        ) { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Регистрация",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                OutlinedTextField(
-                    value = username,
-                    onValueChange = { setUsername(it) },
-                    modifier = Modifier.width(320.dp),
-                    label = { Text("Логин") },
-                    isError = isUsernameError,
-                    singleLine = true,
-                    maxLines = 1
-                )
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { setPassword(it) },
-                    modifier = Modifier.width(320.dp),
-                    label = { Text("Пароль") },
-                    isError = isPasswordError,
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password
-                    ),
-                    singleLine = true,
-                    maxLines = 1
-                )
-                LazyColumn {
-                    itemsIndexed(links) { index, link ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            OutlinedTextField(
-                                value = link,
-                                onValueChange = { links[index] = it },
-                                modifier = Modifier.width(320.dp),
-                                label = {
-                                    if (index == 0) {
-                                        Text("Основной контакт для связи")
-                                    } else {
-                                        Text("Дополнительный контакт $index")
-                                    }
-                                },
-                                isError = isLinksError && links[index].trim().isBlank(),
-                                trailingIcon = {
-                                    if (index != 0) {
-                                        IconButton(
-                                            onClick = { links.removeAt(index) }
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Delete,
-                                                contentDescription = "Remove contact link"
-                                            )
-                                        }
-                                    }
-                                },
-                                singleLine = true,
-                                maxLines = 1
-                            )
-                        }
-                    }
-                }
-                if (links.size < 5) {
-                    OutlinedButton(
-                        onClick = { links.add("") },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.run {
-                                if (links.isEmpty() && isLinksError) error else primary
-                            }
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add contact link"
-                        )
-                        Text("Добавить еще контакт")
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(
-                            interactionSource = null,
-                            indication = null,
-                            onClick = { isExpandSellerFields = !isExpandSellerFields }
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Checkbox(
-                        checked = isExpandSellerFields,
-                        onCheckedChange = { isExpandSellerFields = it }
+                    Text(
+                        text = "Регистрация",
+                        style = MaterialTheme.typography.headlineSmall
                     )
-                    Text(text = "Хочу размещать объявления")
-                }
-                if (isExpandSellerFields) {
                     OutlinedTextField(
-                        value = room,
-                        onValueChange = { setRoom(it) },
+                        value = username,
+                        onValueChange = { setUsername(it) },
                         modifier = Modifier.width(320.dp),
-                        label = { Text("Комната") },
-                        isError = isRoomError,
-                        singleLine = true
+                        label = { Text("Логин") },
+                        isError = isUsernameError,
+                        singleLine = true,
+                        maxLines = 1
                     )
-                }
-                OutlinedButton(
-                    onClick = { onSignUp() }
-                ) {
-                    Text(text = "Зарегистрироваться")
-                }
-                Text(
-                    text = buildAnnotatedString {
-                        append("Уже есть аккаунт? ")
-                        val link = LinkAnnotation.Clickable(
-                            tag = "sign in",
-                            linkInteractionListener = { state.navigateSignInPage() }
-                        )
-                        withLink(link) {
-                            withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append("Войти")
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { setPassword(it) },
+                        modifier = Modifier.width(320.dp),
+                        label = { Text("Пароль") },
+                        isError = isPasswordError,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        ),
+                        singleLine = true,
+                        maxLines = 1
+                    )
+                    LazyColumn {
+                        itemsIndexed(links) { index, link ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                OutlinedTextField(
+                                    value = link,
+                                    onValueChange = { links[index] = it },
+                                    modifier = Modifier.width(320.dp),
+                                    label = {
+                                        if (index == 0) {
+                                            Text("Основной контакт для связи")
+                                        } else {
+                                            Text("Дополнительный контакт $index")
+                                        }
+                                    },
+                                    isError = isLinksError && links[index].trim().isBlank(),
+                                    trailingIcon = {
+                                        if (index != 0) {
+                                            IconButton(
+                                                onClick = { links.removeAt(index) }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Delete,
+                                                    contentDescription = "Remove contact link"
+                                                )
+                                            }
+                                        }
+                                    },
+                                    singleLine = true,
+                                    maxLines = 1
+                                )
                             }
                         }
-                    },
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                    }
+                    if (links.size < 5) {
+                        OutlinedButton(
+                            onClick = { links.add("") },
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.run {
+                                    if (links.isEmpty() && isLinksError) error else primary
+                                }
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Add contact link"
+                            )
+                            Text("Добавить еще контакт")
+                        }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(
+                                interactionSource = null,
+                                indication = null,
+                                onClick = { isExpandSellerFields = !isExpandSellerFields }
+                            ),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Checkbox(
+                            checked = isExpandSellerFields,
+                            onCheckedChange = { isExpandSellerFields = it }
+                        )
+                        Text(text = "Хочу размещать объявления")
+                    }
+                    if (isExpandSellerFields) {
+                        OutlinedTextField(
+                            value = room,
+                            onValueChange = { setRoom(it) },
+                            modifier = Modifier.width(320.dp),
+                            label = { Text("Комната") },
+                            isError = isRoomError,
+                            singleLine = true
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = { onSignUp() }
+                    ) {
+                        Text(text = "Зарегистрироваться")
+                    }
+                    Text(
+                        text = buildAnnotatedString {
+                            append("Уже есть аккаунт? ")
+                            val link = LinkAnnotation.Clickable(
+                                tag = "sign in",
+                                linkInteractionListener = { state.navigateSignInPage() }
+                            )
+                            withLink(link) {
+                                withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                                    append("Войти")
+                                }
+                            }
+                        },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }

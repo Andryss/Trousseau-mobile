@@ -132,33 +132,10 @@ inline fun commonCallbackObj(
     }
 
     override fun onResponse(call: Call, response: Response) {
-        val body = response.body
-        if (response.code == 200) {
-            if (body == null) {
-                callbackScope.launch {
-                    onError(
-                        ErrorObject(
-                            code = 1,
-                            message = "response.200.parse.error",
-                            humanMessage = RESPONSE_PARSE_ERROR_MESSAGE
-                        )
-                    )
-                }
+        response.body?.use {
+            if (response.code == 200) {
+                onSuccess(it)
             } else {
-                body.use { onSuccess(it) }
-            }
-        } else if (body == null) {
-            callbackScope.launch {
-                onError(
-                    ErrorObject(
-                        code = 1,
-                        message = "response.no200.parse.error",
-                        humanMessage = RESPONSE_PARSE_ERROR_MESSAGE
-                    )
-                )
-            }
-        } else {
-            body.use {
                 try {
                     val error = mapper.readValue<ErrorObject>(it.bytes())
                     Log.i(TAG, "Got error object response $error")

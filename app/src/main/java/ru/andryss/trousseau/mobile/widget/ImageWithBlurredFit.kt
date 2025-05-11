@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.layout.ContentScale
@@ -17,12 +18,17 @@ import coil3.request.crossfade
 fun ImageWithBlurredFit(uri: Uri) {
     val context = LocalContext.current
 
+    val model = remember(uri) {
+        ImageRequest.Builder(context)
+            .data(uri)
+            .diskCacheKey(uri.toString())
+            .crossfade(enable = true)
+            .build()
+    }
+
     Box {
         AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(uri)
-                .crossfade(enable = true)
-                .build(),
+            model = model,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -30,10 +36,7 @@ fun ImageWithBlurredFit(uri: Uri) {
                 .blur(20.dp)
         )
         AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(uri)
-                .crossfade(enable = true)
-                .build(),
+            model = model,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize()

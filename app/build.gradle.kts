@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -57,6 +58,8 @@ dependencies {
     implementation(libs.squareup.okhttp3.okhttp)
     implementation(libs.fasterxml.jackson.kotlin)
     implementation(libs.fasterxml.jackson.datatype.jsr310)
+    implementation(platform(libs.firebase.firebase.bom))
+    implementation(libs.firebase.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

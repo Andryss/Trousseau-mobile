@@ -19,21 +19,29 @@
 ## Экраны
 
 1. Страница регистрации
-  ![](docs/signup-screen-1-min.png)
-  ![](docs/signup-screen-2-min.png)
-  ![](docs/signup-screen-3-min.png)
+  <p>
+    <img src="./docs/signup-screen-1-min.png" width="23%">
+    <img src="./docs/signup-screen-2-min.png" width="23%">
+    <img src="./docs/signup-screen-3-min.png" width="23%">
+  </p>
 
 2. Страница входа
-  ![](docs/signin-screen-1-min.png)
-  ![](docs/signin-screen-2-min.png)
+  <p>
+    <img src="./docs/signin-screen-1-min.png" width="23%">
+    <img src="./docs/signin-screen-2-min.png" width="23%">
+  </p>
 
 3. Главная страница
-  ![](docs/home-screen-1-min.png)
+  <p>
+    <img src="./docs/home-screen-1-min.png" width="23%">
+  </p>
 
 4. Страница поиска объявлений
-  ![](docs/search-screen-1-min.png)
-  ![](docs/search-screen-2-min.png)
-  ![](docs/search-screen-3-min.png)
+  <p>
+    <img src="./docs/search-screen-1-min.png" width="23%">
+    <img src="./docs/search-screen-2-min.png" width="23%">
+    <img src="./docs/search-screen-3-min.png" width="23%">
+  </p>
 
 5. Страница объявления
   ![](docs/view-item-1-min.png)

@@ -44,41 +44,59 @@
   </p>
 
 5. Страница объявления
-  ![](docs/view-item-1-min.png)
+  <p>
+    <img src="./docs/view-item-1-min.png" width="23%">
+  </p>
 
 6. Страница профиля
-  ![](docs/profile-screen-1-min.png)
-  ![](docs/profile-screen-2-min.png)
+  <p>
+    <img src="./docs/profile-screen-1-min.png" width="23%">
+    <img src="./docs/profile-screen-2-min.png" width="23%">
+  </p>
 
 7. Страница уведомлений
-  ![](docs/notifications-screen-1-min.png)
-  ![](docs/notifications-screen-2-min.png)
-  ![](docs/notifications-screen-3-min.png)
+  <p>
+    <img src="./docs/notifications-screen-1-min.png" width="23%">
+    <img src="./docs/notifications-screen-2-min.png" width="23%">
+    <img src="./docs/notifications-screen-3-min.png" width="23%">
+  </p>
 
 8. Страница подписок
-  ![](docs/subscriptions-screen-1-min.png)
-  ![](docs/subscriptions-screen-2-min.png)
-  ![](docs/subscriptions-screen-3-min.png)
-  ![](docs/subscriptions-screen-4-min.png)
+  <p>
+    <img src="./docs/subscriptions-screen-1-min.png" width="23%">
+    <img src="./docs/subscriptions-screen-2-min.png" width="23%">
+    <img src="./docs/subscriptions-screen-3-min.png" width="23%">
+    <img src="./docs/subscriptions-screen-4-min.png" width="23%">
+  </p>
 
 9. Страница избранного
-  ![](docs/favourites-screen-1-min.png)
-  ![](docs/favourites-screen-2-min.png)
+  <p>
+    <img src="./docs/favourites-screen-1-min.png" width="23%">
+    <img src="./docs/favourites-screen-2-min.png" width="23%">
+  </p>
 
 10. Страница бронирований
-  ![](docs/bookings-screen-1-min.png)
-  ![](docs/bookings-screen-2-min.png)
+  <p>
+    <img src="./docs/bookings-screen-1-min.png" width="23%">
+    <img src="./docs/bookings-screen-2-min.png" width="23%">
+  </p>
 
 11. Страница моих объявлений
-  ![](docs/my-items-screen-1-min.png)
-  ![](docs/my-items-screen-2-min.png)
-  ![](docs/my-items-screen-3-min.png)
+  <p>
+    <img src="./docs/my-items-screen-1-min.png" width="23%">
+    <img src="./docs/my-items-screen-2-min.png" width="23%">
+    <img src="./docs/my-items-screen-3-min.png" width="23%">
+  </p>
 
 12. Страница редактирования объявления
-  ![](docs/edit-item-screen-1-min.png)
-  ![](docs/edit-item-screen-2-min.png)
-  ![](docs/edit-item-screen-3-min.png)
+  <p>
+    <img src="./docs/edit-item-screen-1-min.png" width="23%">
+    <img src="./docs/edit-item-screen-2-min.png" width="23%">
+    <img src="./docs/edit-item-screen-3-min.png" width="23%">
+  </p>
 
 13. Страница предпросмотра объявления
-  ![](docs/preview-item-screen-1-min.png)
-  ![](docs/preview-item-screen-2-min.png)
+  <p>
+    <img src="./docs/preview-item-screen-1-min.png" width="23%">
+    <img src="./docs/preview-item-screen-2-min.png" width="23%">
+  </p>
